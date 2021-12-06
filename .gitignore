@@ -115,4 +115,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### direnv ###
+.direnv
+.envrc
+
+### dotenv ###
+.env
+
 # End of https://www.toptal.com/developers/gitignore/api/go,linux,macos,windows,data,database
