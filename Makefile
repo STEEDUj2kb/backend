@@ -21,21 +21,14 @@ build:
 run: swag build
 	$(BUILD_DIR)/$(APP_NAME)
 
-docker.run: swag docker.fiber
+compose.build:
+	docker compose -f docker/compose.yml build
 
-docker.fiber.build:
-	docker build -f docker/go.Dockerfile -t fiber .
+compose.up: swag
+	docker compose -f docker/compose.yml up -d
 
-docker.fiber: docker.fiber.build
-	docker run --rm -d \
-		--name steedu-fiber \
-		-p 5000:5000 \
-		fiber
-
-docker.stop: docker.stop.fiber
-
-docker.stop.fiber:
-	docker stop steedu-fiber
+compose.down:
+	docker compose -f docker/compose.yml down
 
 swag:
 	swag init
