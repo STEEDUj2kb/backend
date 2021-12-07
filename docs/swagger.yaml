@@ -22,9 +22,7 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: string
       summary: get first name
       tags:
       - Hello

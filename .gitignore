@@ -2,6 +2,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/go,linux,macos,windows,data,database
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,linux,macos,windows,data,database
 
+### Build ###
+build/
+docs/
+tmp/
+
 ### Data ###
 *.csv
 *.dat
