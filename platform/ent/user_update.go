@@ -5,12 +5,14 @@ package ent
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/STEEDUj2kb/v1/platform/ent/predicate"
 	"github.com/STEEDUj2kb/v1/platform/ent/user"
+	"github.com/google/uuid"
 )
 
 // UserUpdate is the builder for updating User entities.
@@ -26,15 +28,68 @@ func (uu *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return uu
 }
 
-// SetEmail sets the "email" field.
-func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
-	uu.mutation.SetEmail(s)
+// SetUUID sets the "uuid" field.
+func (uu *UserUpdate) SetUUID(u uuid.UUID) *UserUpdate {
+	uu.mutation.SetUUID(u)
+	return uu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
+	uu.mutation.SetUpdatedAt(t)
 	return uu
 }
 
 // SetName sets the "name" field.
 func (uu *UserUpdate) SetName(s string) *UserUpdate {
 	uu.mutation.SetName(s)
+	return uu
+}
+
+// SetEmail sets the "email" field.
+func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
+	uu.mutation.SetEmail(s)
+	return uu
+}
+
+// SetUserStatus sets the "user_status" field.
+func (uu *UserUpdate) SetUserStatus(i int) *UserUpdate {
+	uu.mutation.ResetUserStatus()
+	uu.mutation.SetUserStatus(i)
+	return uu
+}
+
+// SetNillableUserStatus sets the "user_status" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableUserStatus(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetUserStatus(*i)
+	}
+	return uu
+}
+
+// AddUserStatus adds i to the "user_status" field.
+func (uu *UserUpdate) AddUserStatus(i int) *UserUpdate {
+	uu.mutation.AddUserStatus(i)
+	return uu
+}
+
+// SetUserRole sets the "user_role" field.
+func (uu *UserUpdate) SetUserRole(ur user.UserRole) *UserUpdate {
+	uu.mutation.SetUserRole(ur)
+	return uu
+}
+
+// SetNillableUserRole sets the "user_role" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableUserRole(ur *user.UserRole) *UserUpdate {
+	if ur != nil {
+		uu.SetUserRole(*ur)
+	}
+	return uu
+}
+
+// SetPasswordHash sets the "password_hash" field.
+func (uu *UserUpdate) SetPasswordHash(s string) *UserUpdate {
+	uu.mutation.SetPasswordHash(s)
 	return uu
 }
 
@@ -49,13 +104,20 @@ func (uu *UserUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	uu.defaults()
 	if len(uu.hooks) == 0 {
+		if err = uu.check(); err != nil {
+			return 0, err
+		}
 		affected, err = uu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*UserMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = uu.check(); err != nil {
+				return 0, err
 			}
 			uu.mutation = mutation
 			affected, err = uu.sqlSave(ctx)
@@ -97,6 +159,29 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (uu *UserUpdate) defaults() {
+	if _, ok := uu.mutation.UpdatedAt(); !ok {
+		v := user.UpdateDefaultUpdatedAt()
+		uu.mutation.SetUpdatedAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (uu *UserUpdate) check() error {
+	if v, ok := uu.mutation.UserStatus(); ok {
+		if err := user.UserStatusValidator(v); err != nil {
+			return &ValidationError{Name: "user_status", err: fmt.Errorf("ent: validator failed for field \"user_status\": %w", err)}
+		}
+	}
+	if v, ok := uu.mutation.UserRole(); ok {
+		if err := user.UserRoleValidator(v); err != nil {
+			return &ValidationError{Name: "user_role", err: fmt.Errorf("ent: validator failed for field \"user_role\": %w", err)}
+		}
+	}
+	return nil
+}
+
 func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -115,11 +200,18 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := uu.mutation.Email(); ok {
+	if value, ok := uu.mutation.UUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: user.FieldEmail,
+			Column: user.FieldUUID,
+		})
+	}
+	if value, ok := uu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldUpdatedAt,
 		})
 	}
 	if value, ok := uu.mutation.Name(); ok {
@@ -127,6 +219,41 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldName,
+		})
+	}
+	if value, ok := uu.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldEmail,
+		})
+	}
+	if value, ok := uu.mutation.UserStatus(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldUserStatus,
+		})
+	}
+	if value, ok := uu.mutation.AddedUserStatus(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldUserStatus,
+		})
+	}
+	if value, ok := uu.mutation.UserRole(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldUserRole,
+		})
+	}
+	if value, ok := uu.mutation.PasswordHash(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldPasswordHash,
 		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
@@ -148,15 +275,68 @@ type UserUpdateOne struct {
 	mutation *UserMutation
 }
 
-// SetEmail sets the "email" field.
-func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
-	uuo.mutation.SetEmail(s)
+// SetUUID sets the "uuid" field.
+func (uuo *UserUpdateOne) SetUUID(u uuid.UUID) *UserUpdateOne {
+	uuo.mutation.SetUUID(u)
+	return uuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetUpdatedAt(t)
 	return uuo
 }
 
 // SetName sets the "name" field.
 func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
 	uuo.mutation.SetName(s)
+	return uuo
+}
+
+// SetEmail sets the "email" field.
+func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
+	uuo.mutation.SetEmail(s)
+	return uuo
+}
+
+// SetUserStatus sets the "user_status" field.
+func (uuo *UserUpdateOne) SetUserStatus(i int) *UserUpdateOne {
+	uuo.mutation.ResetUserStatus()
+	uuo.mutation.SetUserStatus(i)
+	return uuo
+}
+
+// SetNillableUserStatus sets the "user_status" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUserStatus(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetUserStatus(*i)
+	}
+	return uuo
+}
+
+// AddUserStatus adds i to the "user_status" field.
+func (uuo *UserUpdateOne) AddUserStatus(i int) *UserUpdateOne {
+	uuo.mutation.AddUserStatus(i)
+	return uuo
+}
+
+// SetUserRole sets the "user_role" field.
+func (uuo *UserUpdateOne) SetUserRole(ur user.UserRole) *UserUpdateOne {
+	uuo.mutation.SetUserRole(ur)
+	return uuo
+}
+
+// SetNillableUserRole sets the "user_role" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUserRole(ur *user.UserRole) *UserUpdateOne {
+	if ur != nil {
+		uuo.SetUserRole(*ur)
+	}
+	return uuo
+}
+
+// SetPasswordHash sets the "password_hash" field.
+func (uuo *UserUpdateOne) SetPasswordHash(s string) *UserUpdateOne {
+	uuo.mutation.SetPasswordHash(s)
 	return uuo
 }
 
@@ -178,13 +358,20 @@ func (uuo *UserUpdateOne) Save(ctx context.Context) (*User, error) {
 		err  error
 		node *User
 	)
+	uuo.defaults()
 	if len(uuo.hooks) == 0 {
+		if err = uuo.check(); err != nil {
+			return nil, err
+		}
 		node, err = uuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*UserMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = uuo.check(); err != nil {
+				return nil, err
 			}
 			uuo.mutation = mutation
 			node, err = uuo.sqlSave(ctx)
@@ -226,6 +413,29 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (uuo *UserUpdateOne) defaults() {
+	if _, ok := uuo.mutation.UpdatedAt(); !ok {
+		v := user.UpdateDefaultUpdatedAt()
+		uuo.mutation.SetUpdatedAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (uuo *UserUpdateOne) check() error {
+	if v, ok := uuo.mutation.UserStatus(); ok {
+		if err := user.UserStatusValidator(v); err != nil {
+			return &ValidationError{Name: "user_status", err: fmt.Errorf("ent: validator failed for field \"user_status\": %w", err)}
+		}
+	}
+	if v, ok := uuo.mutation.UserRole(); ok {
+		if err := user.UserRoleValidator(v); err != nil {
+			return &ValidationError{Name: "user_role", err: fmt.Errorf("ent: validator failed for field \"user_role\": %w", err)}
+		}
+	}
+	return nil
+}
+
 func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -261,11 +471,18 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			}
 		}
 	}
-	if value, ok := uuo.mutation.Email(); ok {
+	if value, ok := uuo.mutation.UUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: user.FieldEmail,
+			Column: user.FieldUUID,
+		})
+	}
+	if value, ok := uuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldUpdatedAt,
 		})
 	}
 	if value, ok := uuo.mutation.Name(); ok {
@@ -273,6 +490,41 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldName,
+		})
+	}
+	if value, ok := uuo.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldEmail,
+		})
+	}
+	if value, ok := uuo.mutation.UserStatus(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldUserStatus,
+		})
+	}
+	if value, ok := uuo.mutation.AddedUserStatus(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldUserStatus,
+		})
+	}
+	if value, ok := uuo.mutation.UserRole(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldUserRole,
+		})
+	}
+	if value, ok := uuo.mutation.PasswordHash(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldPasswordHash,
 		})
 	}
 	_node = &User{config: uuo.config}

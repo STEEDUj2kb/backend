@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	"github.com/STEEDUj2kb/v1/app/models"
+	"github.com/STEEDUj2kb/v1/pkg/utils"
 	"github.com/STEEDUj2kb/v1/platform/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 // GetHello func gets first name.
@@ -40,14 +42,18 @@ func GetHello(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param email body string true "Email"
+// @Param name body string true "Name"
 // @Param password body string true "Password"
-// @Param user_role body string true "User role"
 // @Success 200 {object} models.User
 // @Router /v1/user/sign/up [post]
 func UserSignUp(c *fiber.Ctx) error {
-	user := new(models.User)
+	defer database.EntClient.Close()
+
+	// Create a new user auth struct.
+	signUp := new(models.SignUp)
+
 	// Checking received data from JSON body.
-	if err := c.BodyParser(user); err != nil {
+	if err := c.BodyParser(signUp); err != nil {
 		// Return status 400 and error message.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
@@ -55,14 +61,41 @@ func UserSignUp(c *fiber.Ctx) error {
 		})
 	}
 
-	createdUser, err := database.EntClient.User.
-		Create().
-		SetEmail(user.Email).
+	// Create a new validator for a User model.
+	validate := utils.NewValidator()
+
+	// Validate sign up fields.
+	if err := validate.Struct(signUp); err != nil {
+		// Return, if some fields are not valid.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   utils.ValidatorErrors(err),
+		})
+	}
+	user := &models.User{
+		UUID:         uuid.New(),
+		Name:         signUp.Name,
+		Email:        signUp.Email,
+		PasswordHash: utils.GeneratePassword(signUp.Password),
+	}
+
+	// Validate user fields.
+	if err := validate.Struct(user); err != nil {
+		// Return, if some fields are not valid.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   utils.ValidatorErrors(err),
+		})
+	}
+
+	createdUser, err := database.EntClient.User.Create().
 		SetName(user.Name).
+		SetEmail(user.Email).
+		SetPasswordHash(user.PasswordHash).
 		Save(context.Background())
 
 	if err != nil {
-		c.Status(500).JSON("Unable to save note")
+		// Return, if some problem with save model.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),

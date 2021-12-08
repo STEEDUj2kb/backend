@@ -78,8 +78,8 @@ var doc = `{
                         }
                     },
                     {
-                        "description": "Password",
-                        "name": "password",
+                        "description": "Name",
+                        "name": "name",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -87,8 +87,8 @@ var doc = `{
                         }
                     },
                     {
-                        "description": "User role",
-                        "name": "user_role",
+                        "description": "Password",
+                        "name": "password",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -112,9 +112,13 @@ var doc = `{
             "type": "object",
             "required": [
                 "email",
-                "name"
+                "name",
+                "uuid"
             ],
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string",
                     "maxLength": 255
@@ -122,6 +126,18 @@ var doc = `{
                 "name": {
                     "type": "string",
                     "maxLength": 255
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_role": {
+                    "type": "string"
+                },
+                "user_status": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "string"
                 }
             }
         }

@@ -2,15 +2,26 @@ basePath: /api
 definitions:
   models.User:
     properties:
+      created_at:
+        type: string
       email:
         maxLength: 255
         type: string
       name:
         maxLength: 255
         type: string
+      updated_at:
+        type: string
+      user_role:
+        type: string
+      user_status:
+        type: integer
+      uuid:
+        type: string
     required:
     - email
     - name
+    - uuid
     type: object
 info:
   contact:
@@ -51,15 +62,15 @@ paths:
         required: true
         schema:
           type: string
-      - description: Password
+      - description: Name
         in: body
-        name: password
+        name: name
         required: true
         schema:
           type: string
-      - description: User role
+      - description: Password
         in: body
-        name: user_role
+        name: password
         required: true
         schema:
           type: string

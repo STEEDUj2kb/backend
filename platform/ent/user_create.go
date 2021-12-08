@@ -6,10 +6,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/STEEDUj2kb/v1/platform/ent/user"
+	"github.com/google/uuid"
 )
 
 // UserCreate is the builder for creating a User entity.
@@ -19,15 +21,83 @@ type UserCreate struct {
 	hooks    []Hook
 }
 
-// SetEmail sets the "email" field.
-func (uc *UserCreate) SetEmail(s string) *UserCreate {
-	uc.mutation.SetEmail(s)
+// SetUUID sets the "uuid" field.
+func (uc *UserCreate) SetUUID(u uuid.UUID) *UserCreate {
+	uc.mutation.SetUUID(u)
+	return uc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (uc *UserCreate) SetCreatedAt(t time.Time) *UserCreate {
+	uc.mutation.SetCreatedAt(t)
+	return uc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (uc *UserCreate) SetNillableCreatedAt(t *time.Time) *UserCreate {
+	if t != nil {
+		uc.SetCreatedAt(*t)
+	}
+	return uc
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (uc *UserCreate) SetUpdatedAt(t time.Time) *UserCreate {
+	uc.mutation.SetUpdatedAt(t)
+	return uc
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (uc *UserCreate) SetNillableUpdatedAt(t *time.Time) *UserCreate {
+	if t != nil {
+		uc.SetUpdatedAt(*t)
+	}
 	return uc
 }
 
 // SetName sets the "name" field.
 func (uc *UserCreate) SetName(s string) *UserCreate {
 	uc.mutation.SetName(s)
+	return uc
+}
+
+// SetEmail sets the "email" field.
+func (uc *UserCreate) SetEmail(s string) *UserCreate {
+	uc.mutation.SetEmail(s)
+	return uc
+}
+
+// SetUserStatus sets the "user_status" field.
+func (uc *UserCreate) SetUserStatus(i int) *UserCreate {
+	uc.mutation.SetUserStatus(i)
+	return uc
+}
+
+// SetNillableUserStatus sets the "user_status" field if the given value is not nil.
+func (uc *UserCreate) SetNillableUserStatus(i *int) *UserCreate {
+	if i != nil {
+		uc.SetUserStatus(*i)
+	}
+	return uc
+}
+
+// SetUserRole sets the "user_role" field.
+func (uc *UserCreate) SetUserRole(ur user.UserRole) *UserCreate {
+	uc.mutation.SetUserRole(ur)
+	return uc
+}
+
+// SetNillableUserRole sets the "user_role" field if the given value is not nil.
+func (uc *UserCreate) SetNillableUserRole(ur *user.UserRole) *UserCreate {
+	if ur != nil {
+		uc.SetUserRole(*ur)
+	}
+	return uc
+}
+
+// SetPasswordHash sets the "password_hash" field.
+func (uc *UserCreate) SetPasswordHash(s string) *UserCreate {
+	uc.mutation.SetPasswordHash(s)
 	return uc
 }
 
@@ -42,6 +112,7 @@ func (uc *UserCreate) Save(ctx context.Context) (*User, error) {
 		err  error
 		node *User
 	)
+	uc.defaults()
 	if len(uc.hooks) == 0 {
 		if err = uc.check(); err != nil {
 			return nil, err
@@ -99,13 +170,65 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (uc *UserCreate) defaults() {
+	if _, ok := uc.mutation.UUID(); !ok {
+		v := user.DefaultUUID()
+		uc.mutation.SetUUID(v)
+	}
+	if _, ok := uc.mutation.CreatedAt(); !ok {
+		v := user.DefaultCreatedAt()
+		uc.mutation.SetCreatedAt(v)
+	}
+	if _, ok := uc.mutation.UpdatedAt(); !ok {
+		v := user.DefaultUpdatedAt()
+		uc.mutation.SetUpdatedAt(v)
+	}
+	if _, ok := uc.mutation.UserStatus(); !ok {
+		v := user.DefaultUserStatus
+		uc.mutation.SetUserStatus(v)
+	}
+	if _, ok := uc.mutation.UserRole(); !ok {
+		v := user.DefaultUserRole
+		uc.mutation.SetUserRole(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
-	if _, ok := uc.mutation.Email(); !ok {
-		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "email"`)}
+	if _, ok := uc.mutation.UUID(); !ok {
+		return &ValidationError{Name: "uuid", err: errors.New(`ent: missing required field "uuid"`)}
+	}
+	if _, ok := uc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "created_at"`)}
+	}
+	if _, ok := uc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "updated_at"`)}
 	}
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
+	}
+	if _, ok := uc.mutation.Email(); !ok {
+		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "email"`)}
+	}
+	if _, ok := uc.mutation.UserStatus(); !ok {
+		return &ValidationError{Name: "user_status", err: errors.New(`ent: missing required field "user_status"`)}
+	}
+	if v, ok := uc.mutation.UserStatus(); ok {
+		if err := user.UserStatusValidator(v); err != nil {
+			return &ValidationError{Name: "user_status", err: fmt.Errorf(`ent: validator failed for field "user_status": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.UserRole(); !ok {
+		return &ValidationError{Name: "user_role", err: errors.New(`ent: missing required field "user_role"`)}
+	}
+	if v, ok := uc.mutation.UserRole(); ok {
+		if err := user.UserRoleValidator(v); err != nil {
+			return &ValidationError{Name: "user_role", err: fmt.Errorf(`ent: validator failed for field "user_role": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.PasswordHash(); !ok {
+		return &ValidationError{Name: "password_hash", err: errors.New(`ent: missing required field "password_hash"`)}
 	}
 	return nil
 }
@@ -134,13 +257,29 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := uc.mutation.Email(); ok {
+	if value, ok := uc.mutation.UUID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: user.FieldEmail,
+			Column: user.FieldUUID,
 		})
-		_node.Email = value
+		_node.UUID = value
+	}
+	if value, ok := uc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := uc.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
 	}
 	if value, ok := uc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -149,6 +288,38 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldName,
 		})
 		_node.Name = value
+	}
+	if value, ok := uc.mutation.Email(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldEmail,
+		})
+		_node.Email = value
+	}
+	if value, ok := uc.mutation.UserStatus(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldUserStatus,
+		})
+		_node.UserStatus = value
+	}
+	if value, ok := uc.mutation.UserRole(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldUserRole,
+		})
+		_node.UserRole = value
+	}
+	if value, ok := uc.mutation.PasswordHash(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldPasswordHash,
+		})
+		_node.PasswordHash = value
 	}
 	return _node, _spec
 }
@@ -167,6 +338,7 @@ func (ucb *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
 	for i := range ucb.builders {
 		func(i int, root context.Context) {
 			builder := ucb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserMutation)
 				if !ok {

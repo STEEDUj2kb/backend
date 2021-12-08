@@ -2,15 +2,34 @@
 
 package user
 
+import (
+	"fmt"
+	"time"
+
+	"github.com/google/uuid"
+)
+
 const (
 	// Label holds the string label denoting the user type in the database.
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldEmail holds the string denoting the email field in the database.
-	FieldEmail = "email"
+	// FieldUUID holds the string denoting the uuid field in the database.
+	FieldUUID = "uuid"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
+	// FieldUserStatus holds the string denoting the user_status field in the database.
+	FieldUserStatus = "user_status"
+	// FieldUserRole holds the string denoting the user_role field in the database.
+	FieldUserRole = "user_role"
+	// FieldPasswordHash holds the string denoting the password_hash field in the database.
+	FieldPasswordHash = "password_hash"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 )
@@ -18,8 +37,14 @@ const (
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldEmail,
+	FieldUUID,
+	FieldCreatedAt,
+	FieldUpdatedAt,
 	FieldName,
+	FieldEmail,
+	FieldUserStatus,
+	FieldUserRole,
+	FieldPasswordHash,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -30,4 +55,45 @@ func ValidColumn(column string) bool {
 		}
 	}
 	return false
+}
+
+var (
+	// DefaultUUID holds the default value on creation for the "uuid" field.
+	DefaultUUID func() uuid.UUID
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
+	// DefaultUserStatus holds the default value on creation for the "user_status" field.
+	DefaultUserStatus int
+	// UserStatusValidator is a validator for the "user_status" field. It is called by the builders before save.
+	UserStatusValidator func(int) error
+)
+
+// UserRole defines the type for the "user_role" enum field.
+type UserRole string
+
+// UserRoleUser is the default value of the UserRole enum.
+const DefaultUserRole = UserRoleUser
+
+// UserRole values.
+const (
+	UserRoleAdmin UserRole = "admin"
+	UserRoleUser  UserRole = "user"
+)
+
+func (ur UserRole) String() string {
+	return string(ur)
+}
+
+// UserRoleValidator is a validator for the "user_role" field enum values. It is called by the builders before save.
+func UserRoleValidator(ur UserRole) error {
+	switch ur {
+	case UserRoleAdmin, UserRoleUser:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for user_role field: %q", ur)
+	}
 }
