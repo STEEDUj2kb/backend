@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/STEEDUj2kb/v1/pkg/configs"
@@ -30,6 +31,9 @@ import (
 func main() {
 	// Define Fiber config.
 	config := configs.FiberConfig()
+
+	tt := "hi"
+	fmt.Println(tt)
 
 	// Define a new Fiber app with config.
 	app := fiber.New(config)

@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// GetHllo func gets first name.
+// GetHello func gets first name.
 // @Description Get first name with last name.
 // @Summary get first name
 // @Tags User
@@ -23,13 +23,13 @@ func GetHello(c *fiber.Ctx) error {
 		"KIM":  "GA NAE",
 		"SHIN": "GI RU",
 	}
-	last_name := strings.ToUpper(c.Params("last_name"))
+	lastName := strings.ToUpper(c.Params("last_name"))
 
 	// Return status 200 OK.
 	return c.JSON(fiber.Map{
 		"error":      false,
 		"msg":        nil,
-		"first_name": people[last_name],
+		"first_name": people[lastName],
 	})
 }
 
