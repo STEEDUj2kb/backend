@@ -68,7 +68,6 @@ func init() {
 	}
 
 	log.Println("Connected to database successfully")
-	defer Client.Close()
 	// AutoMigration with ENT
 	if err := Client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)

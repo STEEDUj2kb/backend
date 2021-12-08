@@ -1,4 +1,17 @@
 basePath: /api
+definitions:
+  models.User:
+    properties:
+      email:
+        maxLength: 255
+        type: string
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - email
+    - name
+    type: object
 info:
   contact:
     email: your@mail.com
@@ -25,7 +38,41 @@ paths:
             type: string
       summary: get first name
       tags:
-      - Hello
+      - User
+  /v1/user/sign/up:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user.
+      parameters:
+      - description: Email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      - description: User role
+        in: body
+        name: user_role
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: create a new user
+      tags:
+      - User
 securityDefinitions:
   ApiKeyAuth:
     in: header

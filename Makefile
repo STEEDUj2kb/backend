@@ -21,11 +21,14 @@ build:
 run: swag build
 	$(BUILD_DIR)/$(APP_NAME)
 
+docker.postgres:
+	docker compose -f docker/compose.yml up postgres -d
+
 compose.build:
 	docker compose -f docker/compose.yml build
 
 compose.up: swag
-	docker compose -f docker/compose.yml up -d
+	docker compose -f docker/compose.yml up
 
 compose.down:
 	docker compose -f docker/compose.yml down
