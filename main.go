@@ -7,6 +7,7 @@ import (
 	"github.com/STEEDUj2kb/v1/pkg/middleware"
 	"github.com/STEEDUj2kb/v1/pkg/routes"
 	"github.com/STEEDUj2kb/v1/pkg/utils"
+	"github.com/STEEDUj2kb/v1/platform/database"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -28,7 +29,7 @@ import (
 // @name Authorization
 // @BasePath /api
 func main() {
-
+	defer database.EntClient.Close()
 	// Define Fiber config.
 	config := configs.FiberConfig()
 

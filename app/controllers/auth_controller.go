@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
 	"github.com/STEEDUj2kb/v1/app/models"
+	"github.com/STEEDUj2kb/v1/pkg/repository"
 	"github.com/STEEDUj2kb/v1/pkg/utils"
 	"github.com/STEEDUj2kb/v1/platform/database"
+	"github.com/STEEDUj2kb/v1/platform/ent/user"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
@@ -47,8 +50,6 @@ func GetHello(c *fiber.Ctx) error {
 // @Success 200 {object} models.User
 // @Router /v1/user/sign/up [post]
 func UserSignUp(c *fiber.Ctx) error {
-	defer database.EntClient.Close()
-
 	// Create a new user auth struct.
 	signUp := new(models.SignUp)
 
@@ -111,4 +112,83 @@ func UserSignUp(c *fiber.Ctx) error {
 		"user":  user,
 	})
 
+}
+
+// UserSignIn method to auth user and return access and refresh tokens.
+// @Description Auth user and return access and refresh token.
+// @Summary auth user and return access and refresh token
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param email body string true "User Email"
+// @Param password body string true "User Password"
+// @Success 200 {string} status "ok"
+// @Router /v1/user/sign/in [post]
+func UserSignIn(c *fiber.Ctx) error {
+	// Create a new user auth struct.
+	signIn := new(models.SignIn)
+
+	// Checking received data from JSON body.
+	if err := c.BodyParser(signIn); err != nil {
+		// Return status 400 and error message.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// Get user by email.
+	foundedUser, err := database.EntClient.User.
+		Query().
+		Where(user.Email(signIn.Email)).
+		Only(context.Background())
+
+	if err != nil {
+		// Return, if some problem with save model.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// Compare given user password with stored in found user.
+	compareUserPassword := utils.ComparePasswords(foundedUser.PasswordHash, signIn.Password)
+	if !compareUserPassword {
+		// Return, if password is not compare to stored in database.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   "wrong user email address or password",
+		})
+	}
+
+	// Get role credentials from founded user.
+	credentials, err := utils.GetCredentialsByRole(repository.UserRole(foundedUser.UserRole))
+	if err != nil {
+		// Return status 400 and error message.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// Generate a new pair of access and refresh tokens.
+
+	tokens, err := utils.GenerateNewTokens(strconv.Itoa(foundedUser.ID), credentials)
+	if err != nil {
+		// Return status 500 and token generation error.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// Return status 200 OK.
+	return c.JSON(fiber.Map{
+		"error": false,
+		"msg":   nil,
+		"tokens": fiber.Map{
+			"access":  tokens.Access,
+			"refresh": tokens.Refresh,
+		},
+	})
 }
