@@ -101,12 +101,14 @@ func UserSignUp(c *fiber.Ctx) error {
 			"msg":   err.Error(),
 		})
 	}
+	// Apply data from createdUser to user model
+	user.ApplyData(createdUser)
 
 	// Return status 201 OK.
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"error": false,
 		"msg":   nil,
-		"user":  createdUser,
+		"user":  user,
 	})
 
 }

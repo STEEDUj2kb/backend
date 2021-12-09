@@ -7,12 +7,12 @@ import (
 )
 
 // VerifyRole func for verifying a given role.
-func VerifyRole(role string) (string, error) {
+func VerifyRole(role repository.UserRole) (repository.UserRole, error) {
 	// Switch given role.
 	switch role {
-	case repository.AdminRoleName:
+	case repository.Admin:
 		// Nothing to do, verified successfully.
-	case repository.UserRoleName:
+	case repository.User:
 		// Nothing to do, verified successfully.
 	default:
 		// Return error message.

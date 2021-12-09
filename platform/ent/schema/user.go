@@ -35,8 +35,8 @@ func (User) Fields() []ent.Field {
 			Max(1).
 			Default(1),
 		field.Enum("user_role").
-			Values(repository.AdminRoleName, repository.UserRoleName).
-			Default(repository.UserRoleName),
+			Values(string(repository.Admin), string(repository.User)).
+			Default(string(repository.User)),
 		field.String("password_hash").
 			Sensitive(),
 	}

@@ -1,9 +1,12 @@
 package repository
 
+// UserRole defines the type for the "user_role" enum field.
+type UserRole string
+
+// UserRole values.
 const (
 	// AdminRoleName const for admin role.
-	AdminRoleName string = "admin"
-
+	Admin UserRole = "admin"
 	// UserRoleName const for user role.
-	UserRoleName string = "user"
+	User UserRole = "user"
 )
