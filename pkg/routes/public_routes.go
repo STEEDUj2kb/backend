@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/STEEDUj2kb/v1/app/controllers"
+	"github.com/STEEDUj2kb/app/controllers"
 	"github.com/gofiber/fiber/v2"
 )
 

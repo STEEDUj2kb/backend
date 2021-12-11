@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/STEEDUj2kb/v1/app/models"
-	"github.com/STEEDUj2kb/v1/pkg/repository"
-	"github.com/STEEDUj2kb/v1/pkg/utils"
-	"github.com/STEEDUj2kb/v1/platform/database"
-	"github.com/STEEDUj2kb/v1/platform/ent/user"
+	"github.com/STEEDUj2kb/app/models"
+	"github.com/STEEDUj2kb/pkg/repository"
+	"github.com/STEEDUj2kb/pkg/utils"
+	"github.com/STEEDUj2kb/platform/database"
+	"github.com/STEEDUj2kb/platform/ent/user"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )

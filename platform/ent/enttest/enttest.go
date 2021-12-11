@@ -5,9 +5,9 @@ package enttest
 import (
 	"context"
 
-	"github.com/STEEDUj2kb/v1/platform/ent"
+	"github.com/STEEDUj2kb/platform/ent"
 	// required by schema hooks.
-	_ "github.com/STEEDUj2kb/v1/platform/ent/runtime"
+	_ "github.com/STEEDUj2kb/platform/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

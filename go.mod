@@ -1,4 +1,4 @@
-module github.com/STEEDUj2kb/v1
+module github.com/STEEDUj2kb
 
 go 1.17
 

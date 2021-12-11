@@ -3,7 +3,7 @@ package schema
 import (
 	"time"
 
-	"github.com/STEEDUj2kb/v1/pkg/repository"
+	"github.com/STEEDUj2kb/pkg/repository"
 	"github.com/google/uuid"
 
 	"entgo.io/ent"

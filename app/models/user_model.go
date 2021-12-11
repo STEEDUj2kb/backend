@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/STEEDUj2kb/v1/pkg/utils"
-	"github.com/STEEDUj2kb/v1/platform/ent/user"
+	"github.com/STEEDUj2kb/pkg/utils"
+	"github.com/STEEDUj2kb/platform/ent/user"
 	"github.com/google/uuid"
 )
 

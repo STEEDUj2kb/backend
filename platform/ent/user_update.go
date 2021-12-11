@@ -10,8 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/v1/platform/ent/predicate"
-	"github.com/STEEDUj2kb/v1/platform/ent/user"
+	"github.com/STEEDUj2kb/platform/ent/predicate"
+	"github.com/STEEDUj2kb/platform/ent/user"
 	"github.com/google/uuid"
 )
 

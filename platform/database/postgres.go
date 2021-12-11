@@ -14,8 +14,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/STEEDUj2kb/v1/pkg/utils"
-	"github.com/STEEDUj2kb/v1/platform/ent"
+	"github.com/STEEDUj2kb/pkg/utils"
+	"github.com/STEEDUj2kb/platform/ent"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"

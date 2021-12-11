@@ -3,15 +3,15 @@ package main
 import (
 	"os"
 
-	"github.com/STEEDUj2kb/v1/pkg/configs"
-	"github.com/STEEDUj2kb/v1/pkg/middleware"
-	"github.com/STEEDUj2kb/v1/pkg/routes"
-	"github.com/STEEDUj2kb/v1/pkg/utils"
-	"github.com/STEEDUj2kb/v1/platform/database"
+	"github.com/STEEDUj2kb/pkg/configs"
+	"github.com/STEEDUj2kb/pkg/middleware"
+	"github.com/STEEDUj2kb/pkg/routes"
+	"github.com/STEEDUj2kb/pkg/utils"
+	"github.com/STEEDUj2kb/platform/database"
 
 	"github.com/gofiber/fiber/v2"
 
-	_ "github.com/STEEDUj2kb/v1/docs" // load API Docs files (Swagger)
+	_ "github.com/STEEDUj2kb/docs" // load API Docs files (Swagger)
 
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 )

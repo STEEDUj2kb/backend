@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 
-	"github.com/STEEDUj2kb/v1/pkg/repository"
+	"github.com/STEEDUj2kb/pkg/repository"
 )
 
 // VerifyRole func for verifying a given role.

@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/STEEDUj2kb/v1/platform/ent/migrate"
+	"github.com/STEEDUj2kb/platform/ent/migrate"
 
-	"github.com/STEEDUj2kb/v1/platform/ent/user"
+	"github.com/STEEDUj2kb/platform/ent/user"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"

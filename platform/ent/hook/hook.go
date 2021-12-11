@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/STEEDUj2kb/v1/platform/ent"
+	"github.com/STEEDUj2kb/platform/ent"
 )
 
 // The UserFunc type is an adapter to allow the use of ordinary
