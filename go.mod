@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/arsmn/fiber-swagger/v2 v2.20.0
 	github.com/gofiber/fiber/v2 v2.23.0
-	github.com/joho/godotenv v1.4.0
 	github.com/swaggo/swag v1.7.6
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 )

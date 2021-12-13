@@ -3,8 +3,6 @@ package utils
 import (
 	"fmt"
 	"os"
-
-	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 )
 
 // ConnectionURLBuilder func for building URL connection.

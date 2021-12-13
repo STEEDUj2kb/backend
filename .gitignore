@@ -121,11 +121,8 @@ $RECYCLE.BIN/
 *.lnk
 
 ### direnv ###
-.direnv
-.envrc
-
 ### dotenv ###
-.env
+.env*
 
 
 ### Goland ###
