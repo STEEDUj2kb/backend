@@ -22,13 +22,13 @@ run: swag build
 	$(BUILD_DIR)/$(APP_NAME)
 
 docker.postgres:
-	docker compose -f docker/compose.yml up postgres -d
+	docker compose -f docker/compose.yml --env-file=./.env.$(stage) up postgres -d
 
 compose.build:
-	docker compose -f docker/compose.yml build
+	docker compose -f docker/compose.yml --env-file=./.env.$(stage) build
 
 compose.up: swag
-	docker compose -f docker/compose.yml up
+	docker compose -f docker/compose.yml --env-file=./.env.$(stage) up --build
 
 compose.down:
 	docker compose -f docker/compose.yml down

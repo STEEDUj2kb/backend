@@ -8,10 +8,10 @@ services:
   fiber: &fiber
     build:
       context: ../.
-      dockerfile: docker/go.Dockerfile
+      dockerfile: docker/Dockerfile.fiber
     container_name: fibler
     env_file:
-      - ../.env
+      - ../.env.${STAGE_STATUS}
     depends_on:
       - postgres
     ports:
@@ -25,6 +25,7 @@ services:
       - local_postgres_data:/var/lib/postgresql/data:Z
       - local_postgres_data_backups:/backups:z
     env_file:
-      - ../.env
+      - ../.env.${STAGE_STATUS}
     ports:
       - 5432:5432
+
