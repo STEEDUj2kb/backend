@@ -1,0 +1,127 @@
+# Ansible role for deploy the Create Go App project.
+# Author: Vic Shóstak <vic@shostak.dev> (https://shostak.dev)
+# For more information, please visit https://create-go.app/
+
+---
+#
+# Make `apt update`.
+#
+- name: Update system packages cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+#
+# Make `apt upgrade`.
+#
+- name: Update all system packages to their latest versions
+  apt:
+    name: "*"
+    state: latest
+
+- name: Install aptitude using apt
+  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
+
+- name: ensure docker service is restarted
+  service:
+    name: docker
+    state: restarted
+  become: true
+
+#
+# Install `docker-compose`
+# reference: https://www.srijn.net/install-docker-and-docker-compose-using-ansible/
+#
+- name: Check current docker-compose version
+  command: docker-compose --version
+  register: docker_compose_vsn
+  changed_when: false
+  failed_when: false
+  check_mode: no
+
+- set_fact:
+    docker_compose_current_version: "{{ docker_compose_vsn.stdout | regex_search('(\\d+(\\.\\d+)+)') }}"
+  when:
+    - docker_compose_vsn.stdout is defined
+
+
+- name: Install or upgrade docker-compose
+  get_url: 
+    url : "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
+    dest: /usr/local/bin/docker-compose
+    mode: 'a+x'
+    force: yes
+  when: >
+    docker_compose_current_version == ""
+    or docker_compose_current_version is version(docker_compose_version, '<')
+
+
+#
+# Install `docker, docker-compose` package for Python 3 from pip3.
+#
+- name: Install and upgrade pip
+  pip:
+    name: pip
+    extra_args: --upgrade
+    executable: pip3
+
+- name: Add the Python 3 client for Docker
+  pip:
+    name: "{{ item }}"
+    state: latest
+    executable: pip3
+  environment:
+    CRYPTOGRAPHY_DONT_BUILD_RUST: 1
+  loop:
+  - docker
+  - docker-compose
+
+
+#
+# Create a new system group for Docker.
+#
+- name: Create a new Docker group
+  group:
+    name: "{{ server_group }}"
+
+#
+# Create a new system user for Docker.
+#
+- name: Add the default user to the Docker group
+  user:
+    name: "{{ server_user }}"
+    group: "{{ server_group }}"
+
+#
+# Create a new Docker network for connect all project elements into one network.
+#
+- name: Create a new Docker network
+  community.docker.docker_network:
+    name: "{{ docker_network }}"
+
+#
+# Create folder for project files.
+#
+- name: Create folder for project files
+  file:
+    state: directory
+    path: "{{ server_dir }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_group }}"

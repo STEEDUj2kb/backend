@@ -1,0 +1,44 @@
+# Ansible role for deploy a backend of the Create Go App project.
+# Author: Vic Shóstak <vic@shostak.dev> (https://shostak.dev)
+# For more information, please visit https://create-go.app/
+
+---
+#
+# Delete backend files.
+#
+- name: Delete previous backend files
+  file:
+    state: absent
+    path: "{{ server_dir }}/backend"
+
+#
+# Copy `./backend` folder to the remote server.
+#
+- name: Copy a new backend files
+  ansible.posix.synchronize:
+    src: "{{ playbook_dir | dirname }}"
+    dest: "{{ server_dir }}"
+    rsync_opts:
+      - "--exclude=.git,.github,build,*.md,deploy"
+
+#
+# Run backend containers.
+#
+- name: Tear down existing services
+  community.docker.docker_compose:
+    project_src: "{{ server_dir }}/backend/docker"
+    state: absent
+  environment:
+    STAGE_STATUS: "{{ stage_status }}"
+
+
+- name: Create and start services
+  community.docker.docker_compose:
+    project_src: "{{ server_dir }}/backend/docker"
+    build: yes
+  environment:
+    STAGE_STATUS: "{{stage_status }}"
+  register: output
+
+- ansible.builtin.debug:
+    var: output
