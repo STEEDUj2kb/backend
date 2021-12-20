@@ -8,8 +8,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
+	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
+	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
 	"github.com/google/uuid"
 
 	"entgo.io/ent"
@@ -24,8 +27,1304 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeUser = "User"
+	TypeDaily_Gaol  = "Daily_Gaol"
+	TypeStudy       = "Study"
+	TypeUser        = "User"
+	TypeWeekly_Gaol = "Weekly_Gaol"
 )
+
+// DailyGaolMutation represents an operation that mutates the Daily_Gaol nodes in the graph.
+type DailyGaolMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	created_at    *time.Time
+	updated_at    *time.Time
+	todo          *string
+	_done         *bool
+	is_removed    *bool
+	clearedFields map[string]struct{}
+	study         *int
+	clearedstudy  bool
+	wgoal         *int
+	clearedwgoal  bool
+	done          bool
+	oldValue      func(context.Context) (*Daily_Gaol, error)
+	predicates    []predicate.Daily_Gaol
+}
+
+var _ ent.Mutation = (*DailyGaolMutation)(nil)
+
+// dailyGaolOption allows management of the mutation configuration using functional options.
+type dailyGaolOption func(*DailyGaolMutation)
+
+// newDailyGaolMutation creates new mutation for the Daily_Gaol entity.
+func newDailyGaolMutation(c config, op Op, opts ...dailyGaolOption) *DailyGaolMutation {
+	m := &DailyGaolMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeDaily_Gaol,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withDaily_GaolID sets the ID field of the mutation.
+func withDaily_GaolID(id int) dailyGaolOption {
+	return func(m *DailyGaolMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Daily_Gaol
+		)
+		m.oldValue = func(ctx context.Context) (*Daily_Gaol, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Daily_Gaol.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withDaily_Gaol sets the old Daily_Gaol of the mutation.
+func withDaily_Gaol(node *Daily_Gaol) dailyGaolOption {
+	return func(m *DailyGaolMutation) {
+		m.oldValue = func(context.Context) (*Daily_Gaol, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m DailyGaolMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m DailyGaolMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *DailyGaolMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *DailyGaolMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *DailyGaolMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Daily_Gaol entity.
+// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DailyGaolMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *DailyGaolMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *DailyGaolMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *DailyGaolMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Daily_Gaol entity.
+// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DailyGaolMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *DailyGaolMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetTodo sets the "todo" field.
+func (m *DailyGaolMutation) SetTodo(s string) {
+	m.todo = &s
+}
+
+// Todo returns the value of the "todo" field in the mutation.
+func (m *DailyGaolMutation) Todo() (r string, exists bool) {
+	v := m.todo
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTodo returns the old "todo" field's value of the Daily_Gaol entity.
+// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DailyGaolMutation) OldTodo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldTodo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldTodo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTodo: %w", err)
+	}
+	return oldValue.Todo, nil
+}
+
+// ResetTodo resets all changes to the "todo" field.
+func (m *DailyGaolMutation) ResetTodo() {
+	m.todo = nil
+}
+
+// SetDone sets the "done" field.
+func (m *DailyGaolMutation) SetDone(b bool) {
+	m._done = &b
+}
+
+// Done returns the value of the "done" field in the mutation.
+func (m *DailyGaolMutation) Done() (r bool, exists bool) {
+	v := m._done
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDone returns the old "done" field's value of the Daily_Gaol entity.
+// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DailyGaolMutation) OldDone(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDone is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDone requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDone: %w", err)
+	}
+	return oldValue.Done, nil
+}
+
+// ResetDone resets all changes to the "done" field.
+func (m *DailyGaolMutation) ResetDone() {
+	m._done = nil
+}
+
+// SetIsRemoved sets the "is_removed" field.
+func (m *DailyGaolMutation) SetIsRemoved(b bool) {
+	m.is_removed = &b
+}
+
+// IsRemoved returns the value of the "is_removed" field in the mutation.
+func (m *DailyGaolMutation) IsRemoved() (r bool, exists bool) {
+	v := m.is_removed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsRemoved returns the old "is_removed" field's value of the Daily_Gaol entity.
+// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DailyGaolMutation) OldIsRemoved(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldIsRemoved is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldIsRemoved requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsRemoved: %w", err)
+	}
+	return oldValue.IsRemoved, nil
+}
+
+// ResetIsRemoved resets all changes to the "is_removed" field.
+func (m *DailyGaolMutation) ResetIsRemoved() {
+	m.is_removed = nil
+}
+
+// SetStudyID sets the "study" edge to the Study entity by id.
+func (m *DailyGaolMutation) SetStudyID(id int) {
+	m.study = &id
+}
+
+// ClearStudy clears the "study" edge to the Study entity.
+func (m *DailyGaolMutation) ClearStudy() {
+	m.clearedstudy = true
+}
+
+// StudyCleared reports if the "study" edge to the Study entity was cleared.
+func (m *DailyGaolMutation) StudyCleared() bool {
+	return m.clearedstudy
+}
+
+// StudyID returns the "study" edge ID in the mutation.
+func (m *DailyGaolMutation) StudyID() (id int, exists bool) {
+	if m.study != nil {
+		return *m.study, true
+	}
+	return
+}
+
+// StudyIDs returns the "study" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// StudyID instead. It exists only for internal usage by the builders.
+func (m *DailyGaolMutation) StudyIDs() (ids []int) {
+	if id := m.study; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetStudy resets all changes to the "study" edge.
+func (m *DailyGaolMutation) ResetStudy() {
+	m.study = nil
+	m.clearedstudy = false
+}
+
+// SetWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by id.
+func (m *DailyGaolMutation) SetWgoalID(id int) {
+	m.wgoal = &id
+}
+
+// ClearWgoal clears the "wgoal" edge to the Weekly_Gaol entity.
+func (m *DailyGaolMutation) ClearWgoal() {
+	m.clearedwgoal = true
+}
+
+// WgoalCleared reports if the "wgoal" edge to the Weekly_Gaol entity was cleared.
+func (m *DailyGaolMutation) WgoalCleared() bool {
+	return m.clearedwgoal
+}
+
+// WgoalID returns the "wgoal" edge ID in the mutation.
+func (m *DailyGaolMutation) WgoalID() (id int, exists bool) {
+	if m.wgoal != nil {
+		return *m.wgoal, true
+	}
+	return
+}
+
+// WgoalIDs returns the "wgoal" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// WgoalID instead. It exists only for internal usage by the builders.
+func (m *DailyGaolMutation) WgoalIDs() (ids []int) {
+	if id := m.wgoal; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetWgoal resets all changes to the "wgoal" edge.
+func (m *DailyGaolMutation) ResetWgoal() {
+	m.wgoal = nil
+	m.clearedwgoal = false
+}
+
+// Where appends a list predicates to the DailyGaolMutation builder.
+func (m *DailyGaolMutation) Where(ps ...predicate.Daily_Gaol) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *DailyGaolMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Daily_Gaol).
+func (m *DailyGaolMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *DailyGaolMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.created_at != nil {
+		fields = append(fields, daily_gaol.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, daily_gaol.FieldUpdatedAt)
+	}
+	if m.todo != nil {
+		fields = append(fields, daily_gaol.FieldTodo)
+	}
+	if m._done != nil {
+		fields = append(fields, daily_gaol.FieldDone)
+	}
+	if m.is_removed != nil {
+		fields = append(fields, daily_gaol.FieldIsRemoved)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *DailyGaolMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case daily_gaol.FieldCreatedAt:
+		return m.CreatedAt()
+	case daily_gaol.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case daily_gaol.FieldTodo:
+		return m.Todo()
+	case daily_gaol.FieldDone:
+		return m.Done()
+	case daily_gaol.FieldIsRemoved:
+		return m.IsRemoved()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *DailyGaolMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case daily_gaol.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case daily_gaol.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case daily_gaol.FieldTodo:
+		return m.OldTodo(ctx)
+	case daily_gaol.FieldDone:
+		return m.OldDone(ctx)
+	case daily_gaol.FieldIsRemoved:
+		return m.OldIsRemoved(ctx)
+	}
+	return nil, fmt.Errorf("unknown Daily_Gaol field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *DailyGaolMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case daily_gaol.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case daily_gaol.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case daily_gaol.FieldTodo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTodo(v)
+		return nil
+	case daily_gaol.FieldDone:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDone(v)
+		return nil
+	case daily_gaol.FieldIsRemoved:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsRemoved(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Daily_Gaol field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *DailyGaolMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *DailyGaolMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *DailyGaolMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Daily_Gaol numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *DailyGaolMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *DailyGaolMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *DailyGaolMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Daily_Gaol nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *DailyGaolMutation) ResetField(name string) error {
+	switch name {
+	case daily_gaol.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case daily_gaol.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case daily_gaol.FieldTodo:
+		m.ResetTodo()
+		return nil
+	case daily_gaol.FieldDone:
+		m.ResetDone()
+		return nil
+	case daily_gaol.FieldIsRemoved:
+		m.ResetIsRemoved()
+		return nil
+	}
+	return fmt.Errorf("unknown Daily_Gaol field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *DailyGaolMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.study != nil {
+		edges = append(edges, daily_gaol.EdgeStudy)
+	}
+	if m.wgoal != nil {
+		edges = append(edges, daily_gaol.EdgeWgoal)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *DailyGaolMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case daily_gaol.EdgeStudy:
+		if id := m.study; id != nil {
+			return []ent.Value{*id}
+		}
+	case daily_gaol.EdgeWgoal:
+		if id := m.wgoal; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *DailyGaolMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *DailyGaolMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *DailyGaolMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.clearedstudy {
+		edges = append(edges, daily_gaol.EdgeStudy)
+	}
+	if m.clearedwgoal {
+		edges = append(edges, daily_gaol.EdgeWgoal)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *DailyGaolMutation) EdgeCleared(name string) bool {
+	switch name {
+	case daily_gaol.EdgeStudy:
+		return m.clearedstudy
+	case daily_gaol.EdgeWgoal:
+		return m.clearedwgoal
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *DailyGaolMutation) ClearEdge(name string) error {
+	switch name {
+	case daily_gaol.EdgeStudy:
+		m.ClearStudy()
+		return nil
+	case daily_gaol.EdgeWgoal:
+		m.ClearWgoal()
+		return nil
+	}
+	return fmt.Errorf("unknown Daily_Gaol unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *DailyGaolMutation) ResetEdge(name string) error {
+	switch name {
+	case daily_gaol.EdgeStudy:
+		m.ResetStudy()
+		return nil
+	case daily_gaol.EdgeWgoal:
+		m.ResetWgoal()
+		return nil
+	}
+	return fmt.Errorf("unknown Daily_Gaol edge %s", name)
+}
+
+// StudyMutation represents an operation that mutates the Study nodes in the graph.
+type StudyMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *int
+	started_at     *time.Time
+	ended_at       *time.Time
+	content        *string
+	clearedFields  map[string]struct{}
+	planner        *int
+	clearedplanner bool
+	dgoals         map[int]struct{}
+	removeddgoals  map[int]struct{}
+	cleareddgoals  bool
+	wgoals         map[int]struct{}
+	removedwgoals  map[int]struct{}
+	clearedwgoals  bool
+	done           bool
+	oldValue       func(context.Context) (*Study, error)
+	predicates     []predicate.Study
+}
+
+var _ ent.Mutation = (*StudyMutation)(nil)
+
+// studyOption allows management of the mutation configuration using functional options.
+type studyOption func(*StudyMutation)
+
+// newStudyMutation creates new mutation for the Study entity.
+func newStudyMutation(c config, op Op, opts ...studyOption) *StudyMutation {
+	m := &StudyMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeStudy,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withStudyID sets the ID field of the mutation.
+func withStudyID(id int) studyOption {
+	return func(m *StudyMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Study
+		)
+		m.oldValue = func(ctx context.Context) (*Study, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Study.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withStudy sets the old Study of the mutation.
+func withStudy(node *Study) studyOption {
+	return func(m *StudyMutation) {
+		m.oldValue = func(context.Context) (*Study, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m StudyMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m StudyMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *StudyMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetStartedAt sets the "started_at" field.
+func (m *StudyMutation) SetStartedAt(t time.Time) {
+	m.started_at = &t
+}
+
+// StartedAt returns the value of the "started_at" field in the mutation.
+func (m *StudyMutation) StartedAt() (r time.Time, exists bool) {
+	v := m.started_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartedAt returns the old "started_at" field's value of the Study entity.
+// If the Study object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StudyMutation) OldStartedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldStartedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldStartedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartedAt: %w", err)
+	}
+	return oldValue.StartedAt, nil
+}
+
+// ResetStartedAt resets all changes to the "started_at" field.
+func (m *StudyMutation) ResetStartedAt() {
+	m.started_at = nil
+}
+
+// SetEndedAt sets the "ended_at" field.
+func (m *StudyMutation) SetEndedAt(t time.Time) {
+	m.ended_at = &t
+}
+
+// EndedAt returns the value of the "ended_at" field in the mutation.
+func (m *StudyMutation) EndedAt() (r time.Time, exists bool) {
+	v := m.ended_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEndedAt returns the old "ended_at" field's value of the Study entity.
+// If the Study object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StudyMutation) OldEndedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEndedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEndedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEndedAt: %w", err)
+	}
+	return oldValue.EndedAt, nil
+}
+
+// ClearEndedAt clears the value of the "ended_at" field.
+func (m *StudyMutation) ClearEndedAt() {
+	m.ended_at = nil
+	m.clearedFields[study.FieldEndedAt] = struct{}{}
+}
+
+// EndedAtCleared returns if the "ended_at" field was cleared in this mutation.
+func (m *StudyMutation) EndedAtCleared() bool {
+	_, ok := m.clearedFields[study.FieldEndedAt]
+	return ok
+}
+
+// ResetEndedAt resets all changes to the "ended_at" field.
+func (m *StudyMutation) ResetEndedAt() {
+	m.ended_at = nil
+	delete(m.clearedFields, study.FieldEndedAt)
+}
+
+// SetContent sets the "content" field.
+func (m *StudyMutation) SetContent(s string) {
+	m.content = &s
+}
+
+// Content returns the value of the "content" field in the mutation.
+func (m *StudyMutation) Content() (r string, exists bool) {
+	v := m.content
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContent returns the old "content" field's value of the Study entity.
+// If the Study object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StudyMutation) OldContent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldContent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldContent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContent: %w", err)
+	}
+	return oldValue.Content, nil
+}
+
+// ResetContent resets all changes to the "content" field.
+func (m *StudyMutation) ResetContent() {
+	m.content = nil
+}
+
+// SetPlannerID sets the "planner" edge to the User entity by id.
+func (m *StudyMutation) SetPlannerID(id int) {
+	m.planner = &id
+}
+
+// ClearPlanner clears the "planner" edge to the User entity.
+func (m *StudyMutation) ClearPlanner() {
+	m.clearedplanner = true
+}
+
+// PlannerCleared reports if the "planner" edge to the User entity was cleared.
+func (m *StudyMutation) PlannerCleared() bool {
+	return m.clearedplanner
+}
+
+// PlannerID returns the "planner" edge ID in the mutation.
+func (m *StudyMutation) PlannerID() (id int, exists bool) {
+	if m.planner != nil {
+		return *m.planner, true
+	}
+	return
+}
+
+// PlannerIDs returns the "planner" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// PlannerID instead. It exists only for internal usage by the builders.
+func (m *StudyMutation) PlannerIDs() (ids []int) {
+	if id := m.planner; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPlanner resets all changes to the "planner" edge.
+func (m *StudyMutation) ResetPlanner() {
+	m.planner = nil
+	m.clearedplanner = false
+}
+
+// AddDgoalIDs adds the "dgoals" edge to the Daily_Gaol entity by ids.
+func (m *StudyMutation) AddDgoalIDs(ids ...int) {
+	if m.dgoals == nil {
+		m.dgoals = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.dgoals[ids[i]] = struct{}{}
+	}
+}
+
+// ClearDgoals clears the "dgoals" edge to the Daily_Gaol entity.
+func (m *StudyMutation) ClearDgoals() {
+	m.cleareddgoals = true
+}
+
+// DgoalsCleared reports if the "dgoals" edge to the Daily_Gaol entity was cleared.
+func (m *StudyMutation) DgoalsCleared() bool {
+	return m.cleareddgoals
+}
+
+// RemoveDgoalIDs removes the "dgoals" edge to the Daily_Gaol entity by IDs.
+func (m *StudyMutation) RemoveDgoalIDs(ids ...int) {
+	if m.removeddgoals == nil {
+		m.removeddgoals = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.dgoals, ids[i])
+		m.removeddgoals[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedDgoals returns the removed IDs of the "dgoals" edge to the Daily_Gaol entity.
+func (m *StudyMutation) RemovedDgoalsIDs() (ids []int) {
+	for id := range m.removeddgoals {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// DgoalsIDs returns the "dgoals" edge IDs in the mutation.
+func (m *StudyMutation) DgoalsIDs() (ids []int) {
+	for id := range m.dgoals {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetDgoals resets all changes to the "dgoals" edge.
+func (m *StudyMutation) ResetDgoals() {
+	m.dgoals = nil
+	m.cleareddgoals = false
+	m.removeddgoals = nil
+}
+
+// AddWgoalIDs adds the "wgoals" edge to the Weekly_Gaol entity by ids.
+func (m *StudyMutation) AddWgoalIDs(ids ...int) {
+	if m.wgoals == nil {
+		m.wgoals = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.wgoals[ids[i]] = struct{}{}
+	}
+}
+
+// ClearWgoals clears the "wgoals" edge to the Weekly_Gaol entity.
+func (m *StudyMutation) ClearWgoals() {
+	m.clearedwgoals = true
+}
+
+// WgoalsCleared reports if the "wgoals" edge to the Weekly_Gaol entity was cleared.
+func (m *StudyMutation) WgoalsCleared() bool {
+	return m.clearedwgoals
+}
+
+// RemoveWgoalIDs removes the "wgoals" edge to the Weekly_Gaol entity by IDs.
+func (m *StudyMutation) RemoveWgoalIDs(ids ...int) {
+	if m.removedwgoals == nil {
+		m.removedwgoals = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.wgoals, ids[i])
+		m.removedwgoals[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedWgoals returns the removed IDs of the "wgoals" edge to the Weekly_Gaol entity.
+func (m *StudyMutation) RemovedWgoalsIDs() (ids []int) {
+	for id := range m.removedwgoals {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// WgoalsIDs returns the "wgoals" edge IDs in the mutation.
+func (m *StudyMutation) WgoalsIDs() (ids []int) {
+	for id := range m.wgoals {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetWgoals resets all changes to the "wgoals" edge.
+func (m *StudyMutation) ResetWgoals() {
+	m.wgoals = nil
+	m.clearedwgoals = false
+	m.removedwgoals = nil
+}
+
+// Where appends a list predicates to the StudyMutation builder.
+func (m *StudyMutation) Where(ps ...predicate.Study) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *StudyMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Study).
+func (m *StudyMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *StudyMutation) Fields() []string {
+	fields := make([]string, 0, 3)
+	if m.started_at != nil {
+		fields = append(fields, study.FieldStartedAt)
+	}
+	if m.ended_at != nil {
+		fields = append(fields, study.FieldEndedAt)
+	}
+	if m.content != nil {
+		fields = append(fields, study.FieldContent)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *StudyMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case study.FieldStartedAt:
+		return m.StartedAt()
+	case study.FieldEndedAt:
+		return m.EndedAt()
+	case study.FieldContent:
+		return m.Content()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *StudyMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case study.FieldStartedAt:
+		return m.OldStartedAt(ctx)
+	case study.FieldEndedAt:
+		return m.OldEndedAt(ctx)
+	case study.FieldContent:
+		return m.OldContent(ctx)
+	}
+	return nil, fmt.Errorf("unknown Study field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *StudyMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case study.FieldStartedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartedAt(v)
+		return nil
+	case study.FieldEndedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEndedAt(v)
+		return nil
+	case study.FieldContent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContent(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Study field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *StudyMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *StudyMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *StudyMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Study numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *StudyMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(study.FieldEndedAt) {
+		fields = append(fields, study.FieldEndedAt)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *StudyMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *StudyMutation) ClearField(name string) error {
+	switch name {
+	case study.FieldEndedAt:
+		m.ClearEndedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown Study nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *StudyMutation) ResetField(name string) error {
+	switch name {
+	case study.FieldStartedAt:
+		m.ResetStartedAt()
+		return nil
+	case study.FieldEndedAt:
+		m.ResetEndedAt()
+		return nil
+	case study.FieldContent:
+		m.ResetContent()
+		return nil
+	}
+	return fmt.Errorf("unknown Study field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *StudyMutation) AddedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.planner != nil {
+		edges = append(edges, study.EdgePlanner)
+	}
+	if m.dgoals != nil {
+		edges = append(edges, study.EdgeDgoals)
+	}
+	if m.wgoals != nil {
+		edges = append(edges, study.EdgeWgoals)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *StudyMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case study.EdgePlanner:
+		if id := m.planner; id != nil {
+			return []ent.Value{*id}
+		}
+	case study.EdgeDgoals:
+		ids := make([]ent.Value, 0, len(m.dgoals))
+		for id := range m.dgoals {
+			ids = append(ids, id)
+		}
+		return ids
+	case study.EdgeWgoals:
+		ids := make([]ent.Value, 0, len(m.wgoals))
+		for id := range m.wgoals {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *StudyMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.removeddgoals != nil {
+		edges = append(edges, study.EdgeDgoals)
+	}
+	if m.removedwgoals != nil {
+		edges = append(edges, study.EdgeWgoals)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *StudyMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case study.EdgeDgoals:
+		ids := make([]ent.Value, 0, len(m.removeddgoals))
+		for id := range m.removeddgoals {
+			ids = append(ids, id)
+		}
+		return ids
+	case study.EdgeWgoals:
+		ids := make([]ent.Value, 0, len(m.removedwgoals))
+		for id := range m.removedwgoals {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *StudyMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.clearedplanner {
+		edges = append(edges, study.EdgePlanner)
+	}
+	if m.cleareddgoals {
+		edges = append(edges, study.EdgeDgoals)
+	}
+	if m.clearedwgoals {
+		edges = append(edges, study.EdgeWgoals)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *StudyMutation) EdgeCleared(name string) bool {
+	switch name {
+	case study.EdgePlanner:
+		return m.clearedplanner
+	case study.EdgeDgoals:
+		return m.cleareddgoals
+	case study.EdgeWgoals:
+		return m.clearedwgoals
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *StudyMutation) ClearEdge(name string) error {
+	switch name {
+	case study.EdgePlanner:
+		m.ClearPlanner()
+		return nil
+	}
+	return fmt.Errorf("unknown Study unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *StudyMutation) ResetEdge(name string) error {
+	switch name {
+	case study.EdgePlanner:
+		m.ResetPlanner()
+		return nil
+	case study.EdgeDgoals:
+		m.ResetDgoals()
+		return nil
+	case study.EdgeWgoals:
+		m.ResetWgoals()
+		return nil
+	}
+	return fmt.Errorf("unknown Study edge %s", name)
+}
 
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
@@ -43,6 +1342,9 @@ type UserMutation struct {
 	user_role      *user.UserRole
 	password_hash  *string
 	clearedFields  map[string]struct{}
+	studies        map[int]struct{}
+	removedstudies map[int]struct{}
+	clearedstudies bool
 	done           bool
 	oldValue       func(context.Context) (*User, error)
 	predicates     []predicate.User
@@ -435,6 +1737,60 @@ func (m *UserMutation) ResetPasswordHash() {
 	m.password_hash = nil
 }
 
+// AddStudyIDs adds the "studies" edge to the Study entity by ids.
+func (m *UserMutation) AddStudyIDs(ids ...int) {
+	if m.studies == nil {
+		m.studies = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.studies[ids[i]] = struct{}{}
+	}
+}
+
+// ClearStudies clears the "studies" edge to the Study entity.
+func (m *UserMutation) ClearStudies() {
+	m.clearedstudies = true
+}
+
+// StudiesCleared reports if the "studies" edge to the Study entity was cleared.
+func (m *UserMutation) StudiesCleared() bool {
+	return m.clearedstudies
+}
+
+// RemoveStudyIDs removes the "studies" edge to the Study entity by IDs.
+func (m *UserMutation) RemoveStudyIDs(ids ...int) {
+	if m.removedstudies == nil {
+		m.removedstudies = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.studies, ids[i])
+		m.removedstudies[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedStudies returns the removed IDs of the "studies" edge to the Study entity.
+func (m *UserMutation) RemovedStudiesIDs() (ids []int) {
+	for id := range m.removedstudies {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// StudiesIDs returns the "studies" edge IDs in the mutation.
+func (m *UserMutation) StudiesIDs() (ids []int) {
+	for id := range m.studies {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetStudies resets all changes to the "studies" edge.
+func (m *UserMutation) ResetStudies() {
+	m.studies = nil
+	m.clearedstudies = false
+	m.removedstudies = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -687,48 +2043,705 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.studies != nil {
+		edges = append(edges, user.EdgeStudies)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeStudies:
+		ids := make([]ent.Value, 0, len(m.studies))
+		for id := range m.studies {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedstudies != nil {
+		edges = append(edges, user.EdgeStudies)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *UserMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeStudies:
+		ids := make([]ent.Value, 0, len(m.removedstudies))
+		for id := range m.removedstudies {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedstudies {
+		edges = append(edges, user.EdgeStudies)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *UserMutation) EdgeCleared(name string) bool {
+	switch name {
+	case user.EdgeStudies:
+		return m.clearedstudies
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *UserMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown User unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *UserMutation) ResetEdge(name string) error {
+	switch name {
+	case user.EdgeStudies:
+		m.ResetStudies()
+		return nil
+	}
 	return fmt.Errorf("unknown User edge %s", name)
+}
+
+// WeeklyGaolMutation represents an operation that mutates the Weekly_Gaol nodes in the graph.
+type WeeklyGaolMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	goal          *string
+	score         *int
+	addscore      *int
+	nth           *int
+	addnth        *int
+	clearedFields map[string]struct{}
+	dgaols        map[int]struct{}
+	removeddgaols map[int]struct{}
+	cleareddgaols bool
+	study         *int
+	clearedstudy  bool
+	done          bool
+	oldValue      func(context.Context) (*Weekly_Gaol, error)
+	predicates    []predicate.Weekly_Gaol
+}
+
+var _ ent.Mutation = (*WeeklyGaolMutation)(nil)
+
+// weeklyGaolOption allows management of the mutation configuration using functional options.
+type weeklyGaolOption func(*WeeklyGaolMutation)
+
+// newWeeklyGaolMutation creates new mutation for the Weekly_Gaol entity.
+func newWeeklyGaolMutation(c config, op Op, opts ...weeklyGaolOption) *WeeklyGaolMutation {
+	m := &WeeklyGaolMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeWeekly_Gaol,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withWeekly_GaolID sets the ID field of the mutation.
+func withWeekly_GaolID(id int) weeklyGaolOption {
+	return func(m *WeeklyGaolMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Weekly_Gaol
+		)
+		m.oldValue = func(ctx context.Context) (*Weekly_Gaol, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Weekly_Gaol.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withWeekly_Gaol sets the old Weekly_Gaol of the mutation.
+func withWeekly_Gaol(node *Weekly_Gaol) weeklyGaolOption {
+	return func(m *WeeklyGaolMutation) {
+		m.oldValue = func(context.Context) (*Weekly_Gaol, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m WeeklyGaolMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m WeeklyGaolMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *WeeklyGaolMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetGoal sets the "goal" field.
+func (m *WeeklyGaolMutation) SetGoal(s string) {
+	m.goal = &s
+}
+
+// Goal returns the value of the "goal" field in the mutation.
+func (m *WeeklyGaolMutation) Goal() (r string, exists bool) {
+	v := m.goal
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGoal returns the old "goal" field's value of the Weekly_Gaol entity.
+// If the Weekly_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *WeeklyGaolMutation) OldGoal(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGoal is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGoal requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGoal: %w", err)
+	}
+	return oldValue.Goal, nil
+}
+
+// ResetGoal resets all changes to the "goal" field.
+func (m *WeeklyGaolMutation) ResetGoal() {
+	m.goal = nil
+}
+
+// SetScore sets the "score" field.
+func (m *WeeklyGaolMutation) SetScore(i int) {
+	m.score = &i
+	m.addscore = nil
+}
+
+// Score returns the value of the "score" field in the mutation.
+func (m *WeeklyGaolMutation) Score() (r int, exists bool) {
+	v := m.score
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScore returns the old "score" field's value of the Weekly_Gaol entity.
+// If the Weekly_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *WeeklyGaolMutation) OldScore(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldScore is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldScore requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScore: %w", err)
+	}
+	return oldValue.Score, nil
+}
+
+// AddScore adds i to the "score" field.
+func (m *WeeklyGaolMutation) AddScore(i int) {
+	if m.addscore != nil {
+		*m.addscore += i
+	} else {
+		m.addscore = &i
+	}
+}
+
+// AddedScore returns the value that was added to the "score" field in this mutation.
+func (m *WeeklyGaolMutation) AddedScore() (r int, exists bool) {
+	v := m.addscore
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetScore resets all changes to the "score" field.
+func (m *WeeklyGaolMutation) ResetScore() {
+	m.score = nil
+	m.addscore = nil
+}
+
+// SetNth sets the "nth" field.
+func (m *WeeklyGaolMutation) SetNth(i int) {
+	m.nth = &i
+	m.addnth = nil
+}
+
+// Nth returns the value of the "nth" field in the mutation.
+func (m *WeeklyGaolMutation) Nth() (r int, exists bool) {
+	v := m.nth
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNth returns the old "nth" field's value of the Weekly_Gaol entity.
+// If the Weekly_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *WeeklyGaolMutation) OldNth(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldNth is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldNth requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNth: %w", err)
+	}
+	return oldValue.Nth, nil
+}
+
+// AddNth adds i to the "nth" field.
+func (m *WeeklyGaolMutation) AddNth(i int) {
+	if m.addnth != nil {
+		*m.addnth += i
+	} else {
+		m.addnth = &i
+	}
+}
+
+// AddedNth returns the value that was added to the "nth" field in this mutation.
+func (m *WeeklyGaolMutation) AddedNth() (r int, exists bool) {
+	v := m.addnth
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetNth resets all changes to the "nth" field.
+func (m *WeeklyGaolMutation) ResetNth() {
+	m.nth = nil
+	m.addnth = nil
+}
+
+// AddDgaolIDs adds the "dgaols" edge to the Daily_Gaol entity by ids.
+func (m *WeeklyGaolMutation) AddDgaolIDs(ids ...int) {
+	if m.dgaols == nil {
+		m.dgaols = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.dgaols[ids[i]] = struct{}{}
+	}
+}
+
+// ClearDgaols clears the "dgaols" edge to the Daily_Gaol entity.
+func (m *WeeklyGaolMutation) ClearDgaols() {
+	m.cleareddgaols = true
+}
+
+// DgaolsCleared reports if the "dgaols" edge to the Daily_Gaol entity was cleared.
+func (m *WeeklyGaolMutation) DgaolsCleared() bool {
+	return m.cleareddgaols
+}
+
+// RemoveDgaolIDs removes the "dgaols" edge to the Daily_Gaol entity by IDs.
+func (m *WeeklyGaolMutation) RemoveDgaolIDs(ids ...int) {
+	if m.removeddgaols == nil {
+		m.removeddgaols = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.dgaols, ids[i])
+		m.removeddgaols[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedDgaols returns the removed IDs of the "dgaols" edge to the Daily_Gaol entity.
+func (m *WeeklyGaolMutation) RemovedDgaolsIDs() (ids []int) {
+	for id := range m.removeddgaols {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// DgaolsIDs returns the "dgaols" edge IDs in the mutation.
+func (m *WeeklyGaolMutation) DgaolsIDs() (ids []int) {
+	for id := range m.dgaols {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetDgaols resets all changes to the "dgaols" edge.
+func (m *WeeklyGaolMutation) ResetDgaols() {
+	m.dgaols = nil
+	m.cleareddgaols = false
+	m.removeddgaols = nil
+}
+
+// SetStudyID sets the "study" edge to the Study entity by id.
+func (m *WeeklyGaolMutation) SetStudyID(id int) {
+	m.study = &id
+}
+
+// ClearStudy clears the "study" edge to the Study entity.
+func (m *WeeklyGaolMutation) ClearStudy() {
+	m.clearedstudy = true
+}
+
+// StudyCleared reports if the "study" edge to the Study entity was cleared.
+func (m *WeeklyGaolMutation) StudyCleared() bool {
+	return m.clearedstudy
+}
+
+// StudyID returns the "study" edge ID in the mutation.
+func (m *WeeklyGaolMutation) StudyID() (id int, exists bool) {
+	if m.study != nil {
+		return *m.study, true
+	}
+	return
+}
+
+// StudyIDs returns the "study" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// StudyID instead. It exists only for internal usage by the builders.
+func (m *WeeklyGaolMutation) StudyIDs() (ids []int) {
+	if id := m.study; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetStudy resets all changes to the "study" edge.
+func (m *WeeklyGaolMutation) ResetStudy() {
+	m.study = nil
+	m.clearedstudy = false
+}
+
+// Where appends a list predicates to the WeeklyGaolMutation builder.
+func (m *WeeklyGaolMutation) Where(ps ...predicate.Weekly_Gaol) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *WeeklyGaolMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Weekly_Gaol).
+func (m *WeeklyGaolMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *WeeklyGaolMutation) Fields() []string {
+	fields := make([]string, 0, 3)
+	if m.goal != nil {
+		fields = append(fields, weekly_gaol.FieldGoal)
+	}
+	if m.score != nil {
+		fields = append(fields, weekly_gaol.FieldScore)
+	}
+	if m.nth != nil {
+		fields = append(fields, weekly_gaol.FieldNth)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *WeeklyGaolMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case weekly_gaol.FieldGoal:
+		return m.Goal()
+	case weekly_gaol.FieldScore:
+		return m.Score()
+	case weekly_gaol.FieldNth:
+		return m.Nth()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *WeeklyGaolMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case weekly_gaol.FieldGoal:
+		return m.OldGoal(ctx)
+	case weekly_gaol.FieldScore:
+		return m.OldScore(ctx)
+	case weekly_gaol.FieldNth:
+		return m.OldNth(ctx)
+	}
+	return nil, fmt.Errorf("unknown Weekly_Gaol field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *WeeklyGaolMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case weekly_gaol.FieldGoal:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGoal(v)
+		return nil
+	case weekly_gaol.FieldScore:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScore(v)
+		return nil
+	case weekly_gaol.FieldNth:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNth(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Weekly_Gaol field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *WeeklyGaolMutation) AddedFields() []string {
+	var fields []string
+	if m.addscore != nil {
+		fields = append(fields, weekly_gaol.FieldScore)
+	}
+	if m.addnth != nil {
+		fields = append(fields, weekly_gaol.FieldNth)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *WeeklyGaolMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case weekly_gaol.FieldScore:
+		return m.AddedScore()
+	case weekly_gaol.FieldNth:
+		return m.AddedNth()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *WeeklyGaolMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case weekly_gaol.FieldScore:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddScore(v)
+		return nil
+	case weekly_gaol.FieldNth:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddNth(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Weekly_Gaol numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *WeeklyGaolMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *WeeklyGaolMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *WeeklyGaolMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Weekly_Gaol nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *WeeklyGaolMutation) ResetField(name string) error {
+	switch name {
+	case weekly_gaol.FieldGoal:
+		m.ResetGoal()
+		return nil
+	case weekly_gaol.FieldScore:
+		m.ResetScore()
+		return nil
+	case weekly_gaol.FieldNth:
+		m.ResetNth()
+		return nil
+	}
+	return fmt.Errorf("unknown Weekly_Gaol field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *WeeklyGaolMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.dgaols != nil {
+		edges = append(edges, weekly_gaol.EdgeDgaols)
+	}
+	if m.study != nil {
+		edges = append(edges, weekly_gaol.EdgeStudy)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *WeeklyGaolMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case weekly_gaol.EdgeDgaols:
+		ids := make([]ent.Value, 0, len(m.dgaols))
+		for id := range m.dgaols {
+			ids = append(ids, id)
+		}
+		return ids
+	case weekly_gaol.EdgeStudy:
+		if id := m.study; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *WeeklyGaolMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.removeddgaols != nil {
+		edges = append(edges, weekly_gaol.EdgeDgaols)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *WeeklyGaolMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case weekly_gaol.EdgeDgaols:
+		ids := make([]ent.Value, 0, len(m.removeddgaols))
+		for id := range m.removeddgaols {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *WeeklyGaolMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.cleareddgaols {
+		edges = append(edges, weekly_gaol.EdgeDgaols)
+	}
+	if m.clearedstudy {
+		edges = append(edges, weekly_gaol.EdgeStudy)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *WeeklyGaolMutation) EdgeCleared(name string) bool {
+	switch name {
+	case weekly_gaol.EdgeDgaols:
+		return m.cleareddgaols
+	case weekly_gaol.EdgeStudy:
+		return m.clearedstudy
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *WeeklyGaolMutation) ClearEdge(name string) error {
+	switch name {
+	case weekly_gaol.EdgeStudy:
+		m.ClearStudy()
+		return nil
+	}
+	return fmt.Errorf("unknown Weekly_Gaol unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *WeeklyGaolMutation) ResetEdge(name string) error {
+	switch name {
+	case weekly_gaol.EdgeDgaols:
+		m.ResetDgaols()
+		return nil
+	case weekly_gaol.EdgeStudy:
+		m.ResetStudy()
+		return nil
+	}
+	return fmt.Errorf("unknown Weekly_Gaol edge %s", name)
 }

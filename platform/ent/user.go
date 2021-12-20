@@ -33,6 +33,27 @@ type User struct {
 	UserRole user.UserRole `json:"user_role,omitempty"`
 	// PasswordHash holds the value of the "password_hash" field.
 	PasswordHash string `json:"-"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges UserEdges `json:"edges"`
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// Studies holds the value of the studies edge.
+	Studies []*Study `json:"studies,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// StudiesOrErr returns the Studies value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) StudiesOrErr() ([]*Study, error) {
+	if e.loadedTypes[0] {
+		return e.Studies, nil
+	}
+	return nil, &NotLoadedError{edge: "studies"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -120,6 +141,11 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryStudies queries the "studies" edge of the User entity.
+func (u *User) QueryStudies() *StudyQuery {
+	return (&UserClient{config: u.config}).QueryStudies(u)
 }
 
 // Update returns a builder for updating this User.

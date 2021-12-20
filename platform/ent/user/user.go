@@ -30,8 +30,17 @@ const (
 	FieldUserRole = "user_role"
 	// FieldPasswordHash holds the string denoting the password_hash field in the database.
 	FieldPasswordHash = "password_hash"
+	// EdgeStudies holds the string denoting the studies edge name in mutations.
+	EdgeStudies = "studies"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// StudiesTable is the table that holds the studies relation/edge.
+	StudiesTable = "studies"
+	// StudiesInverseTable is the table name for the Study entity.
+	// It exists in this package in order to avoid circular dependency with the "study" package.
+	StudiesInverseTable = "studies"
+	// StudiesColumn is the table column denoting the studies relation/edge.
+	StudiesColumn = "user_studies"
 )
 
 // Columns holds all SQL columns for user fields.

@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
 	"github.com/google/uuid"
 )
@@ -99,6 +100,21 @@ func (uc *UserCreate) SetNillableUserRole(ur *user.UserRole) *UserCreate {
 func (uc *UserCreate) SetPasswordHash(s string) *UserCreate {
 	uc.mutation.SetPasswordHash(s)
 	return uc
+}
+
+// AddStudyIDs adds the "studies" edge to the Study entity by IDs.
+func (uc *UserCreate) AddStudyIDs(ids ...int) *UserCreate {
+	uc.mutation.AddStudyIDs(ids...)
+	return uc
+}
+
+// AddStudies adds the "studies" edges to the Study entity.
+func (uc *UserCreate) AddStudies(s ...*Study) *UserCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uc.AddStudyIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -320,6 +336,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldPasswordHash,
 		})
 		_node.PasswordHash = value
+	}
+	if nodes := uc.mutation.StudiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

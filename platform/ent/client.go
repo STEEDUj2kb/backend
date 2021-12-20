@@ -9,10 +9,14 @@ import (
 
 	"github.com/STEEDUj2kb/platform/ent/migrate"
 
+	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
+	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -20,8 +24,14 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Daily_Gaol is the client for interacting with the Daily_Gaol builders.
+	Daily_Gaol *Daily_GaolClient
+	// Study is the client for interacting with the Study builders.
+	Study *StudyClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// Weekly_Gaol is the client for interacting with the Weekly_Gaol builders.
+	Weekly_Gaol *Weekly_GaolClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -35,7 +45,10 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Daily_Gaol = NewDaily_GaolClient(c.config)
+	c.Study = NewStudyClient(c.config)
 	c.User = NewUserClient(c.config)
+	c.Weekly_Gaol = NewWeekly_GaolClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -67,9 +80,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		User:   NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		Daily_Gaol:  NewDaily_GaolClient(cfg),
+		Study:       NewStudyClient(cfg),
+		User:        NewUserClient(cfg),
+		Weekly_Gaol: NewWeekly_GaolClient(cfg),
 	}, nil
 }
 
@@ -87,15 +103,18 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		config: cfg,
-		User:   NewUserClient(cfg),
+		config:      cfg,
+		Daily_Gaol:  NewDaily_GaolClient(cfg),
+		Study:       NewStudyClient(cfg),
+		User:        NewUserClient(cfg),
+		Weekly_Gaol: NewWeekly_GaolClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		User.
+//		Daily_Gaol.
 //		Query().
 //		Count(ctx)
 //
@@ -118,7 +137,270 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Daily_Gaol.Use(hooks...)
+	c.Study.Use(hooks...)
 	c.User.Use(hooks...)
+	c.Weekly_Gaol.Use(hooks...)
+}
+
+// Daily_GaolClient is a client for the Daily_Gaol schema.
+type Daily_GaolClient struct {
+	config
+}
+
+// NewDaily_GaolClient returns a client for the Daily_Gaol from the given config.
+func NewDaily_GaolClient(c config) *Daily_GaolClient {
+	return &Daily_GaolClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `daily_gaol.Hooks(f(g(h())))`.
+func (c *Daily_GaolClient) Use(hooks ...Hook) {
+	c.hooks.Daily_Gaol = append(c.hooks.Daily_Gaol, hooks...)
+}
+
+// Create returns a create builder for Daily_Gaol.
+func (c *Daily_GaolClient) Create() *DailyGaolCreate {
+	mutation := newDailyGaolMutation(c.config, OpCreate)
+	return &DailyGaolCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Daily_Gaol entities.
+func (c *Daily_GaolClient) CreateBulk(builders ...*DailyGaolCreate) *DailyGaolCreateBulk {
+	return &DailyGaolCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Daily_Gaol.
+func (c *Daily_GaolClient) Update() *DailyGaolUpdate {
+	mutation := newDailyGaolMutation(c.config, OpUpdate)
+	return &DailyGaolUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *Daily_GaolClient) UpdateOne(dg *Daily_Gaol) *DailyGaolUpdateOne {
+	mutation := newDailyGaolMutation(c.config, OpUpdateOne, withDaily_Gaol(dg))
+	return &DailyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *Daily_GaolClient) UpdateOneID(id int) *DailyGaolUpdateOne {
+	mutation := newDailyGaolMutation(c.config, OpUpdateOne, withDaily_GaolID(id))
+	return &DailyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Daily_Gaol.
+func (c *Daily_GaolClient) Delete() *DailyGaolDelete {
+	mutation := newDailyGaolMutation(c.config, OpDelete)
+	return &DailyGaolDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *Daily_GaolClient) DeleteOne(dg *Daily_Gaol) *DailyGaolDeleteOne {
+	return c.DeleteOneID(dg.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *Daily_GaolClient) DeleteOneID(id int) *DailyGaolDeleteOne {
+	builder := c.Delete().Where(daily_gaol.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DailyGaolDeleteOne{builder}
+}
+
+// Query returns a query builder for Daily_Gaol.
+func (c *Daily_GaolClient) Query() *DailyGaolQuery {
+	return &DailyGaolQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Daily_Gaol entity by its id.
+func (c *Daily_GaolClient) Get(ctx context.Context, id int) (*Daily_Gaol, error) {
+	return c.Query().Where(daily_gaol.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *Daily_GaolClient) GetX(ctx context.Context, id int) *Daily_Gaol {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryStudy queries the study edge of a Daily_Gaol.
+func (c *Daily_GaolClient) QueryStudy(dg *Daily_Gaol) *StudyQuery {
+	query := &StudyQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := dg.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(daily_gaol.Table, daily_gaol.FieldID, id),
+			sqlgraph.To(study.Table, study.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, daily_gaol.StudyTable, daily_gaol.StudyColumn),
+		)
+		fromV = sqlgraph.Neighbors(dg.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryWgoal queries the wgoal edge of a Daily_Gaol.
+func (c *Daily_GaolClient) QueryWgoal(dg *Daily_Gaol) *WeeklyGaolQuery {
+	query := &WeeklyGaolQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := dg.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(daily_gaol.Table, daily_gaol.FieldID, id),
+			sqlgraph.To(weekly_gaol.Table, weekly_gaol.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, daily_gaol.WgoalTable, daily_gaol.WgoalColumn),
+		)
+		fromV = sqlgraph.Neighbors(dg.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *Daily_GaolClient) Hooks() []Hook {
+	return c.hooks.Daily_Gaol
+}
+
+// StudyClient is a client for the Study schema.
+type StudyClient struct {
+	config
+}
+
+// NewStudyClient returns a client for the Study from the given config.
+func NewStudyClient(c config) *StudyClient {
+	return &StudyClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `study.Hooks(f(g(h())))`.
+func (c *StudyClient) Use(hooks ...Hook) {
+	c.hooks.Study = append(c.hooks.Study, hooks...)
+}
+
+// Create returns a create builder for Study.
+func (c *StudyClient) Create() *StudyCreate {
+	mutation := newStudyMutation(c.config, OpCreate)
+	return &StudyCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Study entities.
+func (c *StudyClient) CreateBulk(builders ...*StudyCreate) *StudyCreateBulk {
+	return &StudyCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Study.
+func (c *StudyClient) Update() *StudyUpdate {
+	mutation := newStudyMutation(c.config, OpUpdate)
+	return &StudyUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *StudyClient) UpdateOne(s *Study) *StudyUpdateOne {
+	mutation := newStudyMutation(c.config, OpUpdateOne, withStudy(s))
+	return &StudyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *StudyClient) UpdateOneID(id int) *StudyUpdateOne {
+	mutation := newStudyMutation(c.config, OpUpdateOne, withStudyID(id))
+	return &StudyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Study.
+func (c *StudyClient) Delete() *StudyDelete {
+	mutation := newStudyMutation(c.config, OpDelete)
+	return &StudyDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *StudyClient) DeleteOne(s *Study) *StudyDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *StudyClient) DeleteOneID(id int) *StudyDeleteOne {
+	builder := c.Delete().Where(study.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &StudyDeleteOne{builder}
+}
+
+// Query returns a query builder for Study.
+func (c *StudyClient) Query() *StudyQuery {
+	return &StudyQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Study entity by its id.
+func (c *StudyClient) Get(ctx context.Context, id int) (*Study, error) {
+	return c.Query().Where(study.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *StudyClient) GetX(ctx context.Context, id int) *Study {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryPlanner queries the planner edge of a Study.
+func (c *StudyClient) QueryPlanner(s *Study) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(study.Table, study.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, study.PlannerTable, study.PlannerColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDgoals queries the dgoals edge of a Study.
+func (c *StudyClient) QueryDgoals(s *Study) *DailyGaolQuery {
+	query := &DailyGaolQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(study.Table, study.FieldID, id),
+			sqlgraph.To(daily_gaol.Table, daily_gaol.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, study.DgoalsTable, study.DgoalsColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryWgoals queries the wgoals edge of a Study.
+func (c *StudyClient) QueryWgoals(s *Study) *WeeklyGaolQuery {
+	query := &WeeklyGaolQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(study.Table, study.FieldID, id),
+			sqlgraph.To(weekly_gaol.Table, weekly_gaol.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, study.WgoalsTable, study.WgoalsColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *StudyClient) Hooks() []Hook {
+	return c.hooks.Study
 }
 
 // UserClient is a client for the User schema.
@@ -206,7 +488,145 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 	return obj
 }
 
+// QueryStudies queries the studies edge of a User.
+func (c *UserClient) QueryStudies(u *User) *StudyQuery {
+	query := &StudyQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(study.Table, study.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.StudiesTable, user.StudiesColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
 	return c.hooks.User
+}
+
+// Weekly_GaolClient is a client for the Weekly_Gaol schema.
+type Weekly_GaolClient struct {
+	config
+}
+
+// NewWeekly_GaolClient returns a client for the Weekly_Gaol from the given config.
+func NewWeekly_GaolClient(c config) *Weekly_GaolClient {
+	return &Weekly_GaolClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `weekly_gaol.Hooks(f(g(h())))`.
+func (c *Weekly_GaolClient) Use(hooks ...Hook) {
+	c.hooks.Weekly_Gaol = append(c.hooks.Weekly_Gaol, hooks...)
+}
+
+// Create returns a create builder for Weekly_Gaol.
+func (c *Weekly_GaolClient) Create() *WeeklyGaolCreate {
+	mutation := newWeeklyGaolMutation(c.config, OpCreate)
+	return &WeeklyGaolCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Weekly_Gaol entities.
+func (c *Weekly_GaolClient) CreateBulk(builders ...*WeeklyGaolCreate) *WeeklyGaolCreateBulk {
+	return &WeeklyGaolCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Weekly_Gaol.
+func (c *Weekly_GaolClient) Update() *WeeklyGaolUpdate {
+	mutation := newWeeklyGaolMutation(c.config, OpUpdate)
+	return &WeeklyGaolUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *Weekly_GaolClient) UpdateOne(wg *Weekly_Gaol) *WeeklyGaolUpdateOne {
+	mutation := newWeeklyGaolMutation(c.config, OpUpdateOne, withWeekly_Gaol(wg))
+	return &WeeklyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *Weekly_GaolClient) UpdateOneID(id int) *WeeklyGaolUpdateOne {
+	mutation := newWeeklyGaolMutation(c.config, OpUpdateOne, withWeekly_GaolID(id))
+	return &WeeklyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Weekly_Gaol.
+func (c *Weekly_GaolClient) Delete() *WeeklyGaolDelete {
+	mutation := newWeeklyGaolMutation(c.config, OpDelete)
+	return &WeeklyGaolDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *Weekly_GaolClient) DeleteOne(wg *Weekly_Gaol) *WeeklyGaolDeleteOne {
+	return c.DeleteOneID(wg.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *Weekly_GaolClient) DeleteOneID(id int) *WeeklyGaolDeleteOne {
+	builder := c.Delete().Where(weekly_gaol.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WeeklyGaolDeleteOne{builder}
+}
+
+// Query returns a query builder for Weekly_Gaol.
+func (c *Weekly_GaolClient) Query() *WeeklyGaolQuery {
+	return &WeeklyGaolQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Weekly_Gaol entity by its id.
+func (c *Weekly_GaolClient) Get(ctx context.Context, id int) (*Weekly_Gaol, error) {
+	return c.Query().Where(weekly_gaol.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *Weekly_GaolClient) GetX(ctx context.Context, id int) *Weekly_Gaol {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryDgaols queries the dgaols edge of a Weekly_Gaol.
+func (c *Weekly_GaolClient) QueryDgaols(wg *Weekly_Gaol) *DailyGaolQuery {
+	query := &DailyGaolQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := wg.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(weekly_gaol.Table, weekly_gaol.FieldID, id),
+			sqlgraph.To(daily_gaol.Table, daily_gaol.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, weekly_gaol.DgaolsTable, weekly_gaol.DgaolsColumn),
+		)
+		fromV = sqlgraph.Neighbors(wg.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryStudy queries the study edge of a Weekly_Gaol.
+func (c *Weekly_GaolClient) QueryStudy(wg *Weekly_Gaol) *StudyQuery {
+	query := &StudyQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := wg.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(weekly_gaol.Table, weekly_gaol.FieldID, id),
+			sqlgraph.To(study.Table, study.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, weekly_gaol.StudyTable, weekly_gaol.StudyColumn),
+		)
+		fromV = sqlgraph.Neighbors(wg.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *Weekly_GaolClient) Hooks() []Hook {
+	return c.hooks.Weekly_Gaol
 }

@@ -9,6 +9,32 @@ import (
 	"github.com/STEEDUj2kb/platform/ent"
 )
 
+// The Daily_GaolFunc type is an adapter to allow the use of ordinary
+// function as Daily_Gaol mutator.
+type Daily_GaolFunc func(context.Context, *ent.DailyGaolMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f Daily_GaolFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DailyGaolMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DailyGaolMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The StudyFunc type is an adapter to allow the use of ordinary
+// function as Study mutator.
+type StudyFunc func(context.Context, *ent.StudyMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f StudyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.StudyMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StudyMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
@@ -18,6 +44,19 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	mv, ok := m.(*ent.UserMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The Weekly_GaolFunc type is an adapter to allow the use of ordinary
+// function as Weekly_Gaol mutator.
+type Weekly_GaolFunc func(context.Context, *ent.WeeklyGaolMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f Weekly_GaolFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.WeeklyGaolMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WeeklyGaolMutation", m)
 	}
 	return f(ctx, mv)
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/google/uuid"
 )
@@ -824,6 +825,34 @@ func PasswordHashEqualFold(v string) predicate.User {
 func PasswordHashContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldPasswordHash), v))
+	})
+}
+
+// HasStudies applies the HasEdge predicate on the "studies" edge.
+func HasStudies() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(StudiesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, StudiesTable, StudiesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasStudiesWith applies the HasEdge predicate on the "studies" edge with a given conditions (other predicates).
+func HasStudiesWith(preds ...predicate.Study) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(StudiesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, StudiesTable, StudiesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

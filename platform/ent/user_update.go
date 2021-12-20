@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
+	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
 	"github.com/google/uuid"
 )
@@ -93,9 +94,45 @@ func (uu *UserUpdate) SetPasswordHash(s string) *UserUpdate {
 	return uu
 }
 
+// AddStudyIDs adds the "studies" edge to the Study entity by IDs.
+func (uu *UserUpdate) AddStudyIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddStudyIDs(ids...)
+	return uu
+}
+
+// AddStudies adds the "studies" edges to the Study entity.
+func (uu *UserUpdate) AddStudies(s ...*Study) *UserUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uu.AddStudyIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
+}
+
+// ClearStudies clears all "studies" edges to the Study entity.
+func (uu *UserUpdate) ClearStudies() *UserUpdate {
+	uu.mutation.ClearStudies()
+	return uu
+}
+
+// RemoveStudyIDs removes the "studies" edge to Study entities by IDs.
+func (uu *UserUpdate) RemoveStudyIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveStudyIDs(ids...)
+	return uu
+}
+
+// RemoveStudies removes "studies" edges to Study entities.
+func (uu *UserUpdate) RemoveStudies(s ...*Study) *UserUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uu.RemoveStudyIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -256,6 +293,60 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldPasswordHash,
 		})
 	}
+	if uu.mutation.StudiesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedStudiesIDs(); len(nodes) > 0 && !uu.mutation.StudiesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.StudiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -340,9 +431,45 @@ func (uuo *UserUpdateOne) SetPasswordHash(s string) *UserUpdateOne {
 	return uuo
 }
 
+// AddStudyIDs adds the "studies" edge to the Study entity by IDs.
+func (uuo *UserUpdateOne) AddStudyIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddStudyIDs(ids...)
+	return uuo
+}
+
+// AddStudies adds the "studies" edges to the Study entity.
+func (uuo *UserUpdateOne) AddStudies(s ...*Study) *UserUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uuo.AddStudyIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
+}
+
+// ClearStudies clears all "studies" edges to the Study entity.
+func (uuo *UserUpdateOne) ClearStudies() *UserUpdateOne {
+	uuo.mutation.ClearStudies()
+	return uuo
+}
+
+// RemoveStudyIDs removes the "studies" edge to Study entities by IDs.
+func (uuo *UserUpdateOne) RemoveStudyIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveStudyIDs(ids...)
+	return uuo
+}
+
+// RemoveStudies removes "studies" edges to Study entities.
+func (uuo *UserUpdateOne) RemoveStudies(s ...*Study) *UserUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return uuo.RemoveStudyIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -526,6 +653,60 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Value:  value,
 			Column: user.FieldPasswordHash,
 		})
+	}
+	if uuo.mutation.StudiesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedStudiesIDs(); len(nodes) > 0 && !uuo.mutation.StudiesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.StudiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.StudiesTable,
+			Columns: []string{user.StudiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: study.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues
