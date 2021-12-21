@@ -5,10 +5,11 @@ package ent
 import (
 	"time"
 
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/schema"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 	"github.com/google/uuid"
 )
 
@@ -16,30 +17,30 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	daily_gaolFields := schema.Daily_Gaol{}.Fields()
-	_ = daily_gaolFields
-	// daily_gaolDescCreatedAt is the schema descriptor for created_at field.
-	daily_gaolDescCreatedAt := daily_gaolFields[0].Descriptor()
-	// daily_gaol.DefaultCreatedAt holds the default value on creation for the created_at field.
-	daily_gaol.DefaultCreatedAt = daily_gaolDescCreatedAt.Default.(func() time.Time)
-	// daily_gaolDescUpdatedAt is the schema descriptor for updated_at field.
-	daily_gaolDescUpdatedAt := daily_gaolFields[1].Descriptor()
-	// daily_gaol.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	daily_gaol.DefaultUpdatedAt = daily_gaolDescUpdatedAt.Default.(func() time.Time)
-	// daily_gaol.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	daily_gaol.UpdateDefaultUpdatedAt = daily_gaolDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// daily_gaolDescTodo is the schema descriptor for todo field.
-	daily_gaolDescTodo := daily_gaolFields[2].Descriptor()
-	// daily_gaol.TodoValidator is a validator for the "todo" field. It is called by the builders before save.
-	daily_gaol.TodoValidator = daily_gaolDescTodo.Validators[0].(func(string) error)
-	// daily_gaolDescDone is the schema descriptor for done field.
-	daily_gaolDescDone := daily_gaolFields[3].Descriptor()
-	// daily_gaol.DefaultDone holds the default value on creation for the done field.
-	daily_gaol.DefaultDone = daily_gaolDescDone.Default.(bool)
-	// daily_gaolDescIsRemoved is the schema descriptor for is_removed field.
-	daily_gaolDescIsRemoved := daily_gaolFields[4].Descriptor()
-	// daily_gaol.DefaultIsRemoved holds the default value on creation for the is_removed field.
-	daily_gaol.DefaultIsRemoved = daily_gaolDescIsRemoved.Default.(bool)
+	dailygaolFields := schema.DailyGaol{}.Fields()
+	_ = dailygaolFields
+	// dailygaolDescCreatedAt is the schema descriptor for created_at field.
+	dailygaolDescCreatedAt := dailygaolFields[0].Descriptor()
+	// dailygaol.DefaultCreatedAt holds the default value on creation for the created_at field.
+	dailygaol.DefaultCreatedAt = dailygaolDescCreatedAt.Default.(func() time.Time)
+	// dailygaolDescUpdatedAt is the schema descriptor for updated_at field.
+	dailygaolDescUpdatedAt := dailygaolFields[1].Descriptor()
+	// dailygaol.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	dailygaol.DefaultUpdatedAt = dailygaolDescUpdatedAt.Default.(func() time.Time)
+	// dailygaol.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	dailygaol.UpdateDefaultUpdatedAt = dailygaolDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// dailygaolDescTodo is the schema descriptor for todo field.
+	dailygaolDescTodo := dailygaolFields[2].Descriptor()
+	// dailygaol.TodoValidator is a validator for the "todo" field. It is called by the builders before save.
+	dailygaol.TodoValidator = dailygaolDescTodo.Validators[0].(func(string) error)
+	// dailygaolDescDone is the schema descriptor for done field.
+	dailygaolDescDone := dailygaolFields[3].Descriptor()
+	// dailygaol.DefaultDone holds the default value on creation for the done field.
+	dailygaol.DefaultDone = dailygaolDescDone.Default.(bool)
+	// dailygaolDescIsRemoved is the schema descriptor for is_removed field.
+	dailygaolDescIsRemoved := dailygaolFields[4].Descriptor()
+	// dailygaol.DefaultIsRemoved holds the default value on creation for the is_removed field.
+	dailygaol.DefaultIsRemoved = dailygaolDescIsRemoved.Default.(bool)
 	studyFields := schema.Study{}.Fields()
 	_ = studyFields
 	// studyDescStartedAt is the schema descriptor for started_at field.
@@ -76,4 +77,10 @@ func init() {
 	user.DefaultUserStatus = userDescUserStatus.Default.(int)
 	// user.UserStatusValidator is a validator for the "user_status" field. It is called by the builders before save.
 	user.UserStatusValidator = userDescUserStatus.Validators[0].(func(int) error)
+	weeklygaolFields := schema.WeeklyGaol{}.Fields()
+	_ = weeklygaolFields
+	// weeklygaolDescScore is the schema descriptor for score field.
+	weeklygaolDescScore := weeklygaolFields[1].Descriptor()
+	// weeklygaol.DefaultScore holds the default value on creation for the score field.
+	weeklygaol.DefaultScore = weeklygaolDescScore.Default.(int)
 }

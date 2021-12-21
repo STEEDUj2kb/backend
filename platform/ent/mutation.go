@@ -8,11 +8,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 	"github.com/google/uuid"
 
 	"entgo.io/ent"
@@ -27,13 +27,13 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeDaily_Gaol  = "Daily_Gaol"
-	TypeStudy       = "Study"
-	TypeUser        = "User"
-	TypeWeekly_Gaol = "Weekly_Gaol"
+	TypeDailyGaol  = "DailyGaol"
+	TypeStudy      = "Study"
+	TypeUser       = "User"
+	TypeWeeklyGaol = "WeeklyGaol"
 )
 
-// DailyGaolMutation represents an operation that mutates the Daily_Gaol nodes in the graph.
+// DailyGaolMutation represents an operation that mutates the DailyGaol nodes in the graph.
 type DailyGaolMutation struct {
 	config
 	op            Op
@@ -50,21 +50,21 @@ type DailyGaolMutation struct {
 	wgoal         *int
 	clearedwgoal  bool
 	done          bool
-	oldValue      func(context.Context) (*Daily_Gaol, error)
-	predicates    []predicate.Daily_Gaol
+	oldValue      func(context.Context) (*DailyGaol, error)
+	predicates    []predicate.DailyGaol
 }
 
 var _ ent.Mutation = (*DailyGaolMutation)(nil)
 
-// dailyGaolOption allows management of the mutation configuration using functional options.
-type dailyGaolOption func(*DailyGaolMutation)
+// dailygaolOption allows management of the mutation configuration using functional options.
+type dailygaolOption func(*DailyGaolMutation)
 
-// newDailyGaolMutation creates new mutation for the Daily_Gaol entity.
-func newDailyGaolMutation(c config, op Op, opts ...dailyGaolOption) *DailyGaolMutation {
+// newDailyGaolMutation creates new mutation for the DailyGaol entity.
+func newDailyGaolMutation(c config, op Op, opts ...dailygaolOption) *DailyGaolMutation {
 	m := &DailyGaolMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeDaily_Gaol,
+		typ:           TypeDailyGaol,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -73,20 +73,20 @@ func newDailyGaolMutation(c config, op Op, opts ...dailyGaolOption) *DailyGaolMu
 	return m
 }
 
-// withDaily_GaolID sets the ID field of the mutation.
-func withDaily_GaolID(id int) dailyGaolOption {
+// withDailyGaolID sets the ID field of the mutation.
+func withDailyGaolID(id int) dailygaolOption {
 	return func(m *DailyGaolMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Daily_Gaol
+			value *DailyGaol
 		)
-		m.oldValue = func(ctx context.Context) (*Daily_Gaol, error) {
+		m.oldValue = func(ctx context.Context) (*DailyGaol, error) {
 			once.Do(func() {
 				if m.done {
 					err = fmt.Errorf("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Daily_Gaol.Get(ctx, id)
+					value, err = m.Client().DailyGaol.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -95,10 +95,10 @@ func withDaily_GaolID(id int) dailyGaolOption {
 	}
 }
 
-// withDaily_Gaol sets the old Daily_Gaol of the mutation.
-func withDaily_Gaol(node *Daily_Gaol) dailyGaolOption {
+// withDailyGaol sets the old DailyGaol of the mutation.
+func withDailyGaol(node *DailyGaol) dailygaolOption {
 	return func(m *DailyGaolMutation) {
-		m.oldValue = func(context.Context) (*Daily_Gaol, error) {
+		m.oldValue = func(context.Context) (*DailyGaol, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -147,8 +147,8 @@ func (m *DailyGaolMutation) CreatedAt() (r time.Time, exists bool) {
 	return *v, true
 }
 
-// OldCreatedAt returns the old "created_at" field's value of the Daily_Gaol entity.
-// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedAt returns the old "created_at" field's value of the DailyGaol entity.
+// If the DailyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *DailyGaolMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -183,8 +183,8 @@ func (m *DailyGaolMutation) UpdatedAt() (r time.Time, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedAt returns the old "updated_at" field's value of the Daily_Gaol entity.
-// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedAt returns the old "updated_at" field's value of the DailyGaol entity.
+// If the DailyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *DailyGaolMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -219,8 +219,8 @@ func (m *DailyGaolMutation) Todo() (r string, exists bool) {
 	return *v, true
 }
 
-// OldTodo returns the old "todo" field's value of the Daily_Gaol entity.
-// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldTodo returns the old "todo" field's value of the DailyGaol entity.
+// If the DailyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *DailyGaolMutation) OldTodo(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -255,8 +255,8 @@ func (m *DailyGaolMutation) Done() (r bool, exists bool) {
 	return *v, true
 }
 
-// OldDone returns the old "done" field's value of the Daily_Gaol entity.
-// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldDone returns the old "done" field's value of the DailyGaol entity.
+// If the DailyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *DailyGaolMutation) OldDone(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -291,8 +291,8 @@ func (m *DailyGaolMutation) IsRemoved() (r bool, exists bool) {
 	return *v, true
 }
 
-// OldIsRemoved returns the old "is_removed" field's value of the Daily_Gaol entity.
-// If the Daily_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldIsRemoved returns the old "is_removed" field's value of the DailyGaol entity.
+// If the DailyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *DailyGaolMutation) OldIsRemoved(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -352,17 +352,17 @@ func (m *DailyGaolMutation) ResetStudy() {
 	m.clearedstudy = false
 }
 
-// SetWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by id.
+// SetWgoalID sets the "wgoal" edge to the WeeklyGaol entity by id.
 func (m *DailyGaolMutation) SetWgoalID(id int) {
 	m.wgoal = &id
 }
 
-// ClearWgoal clears the "wgoal" edge to the Weekly_Gaol entity.
+// ClearWgoal clears the "wgoal" edge to the WeeklyGaol entity.
 func (m *DailyGaolMutation) ClearWgoal() {
 	m.clearedwgoal = true
 }
 
-// WgoalCleared reports if the "wgoal" edge to the Weekly_Gaol entity was cleared.
+// WgoalCleared reports if the "wgoal" edge to the WeeklyGaol entity was cleared.
 func (m *DailyGaolMutation) WgoalCleared() bool {
 	return m.clearedwgoal
 }
@@ -392,7 +392,7 @@ func (m *DailyGaolMutation) ResetWgoal() {
 }
 
 // Where appends a list predicates to the DailyGaolMutation builder.
-func (m *DailyGaolMutation) Where(ps ...predicate.Daily_Gaol) {
+func (m *DailyGaolMutation) Where(ps ...predicate.DailyGaol) {
 	m.predicates = append(m.predicates, ps...)
 }
 
@@ -401,7 +401,7 @@ func (m *DailyGaolMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (Daily_Gaol).
+// Type returns the node type of this mutation (DailyGaol).
 func (m *DailyGaolMutation) Type() string {
 	return m.typ
 }
@@ -412,19 +412,19 @@ func (m *DailyGaolMutation) Type() string {
 func (m *DailyGaolMutation) Fields() []string {
 	fields := make([]string, 0, 5)
 	if m.created_at != nil {
-		fields = append(fields, daily_gaol.FieldCreatedAt)
+		fields = append(fields, dailygaol.FieldCreatedAt)
 	}
 	if m.updated_at != nil {
-		fields = append(fields, daily_gaol.FieldUpdatedAt)
+		fields = append(fields, dailygaol.FieldUpdatedAt)
 	}
 	if m.todo != nil {
-		fields = append(fields, daily_gaol.FieldTodo)
+		fields = append(fields, dailygaol.FieldTodo)
 	}
 	if m._done != nil {
-		fields = append(fields, daily_gaol.FieldDone)
+		fields = append(fields, dailygaol.FieldDone)
 	}
 	if m.is_removed != nil {
-		fields = append(fields, daily_gaol.FieldIsRemoved)
+		fields = append(fields, dailygaol.FieldIsRemoved)
 	}
 	return fields
 }
@@ -434,15 +434,15 @@ func (m *DailyGaolMutation) Fields() []string {
 // schema.
 func (m *DailyGaolMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case daily_gaol.FieldCreatedAt:
+	case dailygaol.FieldCreatedAt:
 		return m.CreatedAt()
-	case daily_gaol.FieldUpdatedAt:
+	case dailygaol.FieldUpdatedAt:
 		return m.UpdatedAt()
-	case daily_gaol.FieldTodo:
+	case dailygaol.FieldTodo:
 		return m.Todo()
-	case daily_gaol.FieldDone:
+	case dailygaol.FieldDone:
 		return m.Done()
-	case daily_gaol.FieldIsRemoved:
+	case dailygaol.FieldIsRemoved:
 		return m.IsRemoved()
 	}
 	return nil, false
@@ -453,18 +453,18 @@ func (m *DailyGaolMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *DailyGaolMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case daily_gaol.FieldCreatedAt:
+	case dailygaol.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
-	case daily_gaol.FieldUpdatedAt:
+	case dailygaol.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
-	case daily_gaol.FieldTodo:
+	case dailygaol.FieldTodo:
 		return m.OldTodo(ctx)
-	case daily_gaol.FieldDone:
+	case dailygaol.FieldDone:
 		return m.OldDone(ctx)
-	case daily_gaol.FieldIsRemoved:
+	case dailygaol.FieldIsRemoved:
 		return m.OldIsRemoved(ctx)
 	}
-	return nil, fmt.Errorf("unknown Daily_Gaol field %s", name)
+	return nil, fmt.Errorf("unknown DailyGaol field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
@@ -472,35 +472,35 @@ func (m *DailyGaolMutation) OldField(ctx context.Context, name string) (ent.Valu
 // type.
 func (m *DailyGaolMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case daily_gaol.FieldCreatedAt:
+	case dailygaol.FieldCreatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
 		return nil
-	case daily_gaol.FieldUpdatedAt:
+	case dailygaol.FieldUpdatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedAt(v)
 		return nil
-	case daily_gaol.FieldTodo:
+	case dailygaol.FieldTodo:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTodo(v)
 		return nil
-	case daily_gaol.FieldDone:
+	case dailygaol.FieldDone:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDone(v)
 		return nil
-	case daily_gaol.FieldIsRemoved:
+	case dailygaol.FieldIsRemoved:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -508,7 +508,7 @@ func (m *DailyGaolMutation) SetField(name string, value ent.Value) error {
 		m.SetIsRemoved(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Daily_Gaol field %s", name)
+	return fmt.Errorf("unknown DailyGaol field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
@@ -530,7 +530,7 @@ func (m *DailyGaolMutation) AddedField(name string) (ent.Value, bool) {
 func (m *DailyGaolMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown Daily_Gaol numeric field %s", name)
+	return fmt.Errorf("unknown DailyGaol numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
@@ -549,40 +549,40 @@ func (m *DailyGaolMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *DailyGaolMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Daily_Gaol nullable field %s", name)
+	return fmt.Errorf("unknown DailyGaol nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *DailyGaolMutation) ResetField(name string) error {
 	switch name {
-	case daily_gaol.FieldCreatedAt:
+	case dailygaol.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
-	case daily_gaol.FieldUpdatedAt:
+	case dailygaol.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
-	case daily_gaol.FieldTodo:
+	case dailygaol.FieldTodo:
 		m.ResetTodo()
 		return nil
-	case daily_gaol.FieldDone:
+	case dailygaol.FieldDone:
 		m.ResetDone()
 		return nil
-	case daily_gaol.FieldIsRemoved:
+	case dailygaol.FieldIsRemoved:
 		m.ResetIsRemoved()
 		return nil
 	}
-	return fmt.Errorf("unknown Daily_Gaol field %s", name)
+	return fmt.Errorf("unknown DailyGaol field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *DailyGaolMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
 	if m.study != nil {
-		edges = append(edges, daily_gaol.EdgeStudy)
+		edges = append(edges, dailygaol.EdgeStudy)
 	}
 	if m.wgoal != nil {
-		edges = append(edges, daily_gaol.EdgeWgoal)
+		edges = append(edges, dailygaol.EdgeWgoal)
 	}
 	return edges
 }
@@ -591,11 +591,11 @@ func (m *DailyGaolMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *DailyGaolMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case daily_gaol.EdgeStudy:
+	case dailygaol.EdgeStudy:
 		if id := m.study; id != nil {
 			return []ent.Value{*id}
 		}
-	case daily_gaol.EdgeWgoal:
+	case dailygaol.EdgeWgoal:
 		if id := m.wgoal; id != nil {
 			return []ent.Value{*id}
 		}
@@ -621,10 +621,10 @@ func (m *DailyGaolMutation) RemovedIDs(name string) []ent.Value {
 func (m *DailyGaolMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
 	if m.clearedstudy {
-		edges = append(edges, daily_gaol.EdgeStudy)
+		edges = append(edges, dailygaol.EdgeStudy)
 	}
 	if m.clearedwgoal {
-		edges = append(edges, daily_gaol.EdgeWgoal)
+		edges = append(edges, dailygaol.EdgeWgoal)
 	}
 	return edges
 }
@@ -633,9 +633,9 @@ func (m *DailyGaolMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *DailyGaolMutation) EdgeCleared(name string) bool {
 	switch name {
-	case daily_gaol.EdgeStudy:
+	case dailygaol.EdgeStudy:
 		return m.clearedstudy
-	case daily_gaol.EdgeWgoal:
+	case dailygaol.EdgeWgoal:
 		return m.clearedwgoal
 	}
 	return false
@@ -645,28 +645,28 @@ func (m *DailyGaolMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *DailyGaolMutation) ClearEdge(name string) error {
 	switch name {
-	case daily_gaol.EdgeStudy:
+	case dailygaol.EdgeStudy:
 		m.ClearStudy()
 		return nil
-	case daily_gaol.EdgeWgoal:
+	case dailygaol.EdgeWgoal:
 		m.ClearWgoal()
 		return nil
 	}
-	return fmt.Errorf("unknown Daily_Gaol unique edge %s", name)
+	return fmt.Errorf("unknown DailyGaol unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *DailyGaolMutation) ResetEdge(name string) error {
 	switch name {
-	case daily_gaol.EdgeStudy:
+	case dailygaol.EdgeStudy:
 		m.ResetStudy()
 		return nil
-	case daily_gaol.EdgeWgoal:
+	case dailygaol.EdgeWgoal:
 		m.ResetWgoal()
 		return nil
 	}
-	return fmt.Errorf("unknown Daily_Gaol edge %s", name)
+	return fmt.Errorf("unknown DailyGaol edge %s", name)
 }
 
 // StudyMutation represents an operation that mutates the Study nodes in the graph.
@@ -931,7 +931,7 @@ func (m *StudyMutation) ResetPlanner() {
 	m.clearedplanner = false
 }
 
-// AddDgoalIDs adds the "dgoals" edge to the Daily_Gaol entity by ids.
+// AddDgoalIDs adds the "dgoals" edge to the DailyGaol entity by ids.
 func (m *StudyMutation) AddDgoalIDs(ids ...int) {
 	if m.dgoals == nil {
 		m.dgoals = make(map[int]struct{})
@@ -941,17 +941,17 @@ func (m *StudyMutation) AddDgoalIDs(ids ...int) {
 	}
 }
 
-// ClearDgoals clears the "dgoals" edge to the Daily_Gaol entity.
+// ClearDgoals clears the "dgoals" edge to the DailyGaol entity.
 func (m *StudyMutation) ClearDgoals() {
 	m.cleareddgoals = true
 }
 
-// DgoalsCleared reports if the "dgoals" edge to the Daily_Gaol entity was cleared.
+// DgoalsCleared reports if the "dgoals" edge to the DailyGaol entity was cleared.
 func (m *StudyMutation) DgoalsCleared() bool {
 	return m.cleareddgoals
 }
 
-// RemoveDgoalIDs removes the "dgoals" edge to the Daily_Gaol entity by IDs.
+// RemoveDgoalIDs removes the "dgoals" edge to the DailyGaol entity by IDs.
 func (m *StudyMutation) RemoveDgoalIDs(ids ...int) {
 	if m.removeddgoals == nil {
 		m.removeddgoals = make(map[int]struct{})
@@ -962,7 +962,7 @@ func (m *StudyMutation) RemoveDgoalIDs(ids ...int) {
 	}
 }
 
-// RemovedDgoals returns the removed IDs of the "dgoals" edge to the Daily_Gaol entity.
+// RemovedDgoals returns the removed IDs of the "dgoals" edge to the DailyGaol entity.
 func (m *StudyMutation) RemovedDgoalsIDs() (ids []int) {
 	for id := range m.removeddgoals {
 		ids = append(ids, id)
@@ -985,7 +985,7 @@ func (m *StudyMutation) ResetDgoals() {
 	m.removeddgoals = nil
 }
 
-// AddWgoalIDs adds the "wgoals" edge to the Weekly_Gaol entity by ids.
+// AddWgoalIDs adds the "wgoals" edge to the WeeklyGaol entity by ids.
 func (m *StudyMutation) AddWgoalIDs(ids ...int) {
 	if m.wgoals == nil {
 		m.wgoals = make(map[int]struct{})
@@ -995,17 +995,17 @@ func (m *StudyMutation) AddWgoalIDs(ids ...int) {
 	}
 }
 
-// ClearWgoals clears the "wgoals" edge to the Weekly_Gaol entity.
+// ClearWgoals clears the "wgoals" edge to the WeeklyGaol entity.
 func (m *StudyMutation) ClearWgoals() {
 	m.clearedwgoals = true
 }
 
-// WgoalsCleared reports if the "wgoals" edge to the Weekly_Gaol entity was cleared.
+// WgoalsCleared reports if the "wgoals" edge to the WeeklyGaol entity was cleared.
 func (m *StudyMutation) WgoalsCleared() bool {
 	return m.clearedwgoals
 }
 
-// RemoveWgoalIDs removes the "wgoals" edge to the Weekly_Gaol entity by IDs.
+// RemoveWgoalIDs removes the "wgoals" edge to the WeeklyGaol entity by IDs.
 func (m *StudyMutation) RemoveWgoalIDs(ids ...int) {
 	if m.removedwgoals == nil {
 		m.removedwgoals = make(map[int]struct{})
@@ -1016,7 +1016,7 @@ func (m *StudyMutation) RemoveWgoalIDs(ids ...int) {
 	}
 }
 
-// RemovedWgoals returns the removed IDs of the "wgoals" edge to the Weekly_Gaol entity.
+// RemovedWgoals returns the removed IDs of the "wgoals" edge to the WeeklyGaol entity.
 func (m *StudyMutation) RemovedWgoalsIDs() (ids []int) {
 	for id := range m.removedwgoals {
 		ids = append(ids, id)
@@ -2125,7 +2125,7 @@ func (m *UserMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown User edge %s", name)
 }
 
-// WeeklyGaolMutation represents an operation that mutates the Weekly_Gaol nodes in the graph.
+// WeeklyGaolMutation represents an operation that mutates the WeeklyGaol nodes in the graph.
 type WeeklyGaolMutation struct {
 	config
 	op            Op
@@ -2143,21 +2143,21 @@ type WeeklyGaolMutation struct {
 	study         *int
 	clearedstudy  bool
 	done          bool
-	oldValue      func(context.Context) (*Weekly_Gaol, error)
-	predicates    []predicate.Weekly_Gaol
+	oldValue      func(context.Context) (*WeeklyGaol, error)
+	predicates    []predicate.WeeklyGaol
 }
 
 var _ ent.Mutation = (*WeeklyGaolMutation)(nil)
 
-// weeklyGaolOption allows management of the mutation configuration using functional options.
-type weeklyGaolOption func(*WeeklyGaolMutation)
+// weeklygaolOption allows management of the mutation configuration using functional options.
+type weeklygaolOption func(*WeeklyGaolMutation)
 
-// newWeeklyGaolMutation creates new mutation for the Weekly_Gaol entity.
-func newWeeklyGaolMutation(c config, op Op, opts ...weeklyGaolOption) *WeeklyGaolMutation {
+// newWeeklyGaolMutation creates new mutation for the WeeklyGaol entity.
+func newWeeklyGaolMutation(c config, op Op, opts ...weeklygaolOption) *WeeklyGaolMutation {
 	m := &WeeklyGaolMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeWeekly_Gaol,
+		typ:           TypeWeeklyGaol,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -2166,20 +2166,20 @@ func newWeeklyGaolMutation(c config, op Op, opts ...weeklyGaolOption) *WeeklyGao
 	return m
 }
 
-// withWeekly_GaolID sets the ID field of the mutation.
-func withWeekly_GaolID(id int) weeklyGaolOption {
+// withWeeklyGaolID sets the ID field of the mutation.
+func withWeeklyGaolID(id int) weeklygaolOption {
 	return func(m *WeeklyGaolMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Weekly_Gaol
+			value *WeeklyGaol
 		)
-		m.oldValue = func(ctx context.Context) (*Weekly_Gaol, error) {
+		m.oldValue = func(ctx context.Context) (*WeeklyGaol, error) {
 			once.Do(func() {
 				if m.done {
 					err = fmt.Errorf("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Weekly_Gaol.Get(ctx, id)
+					value, err = m.Client().WeeklyGaol.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -2188,10 +2188,10 @@ func withWeekly_GaolID(id int) weeklyGaolOption {
 	}
 }
 
-// withWeekly_Gaol sets the old Weekly_Gaol of the mutation.
-func withWeekly_Gaol(node *Weekly_Gaol) weeklyGaolOption {
+// withWeeklyGaol sets the old WeeklyGaol of the mutation.
+func withWeeklyGaol(node *WeeklyGaol) weeklygaolOption {
 	return func(m *WeeklyGaolMutation) {
-		m.oldValue = func(context.Context) (*Weekly_Gaol, error) {
+		m.oldValue = func(context.Context) (*WeeklyGaol, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -2240,8 +2240,8 @@ func (m *WeeklyGaolMutation) Goal() (r string, exists bool) {
 	return *v, true
 }
 
-// OldGoal returns the old "goal" field's value of the Weekly_Gaol entity.
-// If the Weekly_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldGoal returns the old "goal" field's value of the WeeklyGaol entity.
+// If the WeeklyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *WeeklyGaolMutation) OldGoal(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -2277,8 +2277,8 @@ func (m *WeeklyGaolMutation) Score() (r int, exists bool) {
 	return *v, true
 }
 
-// OldScore returns the old "score" field's value of the Weekly_Gaol entity.
-// If the Weekly_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldScore returns the old "score" field's value of the WeeklyGaol entity.
+// If the WeeklyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *WeeklyGaolMutation) OldScore(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -2312,10 +2312,24 @@ func (m *WeeklyGaolMutation) AddedScore() (r int, exists bool) {
 	return *v, true
 }
 
+// ClearScore clears the value of the "score" field.
+func (m *WeeklyGaolMutation) ClearScore() {
+	m.score = nil
+	m.addscore = nil
+	m.clearedFields[weeklygaol.FieldScore] = struct{}{}
+}
+
+// ScoreCleared returns if the "score" field was cleared in this mutation.
+func (m *WeeklyGaolMutation) ScoreCleared() bool {
+	_, ok := m.clearedFields[weeklygaol.FieldScore]
+	return ok
+}
+
 // ResetScore resets all changes to the "score" field.
 func (m *WeeklyGaolMutation) ResetScore() {
 	m.score = nil
 	m.addscore = nil
+	delete(m.clearedFields, weeklygaol.FieldScore)
 }
 
 // SetNth sets the "nth" field.
@@ -2333,8 +2347,8 @@ func (m *WeeklyGaolMutation) Nth() (r int, exists bool) {
 	return *v, true
 }
 
-// OldNth returns the old "nth" field's value of the Weekly_Gaol entity.
-// If the Weekly_Gaol object wasn't provided to the builder, the object is fetched from the database.
+// OldNth returns the old "nth" field's value of the WeeklyGaol entity.
+// If the WeeklyGaol object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *WeeklyGaolMutation) OldNth(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
@@ -2374,7 +2388,7 @@ func (m *WeeklyGaolMutation) ResetNth() {
 	m.addnth = nil
 }
 
-// AddDgaolIDs adds the "dgaols" edge to the Daily_Gaol entity by ids.
+// AddDgaolIDs adds the "dgaols" edge to the DailyGaol entity by ids.
 func (m *WeeklyGaolMutation) AddDgaolIDs(ids ...int) {
 	if m.dgaols == nil {
 		m.dgaols = make(map[int]struct{})
@@ -2384,17 +2398,17 @@ func (m *WeeklyGaolMutation) AddDgaolIDs(ids ...int) {
 	}
 }
 
-// ClearDgaols clears the "dgaols" edge to the Daily_Gaol entity.
+// ClearDgaols clears the "dgaols" edge to the DailyGaol entity.
 func (m *WeeklyGaolMutation) ClearDgaols() {
 	m.cleareddgaols = true
 }
 
-// DgaolsCleared reports if the "dgaols" edge to the Daily_Gaol entity was cleared.
+// DgaolsCleared reports if the "dgaols" edge to the DailyGaol entity was cleared.
 func (m *WeeklyGaolMutation) DgaolsCleared() bool {
 	return m.cleareddgaols
 }
 
-// RemoveDgaolIDs removes the "dgaols" edge to the Daily_Gaol entity by IDs.
+// RemoveDgaolIDs removes the "dgaols" edge to the DailyGaol entity by IDs.
 func (m *WeeklyGaolMutation) RemoveDgaolIDs(ids ...int) {
 	if m.removeddgaols == nil {
 		m.removeddgaols = make(map[int]struct{})
@@ -2405,7 +2419,7 @@ func (m *WeeklyGaolMutation) RemoveDgaolIDs(ids ...int) {
 	}
 }
 
-// RemovedDgaols returns the removed IDs of the "dgaols" edge to the Daily_Gaol entity.
+// RemovedDgaols returns the removed IDs of the "dgaols" edge to the DailyGaol entity.
 func (m *WeeklyGaolMutation) RemovedDgaolsIDs() (ids []int) {
 	for id := range m.removeddgaols {
 		ids = append(ids, id)
@@ -2468,7 +2482,7 @@ func (m *WeeklyGaolMutation) ResetStudy() {
 }
 
 // Where appends a list predicates to the WeeklyGaolMutation builder.
-func (m *WeeklyGaolMutation) Where(ps ...predicate.Weekly_Gaol) {
+func (m *WeeklyGaolMutation) Where(ps ...predicate.WeeklyGaol) {
 	m.predicates = append(m.predicates, ps...)
 }
 
@@ -2477,7 +2491,7 @@ func (m *WeeklyGaolMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (Weekly_Gaol).
+// Type returns the node type of this mutation (WeeklyGaol).
 func (m *WeeklyGaolMutation) Type() string {
 	return m.typ
 }
@@ -2488,13 +2502,13 @@ func (m *WeeklyGaolMutation) Type() string {
 func (m *WeeklyGaolMutation) Fields() []string {
 	fields := make([]string, 0, 3)
 	if m.goal != nil {
-		fields = append(fields, weekly_gaol.FieldGoal)
+		fields = append(fields, weeklygaol.FieldGoal)
 	}
 	if m.score != nil {
-		fields = append(fields, weekly_gaol.FieldScore)
+		fields = append(fields, weeklygaol.FieldScore)
 	}
 	if m.nth != nil {
-		fields = append(fields, weekly_gaol.FieldNth)
+		fields = append(fields, weeklygaol.FieldNth)
 	}
 	return fields
 }
@@ -2504,11 +2518,11 @@ func (m *WeeklyGaolMutation) Fields() []string {
 // schema.
 func (m *WeeklyGaolMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case weekly_gaol.FieldGoal:
+	case weeklygaol.FieldGoal:
 		return m.Goal()
-	case weekly_gaol.FieldScore:
+	case weeklygaol.FieldScore:
 		return m.Score()
-	case weekly_gaol.FieldNth:
+	case weeklygaol.FieldNth:
 		return m.Nth()
 	}
 	return nil, false
@@ -2519,14 +2533,14 @@ func (m *WeeklyGaolMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *WeeklyGaolMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case weekly_gaol.FieldGoal:
+	case weeklygaol.FieldGoal:
 		return m.OldGoal(ctx)
-	case weekly_gaol.FieldScore:
+	case weeklygaol.FieldScore:
 		return m.OldScore(ctx)
-	case weekly_gaol.FieldNth:
+	case weeklygaol.FieldNth:
 		return m.OldNth(ctx)
 	}
-	return nil, fmt.Errorf("unknown Weekly_Gaol field %s", name)
+	return nil, fmt.Errorf("unknown WeeklyGaol field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
@@ -2534,21 +2548,21 @@ func (m *WeeklyGaolMutation) OldField(ctx context.Context, name string) (ent.Val
 // type.
 func (m *WeeklyGaolMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case weekly_gaol.FieldGoal:
+	case weeklygaol.FieldGoal:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGoal(v)
 		return nil
-	case weekly_gaol.FieldScore:
+	case weeklygaol.FieldScore:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetScore(v)
 		return nil
-	case weekly_gaol.FieldNth:
+	case weeklygaol.FieldNth:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -2556,7 +2570,7 @@ func (m *WeeklyGaolMutation) SetField(name string, value ent.Value) error {
 		m.SetNth(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Weekly_Gaol field %s", name)
+	return fmt.Errorf("unknown WeeklyGaol field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
@@ -2564,10 +2578,10 @@ func (m *WeeklyGaolMutation) SetField(name string, value ent.Value) error {
 func (m *WeeklyGaolMutation) AddedFields() []string {
 	var fields []string
 	if m.addscore != nil {
-		fields = append(fields, weekly_gaol.FieldScore)
+		fields = append(fields, weeklygaol.FieldScore)
 	}
 	if m.addnth != nil {
-		fields = append(fields, weekly_gaol.FieldNth)
+		fields = append(fields, weeklygaol.FieldNth)
 	}
 	return fields
 }
@@ -2577,9 +2591,9 @@ func (m *WeeklyGaolMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *WeeklyGaolMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case weekly_gaol.FieldScore:
+	case weeklygaol.FieldScore:
 		return m.AddedScore()
-	case weekly_gaol.FieldNth:
+	case weeklygaol.FieldNth:
 		return m.AddedNth()
 	}
 	return nil, false
@@ -2590,14 +2604,14 @@ func (m *WeeklyGaolMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *WeeklyGaolMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case weekly_gaol.FieldScore:
+	case weeklygaol.FieldScore:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddScore(v)
 		return nil
-	case weekly_gaol.FieldNth:
+	case weeklygaol.FieldNth:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -2605,13 +2619,17 @@ func (m *WeeklyGaolMutation) AddField(name string, value ent.Value) error {
 		m.AddNth(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Weekly_Gaol numeric field %s", name)
+	return fmt.Errorf("unknown WeeklyGaol numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *WeeklyGaolMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(weeklygaol.FieldScore) {
+		fields = append(fields, weeklygaol.FieldScore)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -2624,34 +2642,39 @@ func (m *WeeklyGaolMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *WeeklyGaolMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Weekly_Gaol nullable field %s", name)
+	switch name {
+	case weeklygaol.FieldScore:
+		m.ClearScore()
+		return nil
+	}
+	return fmt.Errorf("unknown WeeklyGaol nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *WeeklyGaolMutation) ResetField(name string) error {
 	switch name {
-	case weekly_gaol.FieldGoal:
+	case weeklygaol.FieldGoal:
 		m.ResetGoal()
 		return nil
-	case weekly_gaol.FieldScore:
+	case weeklygaol.FieldScore:
 		m.ResetScore()
 		return nil
-	case weekly_gaol.FieldNth:
+	case weeklygaol.FieldNth:
 		m.ResetNth()
 		return nil
 	}
-	return fmt.Errorf("unknown Weekly_Gaol field %s", name)
+	return fmt.Errorf("unknown WeeklyGaol field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *WeeklyGaolMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
 	if m.dgaols != nil {
-		edges = append(edges, weekly_gaol.EdgeDgaols)
+		edges = append(edges, weeklygaol.EdgeDgaols)
 	}
 	if m.study != nil {
-		edges = append(edges, weekly_gaol.EdgeStudy)
+		edges = append(edges, weeklygaol.EdgeStudy)
 	}
 	return edges
 }
@@ -2660,13 +2683,13 @@ func (m *WeeklyGaolMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *WeeklyGaolMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case weekly_gaol.EdgeDgaols:
+	case weeklygaol.EdgeDgaols:
 		ids := make([]ent.Value, 0, len(m.dgaols))
 		for id := range m.dgaols {
 			ids = append(ids, id)
 		}
 		return ids
-	case weekly_gaol.EdgeStudy:
+	case weeklygaol.EdgeStudy:
 		if id := m.study; id != nil {
 			return []ent.Value{*id}
 		}
@@ -2678,7 +2701,7 @@ func (m *WeeklyGaolMutation) AddedIDs(name string) []ent.Value {
 func (m *WeeklyGaolMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 2)
 	if m.removeddgaols != nil {
-		edges = append(edges, weekly_gaol.EdgeDgaols)
+		edges = append(edges, weeklygaol.EdgeDgaols)
 	}
 	return edges
 }
@@ -2687,7 +2710,7 @@ func (m *WeeklyGaolMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *WeeklyGaolMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case weekly_gaol.EdgeDgaols:
+	case weeklygaol.EdgeDgaols:
 		ids := make([]ent.Value, 0, len(m.removeddgaols))
 		for id := range m.removeddgaols {
 			ids = append(ids, id)
@@ -2701,10 +2724,10 @@ func (m *WeeklyGaolMutation) RemovedIDs(name string) []ent.Value {
 func (m *WeeklyGaolMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
 	if m.cleareddgaols {
-		edges = append(edges, weekly_gaol.EdgeDgaols)
+		edges = append(edges, weeklygaol.EdgeDgaols)
 	}
 	if m.clearedstudy {
-		edges = append(edges, weekly_gaol.EdgeStudy)
+		edges = append(edges, weeklygaol.EdgeStudy)
 	}
 	return edges
 }
@@ -2713,9 +2736,9 @@ func (m *WeeklyGaolMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *WeeklyGaolMutation) EdgeCleared(name string) bool {
 	switch name {
-	case weekly_gaol.EdgeDgaols:
+	case weeklygaol.EdgeDgaols:
 		return m.cleareddgaols
-	case weekly_gaol.EdgeStudy:
+	case weeklygaol.EdgeStudy:
 		return m.clearedstudy
 	}
 	return false
@@ -2725,23 +2748,23 @@ func (m *WeeklyGaolMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *WeeklyGaolMutation) ClearEdge(name string) error {
 	switch name {
-	case weekly_gaol.EdgeStudy:
+	case weeklygaol.EdgeStudy:
 		m.ClearStudy()
 		return nil
 	}
-	return fmt.Errorf("unknown Weekly_Gaol unique edge %s", name)
+	return fmt.Errorf("unknown WeeklyGaol unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *WeeklyGaolMutation) ResetEdge(name string) error {
 	switch name {
-	case weekly_gaol.EdgeDgaols:
+	case weeklygaol.EdgeDgaols:
 		m.ResetDgaols()
 		return nil
-	case weekly_gaol.EdgeStudy:
+	case weeklygaol.EdgeStudy:
 		m.ResetStudy()
 		return nil
 	}
-	return fmt.Errorf("unknown Weekly_Gaol edge %s", name)
+	return fmt.Errorf("unknown WeeklyGaol edge %s", name)
 }

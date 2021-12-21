@@ -8,10 +8,10 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -32,10 +32,10 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		daily_gaol.Table:  daily_gaol.ValidColumn,
-		study.Table:       study.ValidColumn,
-		user.Table:        user.ValidColumn,
-		weekly_gaol.Table: weekly_gaol.ValidColumn,
+		dailygaol.Table:  dailygaol.ValidColumn,
+		study.Table:      study.ValidColumn,
+		user.Table:       user.ValidColumn,
+		weeklygaol.Table: weeklygaol.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

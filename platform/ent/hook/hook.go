@@ -9,12 +9,12 @@ import (
 	"github.com/STEEDUj2kb/platform/ent"
 )
 
-// The Daily_GaolFunc type is an adapter to allow the use of ordinary
-// function as Daily_Gaol mutator.
-type Daily_GaolFunc func(context.Context, *ent.DailyGaolMutation) (ent.Value, error)
+// The DailyGaolFunc type is an adapter to allow the use of ordinary
+// function as DailyGaol mutator.
+type DailyGaolFunc func(context.Context, *ent.DailyGaolMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f Daily_GaolFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+func (f DailyGaolFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 	mv, ok := m.(*ent.DailyGaolMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DailyGaolMutation", m)
@@ -48,12 +48,12 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
-// The Weekly_GaolFunc type is an adapter to allow the use of ordinary
-// function as Weekly_Gaol mutator.
-type Weekly_GaolFunc func(context.Context, *ent.WeeklyGaolMutation) (ent.Value, error)
+// The WeeklyGaolFunc type is an adapter to allow the use of ordinary
+// function as WeeklyGaol mutator.
+type WeeklyGaolFunc func(context.Context, *ent.WeeklyGaolMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f Weekly_GaolFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+func (f WeeklyGaolFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 	mv, ok := m.(*ent.WeeklyGaolMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WeeklyGaolMutation", m)

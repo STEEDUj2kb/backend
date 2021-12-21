@@ -83,7 +83,7 @@ var (
 	WeeklyGaolsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "goal", Type: field.TypeString},
-		{Name: "score", Type: field.TypeInt},
+		{Name: "score", Type: field.TypeInt, Nullable: true, Default: 0},
 		{Name: "nth", Type: field.TypeInt},
 		{Name: "study_wgoals", Type: field.TypeInt, Nullable: true},
 	}

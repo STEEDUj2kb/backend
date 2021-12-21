@@ -10,12 +10,12 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// DailyGaolCreate is the builder for creating a Daily_Gaol entity.
+// DailyGaolCreate is the builder for creating a DailyGaol entity.
 type DailyGaolCreate struct {
 	config
 	mutation *DailyGaolMutation
@@ -103,13 +103,13 @@ func (dgc *DailyGaolCreate) SetStudy(s *Study) *DailyGaolCreate {
 	return dgc.SetStudyID(s.ID)
 }
 
-// SetWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by ID.
+// SetWgoalID sets the "wgoal" edge to the WeeklyGaol entity by ID.
 func (dgc *DailyGaolCreate) SetWgoalID(id int) *DailyGaolCreate {
 	dgc.mutation.SetWgoalID(id)
 	return dgc
 }
 
-// SetNillableWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by ID if the given value is not nil.
+// SetNillableWgoalID sets the "wgoal" edge to the WeeklyGaol entity by ID if the given value is not nil.
 func (dgc *DailyGaolCreate) SetNillableWgoalID(id *int) *DailyGaolCreate {
 	if id != nil {
 		dgc = dgc.SetWgoalID(*id)
@@ -117,8 +117,8 @@ func (dgc *DailyGaolCreate) SetNillableWgoalID(id *int) *DailyGaolCreate {
 	return dgc
 }
 
-// SetWgoal sets the "wgoal" edge to the Weekly_Gaol entity.
-func (dgc *DailyGaolCreate) SetWgoal(w *Weekly_Gaol) *DailyGaolCreate {
+// SetWgoal sets the "wgoal" edge to the WeeklyGaol entity.
+func (dgc *DailyGaolCreate) SetWgoal(w *WeeklyGaol) *DailyGaolCreate {
 	return dgc.SetWgoalID(w.ID)
 }
 
@@ -127,11 +127,11 @@ func (dgc *DailyGaolCreate) Mutation() *DailyGaolMutation {
 	return dgc.mutation
 }
 
-// Save creates the Daily_Gaol in the database.
-func (dgc *DailyGaolCreate) Save(ctx context.Context) (*Daily_Gaol, error) {
+// Save creates the DailyGaol in the database.
+func (dgc *DailyGaolCreate) Save(ctx context.Context) (*DailyGaol, error) {
 	var (
 		err  error
-		node *Daily_Gaol
+		node *DailyGaol
 	)
 	dgc.defaults()
 	if len(dgc.hooks) == 0 {
@@ -170,7 +170,7 @@ func (dgc *DailyGaolCreate) Save(ctx context.Context) (*Daily_Gaol, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (dgc *DailyGaolCreate) SaveX(ctx context.Context) *Daily_Gaol {
+func (dgc *DailyGaolCreate) SaveX(ctx context.Context) *DailyGaol {
 	v, err := dgc.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -194,19 +194,19 @@ func (dgc *DailyGaolCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (dgc *DailyGaolCreate) defaults() {
 	if _, ok := dgc.mutation.CreatedAt(); !ok {
-		v := daily_gaol.DefaultCreatedAt()
+		v := dailygaol.DefaultCreatedAt()
 		dgc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := dgc.mutation.UpdatedAt(); !ok {
-		v := daily_gaol.DefaultUpdatedAt()
+		v := dailygaol.DefaultUpdatedAt()
 		dgc.mutation.SetUpdatedAt(v)
 	}
 	if _, ok := dgc.mutation.Done(); !ok {
-		v := daily_gaol.DefaultDone
+		v := dailygaol.DefaultDone
 		dgc.mutation.SetDone(v)
 	}
 	if _, ok := dgc.mutation.IsRemoved(); !ok {
-		v := daily_gaol.DefaultIsRemoved
+		v := dailygaol.DefaultIsRemoved
 		dgc.mutation.SetIsRemoved(v)
 	}
 }
@@ -223,7 +223,7 @@ func (dgc *DailyGaolCreate) check() error {
 		return &ValidationError{Name: "todo", err: errors.New(`ent: missing required field "todo"`)}
 	}
 	if v, ok := dgc.mutation.Todo(); ok {
-		if err := daily_gaol.TodoValidator(v); err != nil {
+		if err := dailygaol.TodoValidator(v); err != nil {
 			return &ValidationError{Name: "todo", err: fmt.Errorf(`ent: validator failed for field "todo": %w`, err)}
 		}
 	}
@@ -236,7 +236,7 @@ func (dgc *DailyGaolCreate) check() error {
 	return nil
 }
 
-func (dgc *DailyGaolCreate) sqlSave(ctx context.Context) (*Daily_Gaol, error) {
+func (dgc *DailyGaolCreate) sqlSave(ctx context.Context) (*DailyGaol, error) {
 	_node, _spec := dgc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, dgc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -249,14 +249,14 @@ func (dgc *DailyGaolCreate) sqlSave(ctx context.Context) (*Daily_Gaol, error) {
 	return _node, nil
 }
 
-func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
+func (dgc *DailyGaolCreate) createSpec() (*DailyGaol, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Daily_Gaol{config: dgc.config}
+		_node = &DailyGaol{config: dgc.config}
 		_spec = &sqlgraph.CreateSpec{
-			Table: daily_gaol.Table,
+			Table: dailygaol.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: daily_gaol.FieldID,
+				Column: dailygaol.FieldID,
 			},
 		}
 	)
@@ -264,7 +264,7 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: daily_gaol.FieldCreatedAt,
+			Column: dailygaol.FieldCreatedAt,
 		})
 		_node.CreatedAt = value
 	}
@@ -272,7 +272,7 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: daily_gaol.FieldUpdatedAt,
+			Column: dailygaol.FieldUpdatedAt,
 		})
 		_node.UpdatedAt = value
 	}
@@ -280,7 +280,7 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: daily_gaol.FieldTodo,
+			Column: dailygaol.FieldTodo,
 		})
 		_node.Todo = value
 	}
@@ -288,7 +288,7 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: daily_gaol.FieldDone,
+			Column: dailygaol.FieldDone,
 		})
 		_node.Done = value
 	}
@@ -296,7 +296,7 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: daily_gaol.FieldIsRemoved,
+			Column: dailygaol.FieldIsRemoved,
 		})
 		_node.IsRemoved = value
 	}
@@ -304,8 +304,8 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.StudyTable,
-			Columns: []string{daily_gaol.StudyColumn},
+			Table:   dailygaol.StudyTable,
+			Columns: []string{dailygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -324,13 +324,13 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.WgoalTable,
-			Columns: []string{daily_gaol.WgoalColumn},
+			Table:   dailygaol.WgoalTable,
+			Columns: []string{dailygaol.WgoalColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -343,16 +343,16 @@ func (dgc *DailyGaolCreate) createSpec() (*Daily_Gaol, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// DailyGaolCreateBulk is the builder for creating many Daily_Gaol entities in bulk.
+// DailyGaolCreateBulk is the builder for creating many DailyGaol entities in bulk.
 type DailyGaolCreateBulk struct {
 	config
 	builders []*DailyGaolCreate
 }
 
-// Save creates the Daily_Gaol entities in the database.
-func (dgcb *DailyGaolCreateBulk) Save(ctx context.Context) ([]*Daily_Gaol, error) {
+// Save creates the DailyGaol entities in the database.
+func (dgcb *DailyGaolCreateBulk) Save(ctx context.Context) ([]*DailyGaol, error) {
 	specs := make([]*sqlgraph.CreateSpec, len(dgcb.builders))
-	nodes := make([]*Daily_Gaol, len(dgcb.builders))
+	nodes := make([]*DailyGaol, len(dgcb.builders))
 	mutators := make([]Mutator, len(dgcb.builders))
 	for i := range dgcb.builders {
 		func(i int, root context.Context) {
@@ -406,7 +406,7 @@ func (dgcb *DailyGaolCreateBulk) Save(ctx context.Context) ([]*Daily_Gaol, error
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (dgcb *DailyGaolCreateBulk) SaveX(ctx context.Context) []*Daily_Gaol {
+func (dgcb *DailyGaolCreateBulk) SaveX(ctx context.Context) []*DailyGaol {
 	v, err := dgcb.Save(ctx)
 	if err != nil {
 		panic(err)

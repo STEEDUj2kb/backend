@@ -12,14 +12,14 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
-	// Daily_Gaol is the client for interacting with the Daily_Gaol builders.
-	Daily_Gaol *Daily_GaolClient
+	// DailyGaol is the client for interacting with the DailyGaol builders.
+	DailyGaol *DailyGaolClient
 	// Study is the client for interacting with the Study builders.
 	Study *StudyClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
-	// Weekly_Gaol is the client for interacting with the Weekly_Gaol builders.
-	Weekly_Gaol *Weekly_GaolClient
+	// WeeklyGaol is the client for interacting with the WeeklyGaol builders.
+	WeeklyGaol *WeeklyGaolClient
 
 	// lazily loaded.
 	client     *Client
@@ -155,10 +155,10 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
-	tx.Daily_Gaol = NewDaily_GaolClient(tx.config)
+	tx.DailyGaol = NewDailyGaolClient(tx.config)
 	tx.Study = NewStudyClient(tx.config)
 	tx.User = NewUserClient(tx.config)
-	tx.Weekly_Gaol = NewWeekly_GaolClient(tx.config)
+	tx.WeeklyGaol = NewWeeklyGaolClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
@@ -168,7 +168,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Daily_Gaol.QueryXXX(), the query will be executed
+// applies a query, for example: DailyGaol.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

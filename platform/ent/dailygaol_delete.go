@@ -9,11 +9,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 )
 
-// DailyGaolDelete is the builder for deleting a Daily_Gaol entity.
+// DailyGaolDelete is the builder for deleting a DailyGaol entity.
 type DailyGaolDelete struct {
 	config
 	hooks    []Hook
@@ -21,7 +21,7 @@ type DailyGaolDelete struct {
 }
 
 // Where appends a list predicates to the DailyGaolDelete builder.
-func (dgd *DailyGaolDelete) Where(ps ...predicate.Daily_Gaol) *DailyGaolDelete {
+func (dgd *DailyGaolDelete) Where(ps ...predicate.DailyGaol) *DailyGaolDelete {
 	dgd.mutation.Where(ps...)
 	return dgd
 }
@@ -70,10 +70,10 @@ func (dgd *DailyGaolDelete) ExecX(ctx context.Context) int {
 func (dgd *DailyGaolDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table: daily_gaol.Table,
+			Table: dailygaol.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: daily_gaol.FieldID,
+				Column: dailygaol.FieldID,
 			},
 		},
 	}
@@ -87,7 +87,7 @@ func (dgd *DailyGaolDelete) sqlExec(ctx context.Context) (int, error) {
 	return sqlgraph.DeleteNodes(ctx, dgd.driver, _spec)
 }
 
-// DailyGaolDeleteOne is the builder for deleting a single Daily_Gaol entity.
+// DailyGaolDeleteOne is the builder for deleting a single DailyGaol entity.
 type DailyGaolDeleteOne struct {
 	dgd *DailyGaolDelete
 }
@@ -99,7 +99,7 @@ func (dgdo *DailyGaolDeleteOne) Exec(ctx context.Context) error {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{daily_gaol.Label}
+		return &NotFoundError{dailygaol.Label}
 	default:
 		return nil
 	}

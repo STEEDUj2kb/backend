@@ -12,13 +12,13 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// WeeklyGaolQuery is the builder for querying Weekly_Gaol entities.
+// WeeklyGaolQuery is the builder for querying WeeklyGaol entities.
 type WeeklyGaolQuery struct {
 	config
 	limit      *int
@@ -26,7 +26,7 @@ type WeeklyGaolQuery struct {
 	unique     *bool
 	order      []OrderFunc
 	fields     []string
-	predicates []predicate.Weekly_Gaol
+	predicates []predicate.WeeklyGaol
 	// eager-loading edges.
 	withDgaols *DailyGaolQuery
 	withStudy  *StudyQuery
@@ -37,7 +37,7 @@ type WeeklyGaolQuery struct {
 }
 
 // Where adds a new predicate for the WeeklyGaolQuery builder.
-func (wgq *WeeklyGaolQuery) Where(ps ...predicate.Weekly_Gaol) *WeeklyGaolQuery {
+func (wgq *WeeklyGaolQuery) Where(ps ...predicate.WeeklyGaol) *WeeklyGaolQuery {
 	wgq.predicates = append(wgq.predicates, ps...)
 	return wgq
 }
@@ -79,9 +79,9 @@ func (wgq *WeeklyGaolQuery) QueryDgaols() *DailyGaolQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(weekly_gaol.Table, weekly_gaol.FieldID, selector),
-			sqlgraph.To(daily_gaol.Table, daily_gaol.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, weekly_gaol.DgaolsTable, weekly_gaol.DgaolsColumn),
+			sqlgraph.From(weeklygaol.Table, weeklygaol.FieldID, selector),
+			sqlgraph.To(dailygaol.Table, dailygaol.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, weeklygaol.DgaolsTable, weeklygaol.DgaolsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(wgq.driver.Dialect(), step)
 		return fromU, nil
@@ -101,9 +101,9 @@ func (wgq *WeeklyGaolQuery) QueryStudy() *StudyQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(weekly_gaol.Table, weekly_gaol.FieldID, selector),
+			sqlgraph.From(weeklygaol.Table, weeklygaol.FieldID, selector),
 			sqlgraph.To(study.Table, study.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, weekly_gaol.StudyTable, weekly_gaol.StudyColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, weeklygaol.StudyTable, weeklygaol.StudyColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(wgq.driver.Dialect(), step)
 		return fromU, nil
@@ -111,21 +111,21 @@ func (wgq *WeeklyGaolQuery) QueryStudy() *StudyQuery {
 	return query
 }
 
-// First returns the first Weekly_Gaol entity from the query.
-// Returns a *NotFoundError when no Weekly_Gaol was found.
-func (wgq *WeeklyGaolQuery) First(ctx context.Context) (*Weekly_Gaol, error) {
+// First returns the first WeeklyGaol entity from the query.
+// Returns a *NotFoundError when no WeeklyGaol was found.
+func (wgq *WeeklyGaolQuery) First(ctx context.Context) (*WeeklyGaol, error) {
 	nodes, err := wgq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{weekly_gaol.Label}
+		return nil, &NotFoundError{weeklygaol.Label}
 	}
 	return nodes[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (wgq *WeeklyGaolQuery) FirstX(ctx context.Context) *Weekly_Gaol {
+func (wgq *WeeklyGaolQuery) FirstX(ctx context.Context) *WeeklyGaol {
 	node, err := wgq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -133,15 +133,15 @@ func (wgq *WeeklyGaolQuery) FirstX(ctx context.Context) *Weekly_Gaol {
 	return node
 }
 
-// FirstID returns the first Weekly_Gaol ID from the query.
-// Returns a *NotFoundError when no Weekly_Gaol ID was found.
+// FirstID returns the first WeeklyGaol ID from the query.
+// Returns a *NotFoundError when no WeeklyGaol ID was found.
 func (wgq *WeeklyGaolQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = wgq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 		return
 	}
 	return ids[0], nil
@@ -156,10 +156,10 @@ func (wgq *WeeklyGaolQuery) FirstIDX(ctx context.Context) int {
 	return id
 }
 
-// Only returns a single Weekly_Gaol entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Weekly_Gaol entity is not found.
-// Returns a *NotFoundError when no Weekly_Gaol entities are found.
-func (wgq *WeeklyGaolQuery) Only(ctx context.Context) (*Weekly_Gaol, error) {
+// Only returns a single WeeklyGaol entity found by the query, ensuring it only returns one.
+// Returns a *NotSingularError when exactly one WeeklyGaol entity is not found.
+// Returns a *NotFoundError when no WeeklyGaol entities are found.
+func (wgq *WeeklyGaolQuery) Only(ctx context.Context) (*WeeklyGaol, error) {
 	nodes, err := wgq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
@@ -168,14 +168,14 @@ func (wgq *WeeklyGaolQuery) Only(ctx context.Context) (*Weekly_Gaol, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{weekly_gaol.Label}
+		return nil, &NotFoundError{weeklygaol.Label}
 	default:
-		return nil, &NotSingularError{weekly_gaol.Label}
+		return nil, &NotSingularError{weeklygaol.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (wgq *WeeklyGaolQuery) OnlyX(ctx context.Context) *Weekly_Gaol {
+func (wgq *WeeklyGaolQuery) OnlyX(ctx context.Context) *WeeklyGaol {
 	node, err := wgq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -183,8 +183,8 @@ func (wgq *WeeklyGaolQuery) OnlyX(ctx context.Context) *Weekly_Gaol {
 	return node
 }
 
-// OnlyID is like Only, but returns the only Weekly_Gaol ID in the query.
-// Returns a *NotSingularError when exactly one Weekly_Gaol ID is not found.
+// OnlyID is like Only, but returns the only WeeklyGaol ID in the query.
+// Returns a *NotSingularError when exactly one WeeklyGaol ID is not found.
 // Returns a *NotFoundError when no entities are found.
 func (wgq *WeeklyGaolQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
@@ -195,9 +195,9 @@ func (wgq *WeeklyGaolQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
-		err = &NotSingularError{weekly_gaol.Label}
+		err = &NotSingularError{weeklygaol.Label}
 	}
 	return
 }
@@ -211,8 +211,8 @@ func (wgq *WeeklyGaolQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Weekly_Gaols.
-func (wgq *WeeklyGaolQuery) All(ctx context.Context) ([]*Weekly_Gaol, error) {
+// All executes the query and returns a list of WeeklyGaols.
+func (wgq *WeeklyGaolQuery) All(ctx context.Context) ([]*WeeklyGaol, error) {
 	if err := wgq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -220,7 +220,7 @@ func (wgq *WeeklyGaolQuery) All(ctx context.Context) ([]*Weekly_Gaol, error) {
 }
 
 // AllX is like All, but panics if an error occurs.
-func (wgq *WeeklyGaolQuery) AllX(ctx context.Context) []*Weekly_Gaol {
+func (wgq *WeeklyGaolQuery) AllX(ctx context.Context) []*WeeklyGaol {
 	nodes, err := wgq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -228,10 +228,10 @@ func (wgq *WeeklyGaolQuery) AllX(ctx context.Context) []*Weekly_Gaol {
 	return nodes
 }
 
-// IDs executes the query and returns a list of Weekly_Gaol IDs.
+// IDs executes the query and returns a list of WeeklyGaol IDs.
 func (wgq *WeeklyGaolQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := wgq.Select(weekly_gaol.FieldID).Scan(ctx, &ids); err != nil {
+	if err := wgq.Select(weeklygaol.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -291,7 +291,7 @@ func (wgq *WeeklyGaolQuery) Clone() *WeeklyGaolQuery {
 		limit:      wgq.limit,
 		offset:     wgq.offset,
 		order:      append([]OrderFunc{}, wgq.order...),
-		predicates: append([]predicate.Weekly_Gaol{}, wgq.predicates...),
+		predicates: append([]predicate.WeeklyGaol{}, wgq.predicates...),
 		withDgaols: wgq.withDgaols.Clone(),
 		withStudy:  wgq.withStudy.Clone(),
 		// clone intermediate query.
@@ -333,7 +333,7 @@ func (wgq *WeeklyGaolQuery) WithStudy(opts ...func(*StudyQuery)) *WeeklyGaolQuer
 //	}
 //
 //	client.WeeklyGaol.Query().
-//		GroupBy(weekly_gaol.FieldGoal).
+//		GroupBy(weeklygaol.FieldGoal).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -359,7 +359,7 @@ func (wgq *WeeklyGaolQuery) GroupBy(field string, fields ...string) *WeeklyGaolG
 //	}
 //
 //	client.WeeklyGaol.Query().
-//		Select(weekly_gaol.FieldGoal).
+//		Select(weeklygaol.FieldGoal).
 //		Scan(ctx, &v)
 //
 func (wgq *WeeklyGaolQuery) Select(fields ...string) *WeeklyGaolSelect {
@@ -369,7 +369,7 @@ func (wgq *WeeklyGaolQuery) Select(fields ...string) *WeeklyGaolSelect {
 
 func (wgq *WeeklyGaolQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range wgq.fields {
-		if !weekly_gaol.ValidColumn(f) {
+		if !weeklygaol.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -383,9 +383,9 @@ func (wgq *WeeklyGaolQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (wgq *WeeklyGaolQuery) sqlAll(ctx context.Context) ([]*Weekly_Gaol, error) {
+func (wgq *WeeklyGaolQuery) sqlAll(ctx context.Context) ([]*WeeklyGaol, error) {
 	var (
-		nodes       = []*Weekly_Gaol{}
+		nodes       = []*WeeklyGaol{}
 		withFKs     = wgq.withFKs
 		_spec       = wgq.querySpec()
 		loadedTypes = [2]bool{
@@ -397,10 +397,10 @@ func (wgq *WeeklyGaolQuery) sqlAll(ctx context.Context) ([]*Weekly_Gaol, error) 
 		withFKs = true
 	}
 	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, weekly_gaol.ForeignKeys...)
+		_spec.Node.Columns = append(_spec.Node.Columns, weeklygaol.ForeignKeys...)
 	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
-		node := &Weekly_Gaol{config: wgq.config}
+		node := &WeeklyGaol{config: wgq.config}
 		nodes = append(nodes, node)
 		return node.scanValues(columns)
 	}
@@ -421,15 +421,15 @@ func (wgq *WeeklyGaolQuery) sqlAll(ctx context.Context) ([]*Weekly_Gaol, error) 
 
 	if query := wgq.withDgaols; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Weekly_Gaol)
+		nodeids := make(map[int]*WeeklyGaol)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.Dgaols = []*Daily_Gaol{}
+			nodes[i].Edges.Dgaols = []*DailyGaol{}
 		}
 		query.withFKs = true
-		query.Where(predicate.Daily_Gaol(func(s *sql.Selector) {
-			s.Where(sql.InValues(weekly_gaol.DgaolsColumn, fks...))
+		query.Where(predicate.DailyGaol(func(s *sql.Selector) {
+			s.Where(sql.InValues(weeklygaol.DgaolsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -450,7 +450,7 @@ func (wgq *WeeklyGaolQuery) sqlAll(ctx context.Context) ([]*Weekly_Gaol, error) 
 
 	if query := wgq.withStudy; query != nil {
 		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Weekly_Gaol)
+		nodeids := make(map[int][]*WeeklyGaol)
 		for i := range nodes {
 			if nodes[i].study_wgoals == nil {
 				continue
@@ -496,11 +496,11 @@ func (wgq *WeeklyGaolQuery) sqlExist(ctx context.Context) (bool, error) {
 func (wgq *WeeklyGaolQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   weekly_gaol.Table,
-			Columns: weekly_gaol.Columns,
+			Table:   weeklygaol.Table,
+			Columns: weeklygaol.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: weekly_gaol.FieldID,
+				Column: weeklygaol.FieldID,
 			},
 		},
 		From:   wgq.sql,
@@ -511,9 +511,9 @@ func (wgq *WeeklyGaolQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := wgq.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, weekly_gaol.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, weeklygaol.FieldID)
 		for i := range fields {
-			if fields[i] != weekly_gaol.FieldID {
+			if fields[i] != weeklygaol.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
@@ -543,10 +543,10 @@ func (wgq *WeeklyGaolQuery) querySpec() *sqlgraph.QuerySpec {
 
 func (wgq *WeeklyGaolQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(wgq.driver.Dialect())
-	t1 := builder.Table(weekly_gaol.Table)
+	t1 := builder.Table(weeklygaol.Table)
 	columns := wgq.fields
 	if len(columns) == 0 {
-		columns = weekly_gaol.Columns
+		columns = weeklygaol.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if wgq.sql != nil {
@@ -570,7 +570,7 @@ func (wgq *WeeklyGaolQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	return selector
 }
 
-// WeeklyGaolGroupBy is the group-by builder for Weekly_Gaol entities.
+// WeeklyGaolGroupBy is the group-by builder for WeeklyGaol entities.
 type WeeklyGaolGroupBy struct {
 	config
 	fields []string
@@ -636,7 +636,7 @@ func (wggb *WeeklyGaolGroupBy) String(ctx context.Context) (_ string, err error)
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolGroupBy.Strings returned %d results when one was expected", len(v))
 	}
@@ -685,7 +685,7 @@ func (wggb *WeeklyGaolGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolGroupBy.Ints returned %d results when one was expected", len(v))
 	}
@@ -734,7 +734,7 @@ func (wggb *WeeklyGaolGroupBy) Float64(ctx context.Context) (_ float64, err erro
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
@@ -783,7 +783,7 @@ func (wggb *WeeklyGaolGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolGroupBy.Bools returned %d results when one was expected", len(v))
 	}
@@ -801,7 +801,7 @@ func (wggb *WeeklyGaolGroupBy) BoolX(ctx context.Context) bool {
 
 func (wggb *WeeklyGaolGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	for _, f := range wggb.fields {
-		if !weekly_gaol.ValidColumn(f) {
+		if !weeklygaol.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
 		}
 	}
@@ -893,7 +893,7 @@ func (wgs *WeeklyGaolSelect) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolSelect.Strings returned %d results when one was expected", len(v))
 	}
@@ -940,7 +940,7 @@ func (wgs *WeeklyGaolSelect) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolSelect.Ints returned %d results when one was expected", len(v))
 	}
@@ -987,7 +987,7 @@ func (wgs *WeeklyGaolSelect) Float64(ctx context.Context) (_ float64, err error)
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolSelect.Float64s returned %d results when one was expected", len(v))
 	}
@@ -1034,7 +1034,7 @@ func (wgs *WeeklyGaolSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{weekly_gaol.Label}
+		err = &NotFoundError{weeklygaol.Label}
 	default:
 		err = fmt.Errorf("ent: WeeklyGaolSelect.Bools returned %d results when one was expected", len(v))
 	}

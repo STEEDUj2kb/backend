@@ -6,8 +6,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Daily_Gaol is the predicate function for daily_gaol builders.
-type Daily_Gaol func(*sql.Selector)
+// DailyGaol is the predicate function for dailygaol builders.
+type DailyGaol func(*sql.Selector)
 
 // Study is the predicate function for study builders.
 type Study func(*sql.Selector)
@@ -15,5 +15,5 @@ type Study func(*sql.Selector)
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
 
-// Weekly_Gaol is the predicate function for weekly_gaol builders.
-type Weekly_Gaol func(*sql.Selector)
+// WeeklyGaol is the predicate function for weeklygaol builders.
+type WeeklyGaol func(*sql.Selector)

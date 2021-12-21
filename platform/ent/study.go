@@ -34,9 +34,9 @@ type StudyEdges struct {
 	// Planner holds the value of the planner edge.
 	Planner *User `json:"planner,omitempty"`
 	// Dgoals holds the value of the dgoals edge.
-	Dgoals []*Daily_Gaol `json:"dgoals,omitempty"`
+	Dgoals []*DailyGaol `json:"dgoals,omitempty"`
 	// Wgoals holds the value of the wgoals edge.
-	Wgoals []*Weekly_Gaol `json:"wgoals,omitempty"`
+	Wgoals []*WeeklyGaol `json:"wgoals,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
@@ -58,7 +58,7 @@ func (e StudyEdges) PlannerOrErr() (*User, error) {
 
 // DgoalsOrErr returns the Dgoals value or an error if the edge
 // was not loaded in eager-loading.
-func (e StudyEdges) DgoalsOrErr() ([]*Daily_Gaol, error) {
+func (e StudyEdges) DgoalsOrErr() ([]*DailyGaol, error) {
 	if e.loadedTypes[1] {
 		return e.Dgoals, nil
 	}
@@ -67,7 +67,7 @@ func (e StudyEdges) DgoalsOrErr() ([]*Daily_Gaol, error) {
 
 // WgoalsOrErr returns the Wgoals value or an error if the edge
 // was not loaded in eager-loading.
-func (e StudyEdges) WgoalsOrErr() ([]*Weekly_Gaol, error) {
+func (e StudyEdges) WgoalsOrErr() ([]*WeeklyGaol, error) {
 	if e.loadedTypes[2] {
 		return e.Wgoals, nil
 	}

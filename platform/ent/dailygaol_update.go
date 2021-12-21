@@ -10,13 +10,13 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// DailyGaolUpdate is the builder for updating Daily_Gaol entities.
+// DailyGaolUpdate is the builder for updating DailyGaol entities.
 type DailyGaolUpdate struct {
 	config
 	hooks    []Hook
@@ -24,7 +24,7 @@ type DailyGaolUpdate struct {
 }
 
 // Where appends a list predicates to the DailyGaolUpdate builder.
-func (dgu *DailyGaolUpdate) Where(ps ...predicate.Daily_Gaol) *DailyGaolUpdate {
+func (dgu *DailyGaolUpdate) Where(ps ...predicate.DailyGaol) *DailyGaolUpdate {
 	dgu.mutation.Where(ps...)
 	return dgu
 }
@@ -88,13 +88,13 @@ func (dgu *DailyGaolUpdate) SetStudy(s *Study) *DailyGaolUpdate {
 	return dgu.SetStudyID(s.ID)
 }
 
-// SetWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by ID.
+// SetWgoalID sets the "wgoal" edge to the WeeklyGaol entity by ID.
 func (dgu *DailyGaolUpdate) SetWgoalID(id int) *DailyGaolUpdate {
 	dgu.mutation.SetWgoalID(id)
 	return dgu
 }
 
-// SetNillableWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by ID if the given value is not nil.
+// SetNillableWgoalID sets the "wgoal" edge to the WeeklyGaol entity by ID if the given value is not nil.
 func (dgu *DailyGaolUpdate) SetNillableWgoalID(id *int) *DailyGaolUpdate {
 	if id != nil {
 		dgu = dgu.SetWgoalID(*id)
@@ -102,8 +102,8 @@ func (dgu *DailyGaolUpdate) SetNillableWgoalID(id *int) *DailyGaolUpdate {
 	return dgu
 }
 
-// SetWgoal sets the "wgoal" edge to the Weekly_Gaol entity.
-func (dgu *DailyGaolUpdate) SetWgoal(w *Weekly_Gaol) *DailyGaolUpdate {
+// SetWgoal sets the "wgoal" edge to the WeeklyGaol entity.
+func (dgu *DailyGaolUpdate) SetWgoal(w *WeeklyGaol) *DailyGaolUpdate {
 	return dgu.SetWgoalID(w.ID)
 }
 
@@ -118,7 +118,7 @@ func (dgu *DailyGaolUpdate) ClearStudy() *DailyGaolUpdate {
 	return dgu
 }
 
-// ClearWgoal clears the "wgoal" edge to the Weekly_Gaol entity.
+// ClearWgoal clears the "wgoal" edge to the WeeklyGaol entity.
 func (dgu *DailyGaolUpdate) ClearWgoal() *DailyGaolUpdate {
 	dgu.mutation.ClearWgoal()
 	return dgu
@@ -188,7 +188,7 @@ func (dgu *DailyGaolUpdate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (dgu *DailyGaolUpdate) defaults() {
 	if _, ok := dgu.mutation.UpdatedAt(); !ok {
-		v := daily_gaol.UpdateDefaultUpdatedAt()
+		v := dailygaol.UpdateDefaultUpdatedAt()
 		dgu.mutation.SetUpdatedAt(v)
 	}
 }
@@ -196,7 +196,7 @@ func (dgu *DailyGaolUpdate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (dgu *DailyGaolUpdate) check() error {
 	if v, ok := dgu.mutation.Todo(); ok {
-		if err := daily_gaol.TodoValidator(v); err != nil {
+		if err := dailygaol.TodoValidator(v); err != nil {
 			return &ValidationError{Name: "todo", err: fmt.Errorf("ent: validator failed for field \"todo\": %w", err)}
 		}
 	}
@@ -206,11 +206,11 @@ func (dgu *DailyGaolUpdate) check() error {
 func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   daily_gaol.Table,
-			Columns: daily_gaol.Columns,
+			Table:   dailygaol.Table,
+			Columns: dailygaol.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: daily_gaol.FieldID,
+				Column: dailygaol.FieldID,
 			},
 		},
 	}
@@ -225,36 +225,36 @@ func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: daily_gaol.FieldUpdatedAt,
+			Column: dailygaol.FieldUpdatedAt,
 		})
 	}
 	if value, ok := dgu.mutation.Todo(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: daily_gaol.FieldTodo,
+			Column: dailygaol.FieldTodo,
 		})
 	}
 	if value, ok := dgu.mutation.Done(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: daily_gaol.FieldDone,
+			Column: dailygaol.FieldDone,
 		})
 	}
 	if value, ok := dgu.mutation.IsRemoved(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: daily_gaol.FieldIsRemoved,
+			Column: dailygaol.FieldIsRemoved,
 		})
 	}
 	if dgu.mutation.StudyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.StudyTable,
-			Columns: []string{daily_gaol.StudyColumn},
+			Table:   dailygaol.StudyTable,
+			Columns: []string{dailygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -269,8 +269,8 @@ func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.StudyTable,
-			Columns: []string{daily_gaol.StudyColumn},
+			Table:   dailygaol.StudyTable,
+			Columns: []string{dailygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -288,13 +288,13 @@ func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.WgoalTable,
-			Columns: []string{daily_gaol.WgoalColumn},
+			Table:   dailygaol.WgoalTable,
+			Columns: []string{dailygaol.WgoalColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -304,13 +304,13 @@ func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.WgoalTable,
-			Columns: []string{daily_gaol.WgoalColumn},
+			Table:   dailygaol.WgoalTable,
+			Columns: []string{dailygaol.WgoalColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -321,7 +321,7 @@ func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, dgu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{daily_gaol.Label}
+			err = &NotFoundError{dailygaol.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}
@@ -330,7 +330,7 @@ func (dgu *DailyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// DailyGaolUpdateOne is the builder for updating a single Daily_Gaol entity.
+// DailyGaolUpdateOne is the builder for updating a single DailyGaol entity.
 type DailyGaolUpdateOne struct {
 	config
 	fields   []string
@@ -397,13 +397,13 @@ func (dguo *DailyGaolUpdateOne) SetStudy(s *Study) *DailyGaolUpdateOne {
 	return dguo.SetStudyID(s.ID)
 }
 
-// SetWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by ID.
+// SetWgoalID sets the "wgoal" edge to the WeeklyGaol entity by ID.
 func (dguo *DailyGaolUpdateOne) SetWgoalID(id int) *DailyGaolUpdateOne {
 	dguo.mutation.SetWgoalID(id)
 	return dguo
 }
 
-// SetNillableWgoalID sets the "wgoal" edge to the Weekly_Gaol entity by ID if the given value is not nil.
+// SetNillableWgoalID sets the "wgoal" edge to the WeeklyGaol entity by ID if the given value is not nil.
 func (dguo *DailyGaolUpdateOne) SetNillableWgoalID(id *int) *DailyGaolUpdateOne {
 	if id != nil {
 		dguo = dguo.SetWgoalID(*id)
@@ -411,8 +411,8 @@ func (dguo *DailyGaolUpdateOne) SetNillableWgoalID(id *int) *DailyGaolUpdateOne 
 	return dguo
 }
 
-// SetWgoal sets the "wgoal" edge to the Weekly_Gaol entity.
-func (dguo *DailyGaolUpdateOne) SetWgoal(w *Weekly_Gaol) *DailyGaolUpdateOne {
+// SetWgoal sets the "wgoal" edge to the WeeklyGaol entity.
+func (dguo *DailyGaolUpdateOne) SetWgoal(w *WeeklyGaol) *DailyGaolUpdateOne {
 	return dguo.SetWgoalID(w.ID)
 }
 
@@ -427,7 +427,7 @@ func (dguo *DailyGaolUpdateOne) ClearStudy() *DailyGaolUpdateOne {
 	return dguo
 }
 
-// ClearWgoal clears the "wgoal" edge to the Weekly_Gaol entity.
+// ClearWgoal clears the "wgoal" edge to the WeeklyGaol entity.
 func (dguo *DailyGaolUpdateOne) ClearWgoal() *DailyGaolUpdateOne {
 	dguo.mutation.ClearWgoal()
 	return dguo
@@ -440,11 +440,11 @@ func (dguo *DailyGaolUpdateOne) Select(field string, fields ...string) *DailyGao
 	return dguo
 }
 
-// Save executes the query and returns the updated Daily_Gaol entity.
-func (dguo *DailyGaolUpdateOne) Save(ctx context.Context) (*Daily_Gaol, error) {
+// Save executes the query and returns the updated DailyGaol entity.
+func (dguo *DailyGaolUpdateOne) Save(ctx context.Context) (*DailyGaol, error) {
 	var (
 		err  error
-		node *Daily_Gaol
+		node *DailyGaol
 	)
 	dguo.defaults()
 	if len(dguo.hooks) == 0 {
@@ -480,7 +480,7 @@ func (dguo *DailyGaolUpdateOne) Save(ctx context.Context) (*Daily_Gaol, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (dguo *DailyGaolUpdateOne) SaveX(ctx context.Context) *Daily_Gaol {
+func (dguo *DailyGaolUpdateOne) SaveX(ctx context.Context) *DailyGaol {
 	node, err := dguo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -504,7 +504,7 @@ func (dguo *DailyGaolUpdateOne) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (dguo *DailyGaolUpdateOne) defaults() {
 	if _, ok := dguo.mutation.UpdatedAt(); !ok {
-		v := daily_gaol.UpdateDefaultUpdatedAt()
+		v := dailygaol.UpdateDefaultUpdatedAt()
 		dguo.mutation.SetUpdatedAt(v)
 	}
 }
@@ -512,37 +512,37 @@ func (dguo *DailyGaolUpdateOne) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (dguo *DailyGaolUpdateOne) check() error {
 	if v, ok := dguo.mutation.Todo(); ok {
-		if err := daily_gaol.TodoValidator(v); err != nil {
+		if err := dailygaol.TodoValidator(v); err != nil {
 			return &ValidationError{Name: "todo", err: fmt.Errorf("ent: validator failed for field \"todo\": %w", err)}
 		}
 	}
 	return nil
 }
 
-func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Daily_Gaol, err error) {
+func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *DailyGaol, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   daily_gaol.Table,
-			Columns: daily_gaol.Columns,
+			Table:   dailygaol.Table,
+			Columns: dailygaol.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: daily_gaol.FieldID,
+				Column: dailygaol.FieldID,
 			},
 		},
 	}
 	id, ok := dguo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Daily_Gaol.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing DailyGaol.ID for update")}
 	}
 	_spec.Node.ID.Value = id
 	if fields := dguo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, daily_gaol.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, dailygaol.FieldID)
 		for _, f := range fields {
-			if !daily_gaol.ValidColumn(f) {
+			if !dailygaol.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != daily_gaol.FieldID {
+			if f != dailygaol.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -558,36 +558,36 @@ func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Daily_Gaol,
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: daily_gaol.FieldUpdatedAt,
+			Column: dailygaol.FieldUpdatedAt,
 		})
 	}
 	if value, ok := dguo.mutation.Todo(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: daily_gaol.FieldTodo,
+			Column: dailygaol.FieldTodo,
 		})
 	}
 	if value, ok := dguo.mutation.Done(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: daily_gaol.FieldDone,
+			Column: dailygaol.FieldDone,
 		})
 	}
 	if value, ok := dguo.mutation.IsRemoved(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: daily_gaol.FieldIsRemoved,
+			Column: dailygaol.FieldIsRemoved,
 		})
 	}
 	if dguo.mutation.StudyCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.StudyTable,
-			Columns: []string{daily_gaol.StudyColumn},
+			Table:   dailygaol.StudyTable,
+			Columns: []string{dailygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -602,8 +602,8 @@ func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Daily_Gaol,
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.StudyTable,
-			Columns: []string{daily_gaol.StudyColumn},
+			Table:   dailygaol.StudyTable,
+			Columns: []string{dailygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -621,13 +621,13 @@ func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Daily_Gaol,
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.WgoalTable,
-			Columns: []string{daily_gaol.WgoalColumn},
+			Table:   dailygaol.WgoalTable,
+			Columns: []string{dailygaol.WgoalColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -637,13 +637,13 @@ func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Daily_Gaol,
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   daily_gaol.WgoalTable,
-			Columns: []string{daily_gaol.WgoalColumn},
+			Table:   dailygaol.WgoalTable,
+			Columns: []string{dailygaol.WgoalColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -652,12 +652,12 @@ func (dguo *DailyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Daily_Gaol,
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Daily_Gaol{config: dguo.config}
+	_node = &DailyGaol{config: dguo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, dguo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{daily_gaol.Label}
+			err = &NotFoundError{dailygaol.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}

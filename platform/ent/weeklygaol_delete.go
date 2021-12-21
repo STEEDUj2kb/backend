@@ -10,10 +10,10 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// WeeklyGaolDelete is the builder for deleting a Weekly_Gaol entity.
+// WeeklyGaolDelete is the builder for deleting a WeeklyGaol entity.
 type WeeklyGaolDelete struct {
 	config
 	hooks    []Hook
@@ -21,7 +21,7 @@ type WeeklyGaolDelete struct {
 }
 
 // Where appends a list predicates to the WeeklyGaolDelete builder.
-func (wgd *WeeklyGaolDelete) Where(ps ...predicate.Weekly_Gaol) *WeeklyGaolDelete {
+func (wgd *WeeklyGaolDelete) Where(ps ...predicate.WeeklyGaol) *WeeklyGaolDelete {
 	wgd.mutation.Where(ps...)
 	return wgd
 }
@@ -70,10 +70,10 @@ func (wgd *WeeklyGaolDelete) ExecX(ctx context.Context) int {
 func (wgd *WeeklyGaolDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table: weekly_gaol.Table,
+			Table: weeklygaol.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: weekly_gaol.FieldID,
+				Column: weeklygaol.FieldID,
 			},
 		},
 	}
@@ -87,7 +87,7 @@ func (wgd *WeeklyGaolDelete) sqlExec(ctx context.Context) (int, error) {
 	return sqlgraph.DeleteNodes(ctx, wgd.driver, _spec)
 }
 
-// WeeklyGaolDeleteOne is the builder for deleting a single Weekly_Gaol entity.
+// WeeklyGaolDeleteOne is the builder for deleting a single WeeklyGaol entity.
 type WeeklyGaolDeleteOne struct {
 	wgd *WeeklyGaolDelete
 }
@@ -99,7 +99,7 @@ func (wgdo *WeeklyGaolDeleteOne) Exec(ctx context.Context) error {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{weekly_gaol.Label}
+		return &NotFoundError{weeklygaol.Label}
 	default:
 		return nil
 	}

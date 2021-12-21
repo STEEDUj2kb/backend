@@ -9,10 +9,10 @@ import (
 
 	"github.com/STEEDUj2kb/platform/ent/migrate"
 
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -24,14 +24,14 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Daily_Gaol is the client for interacting with the Daily_Gaol builders.
-	Daily_Gaol *Daily_GaolClient
+	// DailyGaol is the client for interacting with the DailyGaol builders.
+	DailyGaol *DailyGaolClient
 	// Study is the client for interacting with the Study builders.
 	Study *StudyClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
-	// Weekly_Gaol is the client for interacting with the Weekly_Gaol builders.
-	Weekly_Gaol *Weekly_GaolClient
+	// WeeklyGaol is the client for interacting with the WeeklyGaol builders.
+	WeeklyGaol *WeeklyGaolClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -45,10 +45,10 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Daily_Gaol = NewDaily_GaolClient(c.config)
+	c.DailyGaol = NewDailyGaolClient(c.config)
 	c.Study = NewStudyClient(c.config)
 	c.User = NewUserClient(c.config)
-	c.Weekly_Gaol = NewWeekly_GaolClient(c.config)
+	c.WeeklyGaol = NewWeeklyGaolClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -80,12 +80,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:         ctx,
-		config:      cfg,
-		Daily_Gaol:  NewDaily_GaolClient(cfg),
-		Study:       NewStudyClient(cfg),
-		User:        NewUserClient(cfg),
-		Weekly_Gaol: NewWeekly_GaolClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		DailyGaol:  NewDailyGaolClient(cfg),
+		Study:      NewStudyClient(cfg),
+		User:       NewUserClient(cfg),
+		WeeklyGaol: NewWeeklyGaolClient(cfg),
 	}, nil
 }
 
@@ -103,18 +103,18 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		config:      cfg,
-		Daily_Gaol:  NewDaily_GaolClient(cfg),
-		Study:       NewStudyClient(cfg),
-		User:        NewUserClient(cfg),
-		Weekly_Gaol: NewWeekly_GaolClient(cfg),
+		config:     cfg,
+		DailyGaol:  NewDailyGaolClient(cfg),
+		Study:      NewStudyClient(cfg),
+		User:       NewUserClient(cfg),
+		WeeklyGaol: NewWeeklyGaolClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Daily_Gaol.
+//		DailyGaol.
 //		Query().
 //		Count(ctx)
 //
@@ -137,90 +137,90 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Daily_Gaol.Use(hooks...)
+	c.DailyGaol.Use(hooks...)
 	c.Study.Use(hooks...)
 	c.User.Use(hooks...)
-	c.Weekly_Gaol.Use(hooks...)
+	c.WeeklyGaol.Use(hooks...)
 }
 
-// Daily_GaolClient is a client for the Daily_Gaol schema.
-type Daily_GaolClient struct {
+// DailyGaolClient is a client for the DailyGaol schema.
+type DailyGaolClient struct {
 	config
 }
 
-// NewDaily_GaolClient returns a client for the Daily_Gaol from the given config.
-func NewDaily_GaolClient(c config) *Daily_GaolClient {
-	return &Daily_GaolClient{config: c}
+// NewDailyGaolClient returns a client for the DailyGaol from the given config.
+func NewDailyGaolClient(c config) *DailyGaolClient {
+	return &DailyGaolClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `daily_gaol.Hooks(f(g(h())))`.
-func (c *Daily_GaolClient) Use(hooks ...Hook) {
-	c.hooks.Daily_Gaol = append(c.hooks.Daily_Gaol, hooks...)
+// A call to `Use(f, g, h)` equals to `dailygaol.Hooks(f(g(h())))`.
+func (c *DailyGaolClient) Use(hooks ...Hook) {
+	c.hooks.DailyGaol = append(c.hooks.DailyGaol, hooks...)
 }
 
-// Create returns a create builder for Daily_Gaol.
-func (c *Daily_GaolClient) Create() *DailyGaolCreate {
+// Create returns a create builder for DailyGaol.
+func (c *DailyGaolClient) Create() *DailyGaolCreate {
 	mutation := newDailyGaolMutation(c.config, OpCreate)
 	return &DailyGaolCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Daily_Gaol entities.
-func (c *Daily_GaolClient) CreateBulk(builders ...*DailyGaolCreate) *DailyGaolCreateBulk {
+// CreateBulk returns a builder for creating a bulk of DailyGaol entities.
+func (c *DailyGaolClient) CreateBulk(builders ...*DailyGaolCreate) *DailyGaolCreateBulk {
 	return &DailyGaolCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Daily_Gaol.
-func (c *Daily_GaolClient) Update() *DailyGaolUpdate {
+// Update returns an update builder for DailyGaol.
+func (c *DailyGaolClient) Update() *DailyGaolUpdate {
 	mutation := newDailyGaolMutation(c.config, OpUpdate)
 	return &DailyGaolUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *Daily_GaolClient) UpdateOne(dg *Daily_Gaol) *DailyGaolUpdateOne {
-	mutation := newDailyGaolMutation(c.config, OpUpdateOne, withDaily_Gaol(dg))
+func (c *DailyGaolClient) UpdateOne(dg *DailyGaol) *DailyGaolUpdateOne {
+	mutation := newDailyGaolMutation(c.config, OpUpdateOne, withDailyGaol(dg))
 	return &DailyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *Daily_GaolClient) UpdateOneID(id int) *DailyGaolUpdateOne {
-	mutation := newDailyGaolMutation(c.config, OpUpdateOne, withDaily_GaolID(id))
+func (c *DailyGaolClient) UpdateOneID(id int) *DailyGaolUpdateOne {
+	mutation := newDailyGaolMutation(c.config, OpUpdateOne, withDailyGaolID(id))
 	return &DailyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Daily_Gaol.
-func (c *Daily_GaolClient) Delete() *DailyGaolDelete {
+// Delete returns a delete builder for DailyGaol.
+func (c *DailyGaolClient) Delete() *DailyGaolDelete {
 	mutation := newDailyGaolMutation(c.config, OpDelete)
 	return &DailyGaolDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *Daily_GaolClient) DeleteOne(dg *Daily_Gaol) *DailyGaolDeleteOne {
+func (c *DailyGaolClient) DeleteOne(dg *DailyGaol) *DailyGaolDeleteOne {
 	return c.DeleteOneID(dg.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *Daily_GaolClient) DeleteOneID(id int) *DailyGaolDeleteOne {
-	builder := c.Delete().Where(daily_gaol.ID(id))
+func (c *DailyGaolClient) DeleteOneID(id int) *DailyGaolDeleteOne {
+	builder := c.Delete().Where(dailygaol.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
 	return &DailyGaolDeleteOne{builder}
 }
 
-// Query returns a query builder for Daily_Gaol.
-func (c *Daily_GaolClient) Query() *DailyGaolQuery {
+// Query returns a query builder for DailyGaol.
+func (c *DailyGaolClient) Query() *DailyGaolQuery {
 	return &DailyGaolQuery{
 		config: c.config,
 	}
 }
 
-// Get returns a Daily_Gaol entity by its id.
-func (c *Daily_GaolClient) Get(ctx context.Context, id int) (*Daily_Gaol, error) {
-	return c.Query().Where(daily_gaol.ID(id)).Only(ctx)
+// Get returns a DailyGaol entity by its id.
+func (c *DailyGaolClient) Get(ctx context.Context, id int) (*DailyGaol, error) {
+	return c.Query().Where(dailygaol.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *Daily_GaolClient) GetX(ctx context.Context, id int) *Daily_Gaol {
+func (c *DailyGaolClient) GetX(ctx context.Context, id int) *DailyGaol {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -228,15 +228,15 @@ func (c *Daily_GaolClient) GetX(ctx context.Context, id int) *Daily_Gaol {
 	return obj
 }
 
-// QueryStudy queries the study edge of a Daily_Gaol.
-func (c *Daily_GaolClient) QueryStudy(dg *Daily_Gaol) *StudyQuery {
+// QueryStudy queries the study edge of a DailyGaol.
+func (c *DailyGaolClient) QueryStudy(dg *DailyGaol) *StudyQuery {
 	query := &StudyQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := dg.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(daily_gaol.Table, daily_gaol.FieldID, id),
+			sqlgraph.From(dailygaol.Table, dailygaol.FieldID, id),
 			sqlgraph.To(study.Table, study.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, daily_gaol.StudyTable, daily_gaol.StudyColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, dailygaol.StudyTable, dailygaol.StudyColumn),
 		)
 		fromV = sqlgraph.Neighbors(dg.driver.Dialect(), step)
 		return fromV, nil
@@ -244,15 +244,15 @@ func (c *Daily_GaolClient) QueryStudy(dg *Daily_Gaol) *StudyQuery {
 	return query
 }
 
-// QueryWgoal queries the wgoal edge of a Daily_Gaol.
-func (c *Daily_GaolClient) QueryWgoal(dg *Daily_Gaol) *WeeklyGaolQuery {
+// QueryWgoal queries the wgoal edge of a DailyGaol.
+func (c *DailyGaolClient) QueryWgoal(dg *DailyGaol) *WeeklyGaolQuery {
 	query := &WeeklyGaolQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := dg.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(daily_gaol.Table, daily_gaol.FieldID, id),
-			sqlgraph.To(weekly_gaol.Table, weekly_gaol.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, daily_gaol.WgoalTable, daily_gaol.WgoalColumn),
+			sqlgraph.From(dailygaol.Table, dailygaol.FieldID, id),
+			sqlgraph.To(weeklygaol.Table, weeklygaol.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, dailygaol.WgoalTable, dailygaol.WgoalColumn),
 		)
 		fromV = sqlgraph.Neighbors(dg.driver.Dialect(), step)
 		return fromV, nil
@@ -261,8 +261,8 @@ func (c *Daily_GaolClient) QueryWgoal(dg *Daily_Gaol) *WeeklyGaolQuery {
 }
 
 // Hooks returns the client hooks.
-func (c *Daily_GaolClient) Hooks() []Hook {
-	return c.hooks.Daily_Gaol
+func (c *DailyGaolClient) Hooks() []Hook {
+	return c.hooks.DailyGaol
 }
 
 // StudyClient is a client for the Study schema.
@@ -373,7 +373,7 @@ func (c *StudyClient) QueryDgoals(s *Study) *DailyGaolQuery {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(study.Table, study.FieldID, id),
-			sqlgraph.To(daily_gaol.Table, daily_gaol.FieldID),
+			sqlgraph.To(dailygaol.Table, dailygaol.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, study.DgoalsTable, study.DgoalsColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
@@ -389,7 +389,7 @@ func (c *StudyClient) QueryWgoals(s *Study) *WeeklyGaolQuery {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(study.Table, study.FieldID, id),
-			sqlgraph.To(weekly_gaol.Table, weekly_gaol.FieldID),
+			sqlgraph.To(weeklygaol.Table, weeklygaol.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, study.WgoalsTable, study.WgoalsColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
@@ -509,84 +509,84 @@ func (c *UserClient) Hooks() []Hook {
 	return c.hooks.User
 }
 
-// Weekly_GaolClient is a client for the Weekly_Gaol schema.
-type Weekly_GaolClient struct {
+// WeeklyGaolClient is a client for the WeeklyGaol schema.
+type WeeklyGaolClient struct {
 	config
 }
 
-// NewWeekly_GaolClient returns a client for the Weekly_Gaol from the given config.
-func NewWeekly_GaolClient(c config) *Weekly_GaolClient {
-	return &Weekly_GaolClient{config: c}
+// NewWeeklyGaolClient returns a client for the WeeklyGaol from the given config.
+func NewWeeklyGaolClient(c config) *WeeklyGaolClient {
+	return &WeeklyGaolClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `weekly_gaol.Hooks(f(g(h())))`.
-func (c *Weekly_GaolClient) Use(hooks ...Hook) {
-	c.hooks.Weekly_Gaol = append(c.hooks.Weekly_Gaol, hooks...)
+// A call to `Use(f, g, h)` equals to `weeklygaol.Hooks(f(g(h())))`.
+func (c *WeeklyGaolClient) Use(hooks ...Hook) {
+	c.hooks.WeeklyGaol = append(c.hooks.WeeklyGaol, hooks...)
 }
 
-// Create returns a create builder for Weekly_Gaol.
-func (c *Weekly_GaolClient) Create() *WeeklyGaolCreate {
+// Create returns a create builder for WeeklyGaol.
+func (c *WeeklyGaolClient) Create() *WeeklyGaolCreate {
 	mutation := newWeeklyGaolMutation(c.config, OpCreate)
 	return &WeeklyGaolCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Weekly_Gaol entities.
-func (c *Weekly_GaolClient) CreateBulk(builders ...*WeeklyGaolCreate) *WeeklyGaolCreateBulk {
+// CreateBulk returns a builder for creating a bulk of WeeklyGaol entities.
+func (c *WeeklyGaolClient) CreateBulk(builders ...*WeeklyGaolCreate) *WeeklyGaolCreateBulk {
 	return &WeeklyGaolCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Weekly_Gaol.
-func (c *Weekly_GaolClient) Update() *WeeklyGaolUpdate {
+// Update returns an update builder for WeeklyGaol.
+func (c *WeeklyGaolClient) Update() *WeeklyGaolUpdate {
 	mutation := newWeeklyGaolMutation(c.config, OpUpdate)
 	return &WeeklyGaolUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *Weekly_GaolClient) UpdateOne(wg *Weekly_Gaol) *WeeklyGaolUpdateOne {
-	mutation := newWeeklyGaolMutation(c.config, OpUpdateOne, withWeekly_Gaol(wg))
+func (c *WeeklyGaolClient) UpdateOne(wg *WeeklyGaol) *WeeklyGaolUpdateOne {
+	mutation := newWeeklyGaolMutation(c.config, OpUpdateOne, withWeeklyGaol(wg))
 	return &WeeklyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *Weekly_GaolClient) UpdateOneID(id int) *WeeklyGaolUpdateOne {
-	mutation := newWeeklyGaolMutation(c.config, OpUpdateOne, withWeekly_GaolID(id))
+func (c *WeeklyGaolClient) UpdateOneID(id int) *WeeklyGaolUpdateOne {
+	mutation := newWeeklyGaolMutation(c.config, OpUpdateOne, withWeeklyGaolID(id))
 	return &WeeklyGaolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Weekly_Gaol.
-func (c *Weekly_GaolClient) Delete() *WeeklyGaolDelete {
+// Delete returns a delete builder for WeeklyGaol.
+func (c *WeeklyGaolClient) Delete() *WeeklyGaolDelete {
 	mutation := newWeeklyGaolMutation(c.config, OpDelete)
 	return &WeeklyGaolDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *Weekly_GaolClient) DeleteOne(wg *Weekly_Gaol) *WeeklyGaolDeleteOne {
+func (c *WeeklyGaolClient) DeleteOne(wg *WeeklyGaol) *WeeklyGaolDeleteOne {
 	return c.DeleteOneID(wg.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *Weekly_GaolClient) DeleteOneID(id int) *WeeklyGaolDeleteOne {
-	builder := c.Delete().Where(weekly_gaol.ID(id))
+func (c *WeeklyGaolClient) DeleteOneID(id int) *WeeklyGaolDeleteOne {
+	builder := c.Delete().Where(weeklygaol.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
 	return &WeeklyGaolDeleteOne{builder}
 }
 
-// Query returns a query builder for Weekly_Gaol.
-func (c *Weekly_GaolClient) Query() *WeeklyGaolQuery {
+// Query returns a query builder for WeeklyGaol.
+func (c *WeeklyGaolClient) Query() *WeeklyGaolQuery {
 	return &WeeklyGaolQuery{
 		config: c.config,
 	}
 }
 
-// Get returns a Weekly_Gaol entity by its id.
-func (c *Weekly_GaolClient) Get(ctx context.Context, id int) (*Weekly_Gaol, error) {
-	return c.Query().Where(weekly_gaol.ID(id)).Only(ctx)
+// Get returns a WeeklyGaol entity by its id.
+func (c *WeeklyGaolClient) Get(ctx context.Context, id int) (*WeeklyGaol, error) {
+	return c.Query().Where(weeklygaol.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *Weekly_GaolClient) GetX(ctx context.Context, id int) *Weekly_Gaol {
+func (c *WeeklyGaolClient) GetX(ctx context.Context, id int) *WeeklyGaol {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -594,15 +594,15 @@ func (c *Weekly_GaolClient) GetX(ctx context.Context, id int) *Weekly_Gaol {
 	return obj
 }
 
-// QueryDgaols queries the dgaols edge of a Weekly_Gaol.
-func (c *Weekly_GaolClient) QueryDgaols(wg *Weekly_Gaol) *DailyGaolQuery {
+// QueryDgaols queries the dgaols edge of a WeeklyGaol.
+func (c *WeeklyGaolClient) QueryDgaols(wg *WeeklyGaol) *DailyGaolQuery {
 	query := &DailyGaolQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := wg.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(weekly_gaol.Table, weekly_gaol.FieldID, id),
-			sqlgraph.To(daily_gaol.Table, daily_gaol.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, weekly_gaol.DgaolsTable, weekly_gaol.DgaolsColumn),
+			sqlgraph.From(weeklygaol.Table, weeklygaol.FieldID, id),
+			sqlgraph.To(dailygaol.Table, dailygaol.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, weeklygaol.DgaolsTable, weeklygaol.DgaolsColumn),
 		)
 		fromV = sqlgraph.Neighbors(wg.driver.Dialect(), step)
 		return fromV, nil
@@ -610,15 +610,15 @@ func (c *Weekly_GaolClient) QueryDgaols(wg *Weekly_Gaol) *DailyGaolQuery {
 	return query
 }
 
-// QueryStudy queries the study edge of a Weekly_Gaol.
-func (c *Weekly_GaolClient) QueryStudy(wg *Weekly_Gaol) *StudyQuery {
+// QueryStudy queries the study edge of a WeeklyGaol.
+func (c *WeeklyGaolClient) QueryStudy(wg *WeeklyGaol) *StudyQuery {
 	query := &StudyQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := wg.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(weekly_gaol.Table, weekly_gaol.FieldID, id),
+			sqlgraph.From(weeklygaol.Table, weeklygaol.FieldID, id),
 			sqlgraph.To(study.Table, study.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, weekly_gaol.StudyTable, weekly_gaol.StudyColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, weeklygaol.StudyTable, weeklygaol.StudyColumn),
 		)
 		fromV = sqlgraph.Neighbors(wg.driver.Dialect(), step)
 		return fromV, nil
@@ -627,6 +627,6 @@ func (c *Weekly_GaolClient) QueryStudy(wg *Weekly_Gaol) *StudyQuery {
 }
 
 // Hooks returns the client hooks.
-func (c *Weekly_GaolClient) Hooks() []Hook {
-	return c.hooks.Weekly_Gaol
+func (c *WeeklyGaolClient) Hooks() []Hook {
+	return c.hooks.WeeklyGaol
 }

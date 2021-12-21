@@ -432,7 +432,7 @@ func HasDgoals() predicate.Study {
 }
 
 // HasDgoalsWith applies the HasEdge predicate on the "dgoals" edge with a given conditions (other predicates).
-func HasDgoalsWith(preds ...predicate.Daily_Gaol) predicate.Study {
+func HasDgoalsWith(preds ...predicate.DailyGaol) predicate.Study {
 	return predicate.Study(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
@@ -460,7 +460,7 @@ func HasWgoals() predicate.Study {
 }
 
 // HasWgoalsWith applies the HasEdge predicate on the "wgoals" edge with a given conditions (other predicates).
-func HasWgoalsWith(preds ...predicate.Weekly_Gaol) predicate.Study {
+func HasWgoalsWith(preds ...predicate.WeeklyGaol) predicate.Study {
 	return predicate.Study(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),

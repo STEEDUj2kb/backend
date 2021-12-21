@@ -9,12 +9,12 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// WeeklyGaolCreate is the builder for creating a Weekly_Gaol entity.
+// WeeklyGaolCreate is the builder for creating a WeeklyGaol entity.
 type WeeklyGaolCreate struct {
 	config
 	mutation *WeeklyGaolMutation
@@ -33,20 +33,28 @@ func (wgc *WeeklyGaolCreate) SetScore(i int) *WeeklyGaolCreate {
 	return wgc
 }
 
+// SetNillableScore sets the "score" field if the given value is not nil.
+func (wgc *WeeklyGaolCreate) SetNillableScore(i *int) *WeeklyGaolCreate {
+	if i != nil {
+		wgc.SetScore(*i)
+	}
+	return wgc
+}
+
 // SetNth sets the "nth" field.
 func (wgc *WeeklyGaolCreate) SetNth(i int) *WeeklyGaolCreate {
 	wgc.mutation.SetNth(i)
 	return wgc
 }
 
-// AddDgaolIDs adds the "dgaols" edge to the Daily_Gaol entity by IDs.
+// AddDgaolIDs adds the "dgaols" edge to the DailyGaol entity by IDs.
 func (wgc *WeeklyGaolCreate) AddDgaolIDs(ids ...int) *WeeklyGaolCreate {
 	wgc.mutation.AddDgaolIDs(ids...)
 	return wgc
 }
 
-// AddDgaols adds the "dgaols" edges to the Daily_Gaol entity.
-func (wgc *WeeklyGaolCreate) AddDgaols(d ...*Daily_Gaol) *WeeklyGaolCreate {
+// AddDgaols adds the "dgaols" edges to the DailyGaol entity.
+func (wgc *WeeklyGaolCreate) AddDgaols(d ...*DailyGaol) *WeeklyGaolCreate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -78,12 +86,13 @@ func (wgc *WeeklyGaolCreate) Mutation() *WeeklyGaolMutation {
 	return wgc.mutation
 }
 
-// Save creates the Weekly_Gaol in the database.
-func (wgc *WeeklyGaolCreate) Save(ctx context.Context) (*Weekly_Gaol, error) {
+// Save creates the WeeklyGaol in the database.
+func (wgc *WeeklyGaolCreate) Save(ctx context.Context) (*WeeklyGaol, error) {
 	var (
 		err  error
-		node *Weekly_Gaol
+		node *WeeklyGaol
 	)
+	wgc.defaults()
 	if len(wgc.hooks) == 0 {
 		if err = wgc.check(); err != nil {
 			return nil, err
@@ -120,7 +129,7 @@ func (wgc *WeeklyGaolCreate) Save(ctx context.Context) (*Weekly_Gaol, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (wgc *WeeklyGaolCreate) SaveX(ctx context.Context) *Weekly_Gaol {
+func (wgc *WeeklyGaolCreate) SaveX(ctx context.Context) *WeeklyGaol {
 	v, err := wgc.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -141,13 +150,18 @@ func (wgc *WeeklyGaolCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (wgc *WeeklyGaolCreate) defaults() {
+	if _, ok := wgc.mutation.Score(); !ok {
+		v := weeklygaol.DefaultScore
+		wgc.mutation.SetScore(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (wgc *WeeklyGaolCreate) check() error {
 	if _, ok := wgc.mutation.Goal(); !ok {
 		return &ValidationError{Name: "goal", err: errors.New(`ent: missing required field "goal"`)}
-	}
-	if _, ok := wgc.mutation.Score(); !ok {
-		return &ValidationError{Name: "score", err: errors.New(`ent: missing required field "score"`)}
 	}
 	if _, ok := wgc.mutation.Nth(); !ok {
 		return &ValidationError{Name: "nth", err: errors.New(`ent: missing required field "nth"`)}
@@ -155,7 +169,7 @@ func (wgc *WeeklyGaolCreate) check() error {
 	return nil
 }
 
-func (wgc *WeeklyGaolCreate) sqlSave(ctx context.Context) (*Weekly_Gaol, error) {
+func (wgc *WeeklyGaolCreate) sqlSave(ctx context.Context) (*WeeklyGaol, error) {
 	_node, _spec := wgc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, wgc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -168,14 +182,14 @@ func (wgc *WeeklyGaolCreate) sqlSave(ctx context.Context) (*Weekly_Gaol, error) 
 	return _node, nil
 }
 
-func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
+func (wgc *WeeklyGaolCreate) createSpec() (*WeeklyGaol, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Weekly_Gaol{config: wgc.config}
+		_node = &WeeklyGaol{config: wgc.config}
 		_spec = &sqlgraph.CreateSpec{
-			Table: weekly_gaol.Table,
+			Table: weeklygaol.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: weekly_gaol.FieldID,
+				Column: weeklygaol.FieldID,
 			},
 		}
 	)
@@ -183,7 +197,7 @@ func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: weekly_gaol.FieldGoal,
+			Column: weeklygaol.FieldGoal,
 		})
 		_node.Goal = value
 	}
@@ -191,7 +205,7 @@ func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldScore,
+			Column: weeklygaol.FieldScore,
 		})
 		_node.Score = value
 	}
@@ -199,7 +213,7 @@ func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldNth,
+			Column: weeklygaol.FieldNth,
 		})
 		_node.Nth = value
 	}
@@ -207,13 +221,13 @@ func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -226,8 +240,8 @@ func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   weekly_gaol.StudyTable,
-			Columns: []string{weekly_gaol.StudyColumn},
+			Table:   weeklygaol.StudyTable,
+			Columns: []string{weeklygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -245,20 +259,21 @@ func (wgc *WeeklyGaolCreate) createSpec() (*Weekly_Gaol, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// WeeklyGaolCreateBulk is the builder for creating many Weekly_Gaol entities in bulk.
+// WeeklyGaolCreateBulk is the builder for creating many WeeklyGaol entities in bulk.
 type WeeklyGaolCreateBulk struct {
 	config
 	builders []*WeeklyGaolCreate
 }
 
-// Save creates the Weekly_Gaol entities in the database.
-func (wgcb *WeeklyGaolCreateBulk) Save(ctx context.Context) ([]*Weekly_Gaol, error) {
+// Save creates the WeeklyGaol entities in the database.
+func (wgcb *WeeklyGaolCreateBulk) Save(ctx context.Context) ([]*WeeklyGaol, error) {
 	specs := make([]*sqlgraph.CreateSpec, len(wgcb.builders))
-	nodes := make([]*Weekly_Gaol, len(wgcb.builders))
+	nodes := make([]*WeeklyGaol, len(wgcb.builders))
 	mutators := make([]Mutator, len(wgcb.builders))
 	for i := range wgcb.builders {
 		func(i int, root context.Context) {
 			builder := wgcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*WeeklyGaolMutation)
 				if !ok {
@@ -307,7 +322,7 @@ func (wgcb *WeeklyGaolCreateBulk) Save(ctx context.Context) ([]*Weekly_Gaol, err
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (wgcb *WeeklyGaolCreateBulk) SaveX(ctx context.Context) []*Weekly_Gaol {
+func (wgcb *WeeklyGaolCreateBulk) SaveX(ctx context.Context) []*WeeklyGaol {
 	v, err := wgcb.Save(ctx)
 	if err != nil {
 		panic(err)

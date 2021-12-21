@@ -8,11 +8,11 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// Weekly_Gaol is the model entity for the Weekly_Gaol schema.
-type Weekly_Gaol struct {
+// WeeklyGaol is the model entity for the WeeklyGaol schema.
+type WeeklyGaol struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
@@ -23,15 +23,15 @@ type Weekly_Gaol struct {
 	// Nth holds the value of the "nth" field.
 	Nth int `json:"nth,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the Weekly_GaolQuery when eager-loading is set.
-	Edges        Weekly_GaolEdges `json:"edges"`
+	// The values are being populated by the WeeklyGaolQuery when eager-loading is set.
+	Edges        WeeklyGaolEdges `json:"edges"`
 	study_wgoals *int
 }
 
-// Weekly_GaolEdges holds the relations/edges for other nodes in the graph.
-type Weekly_GaolEdges struct {
+// WeeklyGaolEdges holds the relations/edges for other nodes in the graph.
+type WeeklyGaolEdges struct {
 	// Dgaols holds the value of the dgaols edge.
-	Dgaols []*Daily_Gaol `json:"dgaols,omitempty"`
+	Dgaols []*DailyGaol `json:"dgaols,omitempty"`
 	// Study holds the value of the study edge.
 	Study *Study `json:"study,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -41,7 +41,7 @@ type Weekly_GaolEdges struct {
 
 // DgaolsOrErr returns the Dgaols value or an error if the edge
 // was not loaded in eager-loading.
-func (e Weekly_GaolEdges) DgaolsOrErr() ([]*Daily_Gaol, error) {
+func (e WeeklyGaolEdges) DgaolsOrErr() ([]*DailyGaol, error) {
 	if e.loadedTypes[0] {
 		return e.Dgaols, nil
 	}
@@ -50,7 +50,7 @@ func (e Weekly_GaolEdges) DgaolsOrErr() ([]*Daily_Gaol, error) {
 
 // StudyOrErr returns the Study value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e Weekly_GaolEdges) StudyOrErr() (*Study, error) {
+func (e WeeklyGaolEdges) StudyOrErr() (*Study, error) {
 	if e.loadedTypes[1] {
 		if e.Study == nil {
 			// The edge study was loaded in eager-loading,
@@ -63,56 +63,56 @@ func (e Weekly_GaolEdges) StudyOrErr() (*Study, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Weekly_Gaol) scanValues(columns []string) ([]interface{}, error) {
+func (*WeeklyGaol) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case weekly_gaol.FieldID, weekly_gaol.FieldScore, weekly_gaol.FieldNth:
+		case weeklygaol.FieldID, weeklygaol.FieldScore, weeklygaol.FieldNth:
 			values[i] = new(sql.NullInt64)
-		case weekly_gaol.FieldGoal:
+		case weeklygaol.FieldGoal:
 			values[i] = new(sql.NullString)
-		case weekly_gaol.ForeignKeys[0]: // study_wgoals
+		case weeklygaol.ForeignKeys[0]: // study_wgoals
 			values[i] = new(sql.NullInt64)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Weekly_Gaol", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type WeeklyGaol", columns[i])
 		}
 	}
 	return values, nil
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Weekly_Gaol fields.
-func (wg *Weekly_Gaol) assignValues(columns []string, values []interface{}) error {
+// to the WeeklyGaol fields.
+func (wg *WeeklyGaol) assignValues(columns []string, values []interface{}) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case weekly_gaol.FieldID:
+		case weeklygaol.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			wg.ID = int(value.Int64)
-		case weekly_gaol.FieldGoal:
+		case weeklygaol.FieldGoal:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field goal", values[i])
 			} else if value.Valid {
 				wg.Goal = value.String
 			}
-		case weekly_gaol.FieldScore:
+		case weeklygaol.FieldScore:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field score", values[i])
 			} else if value.Valid {
 				wg.Score = int(value.Int64)
 			}
-		case weekly_gaol.FieldNth:
+		case weeklygaol.FieldNth:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field nth", values[i])
 			} else if value.Valid {
 				wg.Nth = int(value.Int64)
 			}
-		case weekly_gaol.ForeignKeys[0]:
+		case weeklygaol.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field study_wgoals", value)
 			} else if value.Valid {
@@ -124,38 +124,38 @@ func (wg *Weekly_Gaol) assignValues(columns []string, values []interface{}) erro
 	return nil
 }
 
-// QueryDgaols queries the "dgaols" edge of the Weekly_Gaol entity.
-func (wg *Weekly_Gaol) QueryDgaols() *DailyGaolQuery {
-	return (&Weekly_GaolClient{config: wg.config}).QueryDgaols(wg)
+// QueryDgaols queries the "dgaols" edge of the WeeklyGaol entity.
+func (wg *WeeklyGaol) QueryDgaols() *DailyGaolQuery {
+	return (&WeeklyGaolClient{config: wg.config}).QueryDgaols(wg)
 }
 
-// QueryStudy queries the "study" edge of the Weekly_Gaol entity.
-func (wg *Weekly_Gaol) QueryStudy() *StudyQuery {
-	return (&Weekly_GaolClient{config: wg.config}).QueryStudy(wg)
+// QueryStudy queries the "study" edge of the WeeklyGaol entity.
+func (wg *WeeklyGaol) QueryStudy() *StudyQuery {
+	return (&WeeklyGaolClient{config: wg.config}).QueryStudy(wg)
 }
 
-// Update returns a builder for updating this Weekly_Gaol.
-// Note that you need to call Weekly_Gaol.Unwrap() before calling this method if this Weekly_Gaol
+// Update returns a builder for updating this WeeklyGaol.
+// Note that you need to call WeeklyGaol.Unwrap() before calling this method if this WeeklyGaol
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (wg *Weekly_Gaol) Update() *WeeklyGaolUpdateOne {
-	return (&Weekly_GaolClient{config: wg.config}).UpdateOne(wg)
+func (wg *WeeklyGaol) Update() *WeeklyGaolUpdateOne {
+	return (&WeeklyGaolClient{config: wg.config}).UpdateOne(wg)
 }
 
-// Unwrap unwraps the Weekly_Gaol entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the WeeklyGaol entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (wg *Weekly_Gaol) Unwrap() *Weekly_Gaol {
+func (wg *WeeklyGaol) Unwrap() *WeeklyGaol {
 	tx, ok := wg.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Weekly_Gaol is not a transactional entity")
+		panic("ent: WeeklyGaol is not a transactional entity")
 	}
 	wg.config.driver = tx.drv
 	return wg
 }
 
 // String implements the fmt.Stringer.
-func (wg *Weekly_Gaol) String() string {
+func (wg *WeeklyGaol) String() string {
 	var builder strings.Builder
-	builder.WriteString("Weekly_Gaol(")
+	builder.WriteString("WeeklyGaol(")
 	builder.WriteString(fmt.Sprintf("id=%v", wg.ID))
 	builder.WriteString(", goal=")
 	builder.WriteString(wg.Goal)
@@ -167,10 +167,10 @@ func (wg *Weekly_Gaol) String() string {
 	return builder.String()
 }
 
-// Weekly_Gaols is a parsable slice of Weekly_Gaol.
-type Weekly_Gaols []*Weekly_Gaol
+// WeeklyGaols is a parsable slice of WeeklyGaol.
+type WeeklyGaols []*WeeklyGaol
 
-func (wg Weekly_Gaols) config(cfg config) {
+func (wg WeeklyGaols) config(cfg config) {
 	for _i := range wg {
 		wg[_i].config = cfg
 	}

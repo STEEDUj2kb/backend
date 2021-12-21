@@ -10,10 +10,10 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
 // StudyCreate is the builder for creating a Study entity.
@@ -76,14 +76,14 @@ func (sc *StudyCreate) SetPlanner(u *User) *StudyCreate {
 	return sc.SetPlannerID(u.ID)
 }
 
-// AddDgoalIDs adds the "dgoals" edge to the Daily_Gaol entity by IDs.
+// AddDgoalIDs adds the "dgoals" edge to the DailyGaol entity by IDs.
 func (sc *StudyCreate) AddDgoalIDs(ids ...int) *StudyCreate {
 	sc.mutation.AddDgoalIDs(ids...)
 	return sc
 }
 
-// AddDgoals adds the "dgoals" edges to the Daily_Gaol entity.
-func (sc *StudyCreate) AddDgoals(d ...*Daily_Gaol) *StudyCreate {
+// AddDgoals adds the "dgoals" edges to the DailyGaol entity.
+func (sc *StudyCreate) AddDgoals(d ...*DailyGaol) *StudyCreate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -91,14 +91,14 @@ func (sc *StudyCreate) AddDgoals(d ...*Daily_Gaol) *StudyCreate {
 	return sc.AddDgoalIDs(ids...)
 }
 
-// AddWgoalIDs adds the "wgoals" edge to the Weekly_Gaol entity by IDs.
+// AddWgoalIDs adds the "wgoals" edge to the WeeklyGaol entity by IDs.
 func (sc *StudyCreate) AddWgoalIDs(ids ...int) *StudyCreate {
 	sc.mutation.AddWgoalIDs(ids...)
 	return sc
 }
 
-// AddWgoals adds the "wgoals" edges to the Weekly_Gaol entity.
-func (sc *StudyCreate) AddWgoals(w ...*Weekly_Gaol) *StudyCreate {
+// AddWgoals adds the "wgoals" edges to the WeeklyGaol entity.
+func (sc *StudyCreate) AddWgoals(w ...*WeeklyGaol) *StudyCreate {
 	ids := make([]int, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
@@ -281,7 +281,7 @@ func (sc *StudyCreate) createSpec() (*Study, *sqlgraph.CreateSpec) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -300,7 +300,7 @@ func (sc *StudyCreate) createSpec() (*Study, *sqlgraph.CreateSpec) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}

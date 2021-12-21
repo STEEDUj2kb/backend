@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// Daily_Gaol is the model entity for the Daily_Gaol schema.
-type Daily_Gaol struct {
+// DailyGaol is the model entity for the DailyGaol schema.
+type DailyGaol struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
@@ -29,18 +29,18 @@ type Daily_Gaol struct {
 	// IsRemoved holds the value of the "is_removed" field.
 	IsRemoved bool `json:"is_removed,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the Daily_GaolQuery when eager-loading is set.
-	Edges              Daily_GaolEdges `json:"edges"`
+	// The values are being populated by the DailyGaolQuery when eager-loading is set.
+	Edges              DailyGaolEdges `json:"edges"`
 	study_dgoals       *int
 	weekly_gaol_dgaols *int
 }
 
-// Daily_GaolEdges holds the relations/edges for other nodes in the graph.
-type Daily_GaolEdges struct {
+// DailyGaolEdges holds the relations/edges for other nodes in the graph.
+type DailyGaolEdges struct {
 	// Study holds the value of the study edge.
 	Study *Study `json:"study,omitempty"`
 	// Wgoal holds the value of the wgoal edge.
-	Wgoal *Weekly_Gaol `json:"wgoal,omitempty"`
+	Wgoal *WeeklyGaol `json:"wgoal,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
@@ -48,7 +48,7 @@ type Daily_GaolEdges struct {
 
 // StudyOrErr returns the Study value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e Daily_GaolEdges) StudyOrErr() (*Study, error) {
+func (e DailyGaolEdges) StudyOrErr() (*Study, error) {
 	if e.loadedTypes[0] {
 		if e.Study == nil {
 			// The edge study was loaded in eager-loading,
@@ -62,12 +62,12 @@ func (e Daily_GaolEdges) StudyOrErr() (*Study, error) {
 
 // WgoalOrErr returns the Wgoal value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e Daily_GaolEdges) WgoalOrErr() (*Weekly_Gaol, error) {
+func (e DailyGaolEdges) WgoalOrErr() (*WeeklyGaol, error) {
 	if e.loadedTypes[1] {
 		if e.Wgoal == nil {
 			// The edge wgoal was loaded in eager-loading,
 			// but was not found.
-			return nil, &NotFoundError{label: weekly_gaol.Label}
+			return nil, &NotFoundError{label: weeklygaol.Label}
 		}
 		return e.Wgoal, nil
 	}
@@ -75,81 +75,81 @@ func (e Daily_GaolEdges) WgoalOrErr() (*Weekly_Gaol, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Daily_Gaol) scanValues(columns []string) ([]interface{}, error) {
+func (*DailyGaol) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case daily_gaol.FieldDone, daily_gaol.FieldIsRemoved:
+		case dailygaol.FieldDone, dailygaol.FieldIsRemoved:
 			values[i] = new(sql.NullBool)
-		case daily_gaol.FieldID:
+		case dailygaol.FieldID:
 			values[i] = new(sql.NullInt64)
-		case daily_gaol.FieldTodo:
+		case dailygaol.FieldTodo:
 			values[i] = new(sql.NullString)
-		case daily_gaol.FieldCreatedAt, daily_gaol.FieldUpdatedAt:
+		case dailygaol.FieldCreatedAt, dailygaol.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case daily_gaol.ForeignKeys[0]: // study_dgoals
+		case dailygaol.ForeignKeys[0]: // study_dgoals
 			values[i] = new(sql.NullInt64)
-		case daily_gaol.ForeignKeys[1]: // weekly_gaol_dgaols
+		case dailygaol.ForeignKeys[1]: // weekly_gaol_dgaols
 			values[i] = new(sql.NullInt64)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Daily_Gaol", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type DailyGaol", columns[i])
 		}
 	}
 	return values, nil
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Daily_Gaol fields.
-func (dg *Daily_Gaol) assignValues(columns []string, values []interface{}) error {
+// to the DailyGaol fields.
+func (dg *DailyGaol) assignValues(columns []string, values []interface{}) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case daily_gaol.FieldID:
+		case dailygaol.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			dg.ID = int(value.Int64)
-		case daily_gaol.FieldCreatedAt:
+		case dailygaol.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				dg.CreatedAt = value.Time
 			}
-		case daily_gaol.FieldUpdatedAt:
+		case dailygaol.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				dg.UpdatedAt = value.Time
 			}
-		case daily_gaol.FieldTodo:
+		case dailygaol.FieldTodo:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field todo", values[i])
 			} else if value.Valid {
 				dg.Todo = value.String
 			}
-		case daily_gaol.FieldDone:
+		case dailygaol.FieldDone:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field done", values[i])
 			} else if value.Valid {
 				dg.Done = value.Bool
 			}
-		case daily_gaol.FieldIsRemoved:
+		case dailygaol.FieldIsRemoved:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_removed", values[i])
 			} else if value.Valid {
 				dg.IsRemoved = value.Bool
 			}
-		case daily_gaol.ForeignKeys[0]:
+		case dailygaol.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field study_dgoals", value)
 			} else if value.Valid {
 				dg.study_dgoals = new(int)
 				*dg.study_dgoals = int(value.Int64)
 			}
-		case daily_gaol.ForeignKeys[1]:
+		case dailygaol.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field weekly_gaol_dgaols", value)
 			} else if value.Valid {
@@ -161,38 +161,38 @@ func (dg *Daily_Gaol) assignValues(columns []string, values []interface{}) error
 	return nil
 }
 
-// QueryStudy queries the "study" edge of the Daily_Gaol entity.
-func (dg *Daily_Gaol) QueryStudy() *StudyQuery {
-	return (&Daily_GaolClient{config: dg.config}).QueryStudy(dg)
+// QueryStudy queries the "study" edge of the DailyGaol entity.
+func (dg *DailyGaol) QueryStudy() *StudyQuery {
+	return (&DailyGaolClient{config: dg.config}).QueryStudy(dg)
 }
 
-// QueryWgoal queries the "wgoal" edge of the Daily_Gaol entity.
-func (dg *Daily_Gaol) QueryWgoal() *WeeklyGaolQuery {
-	return (&Daily_GaolClient{config: dg.config}).QueryWgoal(dg)
+// QueryWgoal queries the "wgoal" edge of the DailyGaol entity.
+func (dg *DailyGaol) QueryWgoal() *WeeklyGaolQuery {
+	return (&DailyGaolClient{config: dg.config}).QueryWgoal(dg)
 }
 
-// Update returns a builder for updating this Daily_Gaol.
-// Note that you need to call Daily_Gaol.Unwrap() before calling this method if this Daily_Gaol
+// Update returns a builder for updating this DailyGaol.
+// Note that you need to call DailyGaol.Unwrap() before calling this method if this DailyGaol
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (dg *Daily_Gaol) Update() *DailyGaolUpdateOne {
-	return (&Daily_GaolClient{config: dg.config}).UpdateOne(dg)
+func (dg *DailyGaol) Update() *DailyGaolUpdateOne {
+	return (&DailyGaolClient{config: dg.config}).UpdateOne(dg)
 }
 
-// Unwrap unwraps the Daily_Gaol entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the DailyGaol entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (dg *Daily_Gaol) Unwrap() *Daily_Gaol {
+func (dg *DailyGaol) Unwrap() *DailyGaol {
 	tx, ok := dg.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Daily_Gaol is not a transactional entity")
+		panic("ent: DailyGaol is not a transactional entity")
 	}
 	dg.config.driver = tx.drv
 	return dg
 }
 
 // String implements the fmt.Stringer.
-func (dg *Daily_Gaol) String() string {
+func (dg *DailyGaol) String() string {
 	var builder strings.Builder
-	builder.WriteString("Daily_Gaol(")
+	builder.WriteString("DailyGaol(")
 	builder.WriteString(fmt.Sprintf("id=%v", dg.ID))
 	builder.WriteString(", created_at=")
 	builder.WriteString(dg.CreatedAt.Format(time.ANSIC))
@@ -208,10 +208,10 @@ func (dg *Daily_Gaol) String() string {
 	return builder.String()
 }
 
-// Daily_Gaols is a parsable slice of Daily_Gaol.
-type Daily_Gaols []*Daily_Gaol
+// DailyGaols is a parsable slice of DailyGaol.
+type DailyGaols []*DailyGaol
 
-func (dg Daily_Gaols) config(cfg config) {
+func (dg DailyGaols) config(cfg config) {
 	for _i := range dg {
 		dg[_i].config = cfg
 	}

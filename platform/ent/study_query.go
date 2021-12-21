@@ -12,11 +12,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
 // StudyQuery is the builder for querying Study entities.
@@ -104,7 +104,7 @@ func (sq *StudyQuery) QueryDgoals() *DailyGaolQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(study.Table, study.FieldID, selector),
-			sqlgraph.To(daily_gaol.Table, daily_gaol.FieldID),
+			sqlgraph.To(dailygaol.Table, dailygaol.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, study.DgoalsTable, study.DgoalsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
@@ -126,7 +126,7 @@ func (sq *StudyQuery) QueryWgoals() *WeeklyGaolQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(study.Table, study.FieldID, selector),
-			sqlgraph.To(weekly_gaol.Table, weekly_gaol.FieldID),
+			sqlgraph.To(weeklygaol.Table, weeklygaol.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, study.WgoalsTable, study.WgoalsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
@@ -491,10 +491,10 @@ func (sq *StudyQuery) sqlAll(ctx context.Context) ([]*Study, error) {
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.Dgoals = []*Daily_Gaol{}
+			nodes[i].Edges.Dgoals = []*DailyGaol{}
 		}
 		query.withFKs = true
-		query.Where(predicate.Daily_Gaol(func(s *sql.Selector) {
+		query.Where(predicate.DailyGaol(func(s *sql.Selector) {
 			s.Where(sql.InValues(study.DgoalsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
@@ -520,10 +520,10 @@ func (sq *StudyQuery) sqlAll(ctx context.Context) ([]*Study, error) {
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.Wgoals = []*Weekly_Gaol{}
+			nodes[i].Edges.Wgoals = []*WeeklyGaol{}
 		}
 		query.withFKs = true
-		query.Where(predicate.Weekly_Gaol(func(s *sql.Selector) {
+		query.Where(predicate.WeeklyGaol(func(s *sql.Selector) {
 			s.Where(sql.InValues(study.WgoalsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)

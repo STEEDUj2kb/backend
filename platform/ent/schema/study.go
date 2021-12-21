@@ -36,9 +36,9 @@ func (Study) Edges() []ent.Edge {
 			Unique(),
 
 		// User have many daily goals
-		edge.To("dgoals", Daily_Gaol.Type),
+		edge.To("dgoals", DailyGaol.Type),
 
 		// User have many weekly goals
-		edge.To("wgoals", Weekly_Gaol.Type),
+		edge.To("wgoals", WeeklyGaol.Type),
 	}
 }

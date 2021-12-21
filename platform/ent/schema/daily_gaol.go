@@ -8,13 +8,13 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// Daily_Gaol holds the schema definition for the Daily_Gaol entity.
-type Daily_Gaol struct {
+// DailyGaol holds the schema definition for the DailyGaol entity.
+type DailyGaol struct {
 	ent.Schema
 }
 
-// Fields of the Daily_Gaol.
-func (Daily_Gaol) Fields() []ent.Field {
+// Fields of the DailyGaol.
+func (DailyGaol) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("created_at").
 			Default(time.Now).
@@ -31,8 +31,8 @@ func (Daily_Gaol) Fields() []ent.Field {
 	}
 }
 
-// Edges of the Daily_Gaol.
-func (Daily_Gaol) Edges() []ent.Edge {
+// Edges of the DailyGaol.
+func (DailyGaol) Edges() []ent.Edge {
 	return []ent.Edge{
 		// Daily Goal reference a Study
 		edge.From("study", Study.Type).
@@ -40,7 +40,7 @@ func (Daily_Gaol) Edges() []ent.Edge {
 			Unique(),
 
 		// Daily Goal reference a Weeky Goal
-		edge.From("wgoal", Weekly_Gaol.Type).
+		edge.From("wgoal", WeeklyGaol.Type).
 			Ref("dgaols").
 			Unique(),
 	}

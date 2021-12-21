@@ -24,10 +24,10 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	Daily_Gaol  []ent.Hook
-	Study       []ent.Hook
-	User        []ent.Hook
-	Weekly_Gaol []ent.Hook
+	DailyGaol  []ent.Hook
+	Study      []ent.Hook
+	User       []ent.Hook
+	WeeklyGaol []ent.Hook
 }
 
 // Options applies the options on the config object.

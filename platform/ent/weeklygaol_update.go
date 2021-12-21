@@ -9,13 +9,13 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// WeeklyGaolUpdate is the builder for updating Weekly_Gaol entities.
+// WeeklyGaolUpdate is the builder for updating WeeklyGaol entities.
 type WeeklyGaolUpdate struct {
 	config
 	hooks    []Hook
@@ -23,7 +23,7 @@ type WeeklyGaolUpdate struct {
 }
 
 // Where appends a list predicates to the WeeklyGaolUpdate builder.
-func (wgu *WeeklyGaolUpdate) Where(ps ...predicate.Weekly_Gaol) *WeeklyGaolUpdate {
+func (wgu *WeeklyGaolUpdate) Where(ps ...predicate.WeeklyGaol) *WeeklyGaolUpdate {
 	wgu.mutation.Where(ps...)
 	return wgu
 }
@@ -41,9 +41,23 @@ func (wgu *WeeklyGaolUpdate) SetScore(i int) *WeeklyGaolUpdate {
 	return wgu
 }
 
+// SetNillableScore sets the "score" field if the given value is not nil.
+func (wgu *WeeklyGaolUpdate) SetNillableScore(i *int) *WeeklyGaolUpdate {
+	if i != nil {
+		wgu.SetScore(*i)
+	}
+	return wgu
+}
+
 // AddScore adds i to the "score" field.
 func (wgu *WeeklyGaolUpdate) AddScore(i int) *WeeklyGaolUpdate {
 	wgu.mutation.AddScore(i)
+	return wgu
+}
+
+// ClearScore clears the value of the "score" field.
+func (wgu *WeeklyGaolUpdate) ClearScore() *WeeklyGaolUpdate {
+	wgu.mutation.ClearScore()
 	return wgu
 }
 
@@ -60,14 +74,14 @@ func (wgu *WeeklyGaolUpdate) AddNth(i int) *WeeklyGaolUpdate {
 	return wgu
 }
 
-// AddDgaolIDs adds the "dgaols" edge to the Daily_Gaol entity by IDs.
+// AddDgaolIDs adds the "dgaols" edge to the DailyGaol entity by IDs.
 func (wgu *WeeklyGaolUpdate) AddDgaolIDs(ids ...int) *WeeklyGaolUpdate {
 	wgu.mutation.AddDgaolIDs(ids...)
 	return wgu
 }
 
-// AddDgaols adds the "dgaols" edges to the Daily_Gaol entity.
-func (wgu *WeeklyGaolUpdate) AddDgaols(d ...*Daily_Gaol) *WeeklyGaolUpdate {
+// AddDgaols adds the "dgaols" edges to the DailyGaol entity.
+func (wgu *WeeklyGaolUpdate) AddDgaols(d ...*DailyGaol) *WeeklyGaolUpdate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -99,20 +113,20 @@ func (wgu *WeeklyGaolUpdate) Mutation() *WeeklyGaolMutation {
 	return wgu.mutation
 }
 
-// ClearDgaols clears all "dgaols" edges to the Daily_Gaol entity.
+// ClearDgaols clears all "dgaols" edges to the DailyGaol entity.
 func (wgu *WeeklyGaolUpdate) ClearDgaols() *WeeklyGaolUpdate {
 	wgu.mutation.ClearDgaols()
 	return wgu
 }
 
-// RemoveDgaolIDs removes the "dgaols" edge to Daily_Gaol entities by IDs.
+// RemoveDgaolIDs removes the "dgaols" edge to DailyGaol entities by IDs.
 func (wgu *WeeklyGaolUpdate) RemoveDgaolIDs(ids ...int) *WeeklyGaolUpdate {
 	wgu.mutation.RemoveDgaolIDs(ids...)
 	return wgu
 }
 
-// RemoveDgaols removes "dgaols" edges to Daily_Gaol entities.
-func (wgu *WeeklyGaolUpdate) RemoveDgaols(d ...*Daily_Gaol) *WeeklyGaolUpdate {
+// RemoveDgaols removes "dgaols" edges to DailyGaol entities.
+func (wgu *WeeklyGaolUpdate) RemoveDgaols(d ...*DailyGaol) *WeeklyGaolUpdate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -183,11 +197,11 @@ func (wgu *WeeklyGaolUpdate) ExecX(ctx context.Context) {
 func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   weekly_gaol.Table,
-			Columns: weekly_gaol.Columns,
+			Table:   weeklygaol.Table,
+			Columns: weeklygaol.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: weekly_gaol.FieldID,
+				Column: weeklygaol.FieldID,
 			},
 		},
 	}
@@ -202,48 +216,54 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: weekly_gaol.FieldGoal,
+			Column: weeklygaol.FieldGoal,
 		})
 	}
 	if value, ok := wgu.mutation.Score(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldScore,
+			Column: weeklygaol.FieldScore,
 		})
 	}
 	if value, ok := wgu.mutation.AddedScore(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldScore,
+			Column: weeklygaol.FieldScore,
+		})
+	}
+	if wgu.mutation.ScoreCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Column: weeklygaol.FieldScore,
 		})
 	}
 	if value, ok := wgu.mutation.Nth(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldNth,
+			Column: weeklygaol.FieldNth,
 		})
 	}
 	if value, ok := wgu.mutation.AddedNth(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldNth,
+			Column: weeklygaol.FieldNth,
 		})
 	}
 	if wgu.mutation.DgaolsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -253,13 +273,13 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -272,13 +292,13 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -291,8 +311,8 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   weekly_gaol.StudyTable,
-			Columns: []string{weekly_gaol.StudyColumn},
+			Table:   weeklygaol.StudyTable,
+			Columns: []string{weeklygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -307,8 +327,8 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   weekly_gaol.StudyTable,
-			Columns: []string{weekly_gaol.StudyColumn},
+			Table:   weeklygaol.StudyTable,
+			Columns: []string{weeklygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -324,7 +344,7 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, wgu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{weekly_gaol.Label}
+			err = &NotFoundError{weeklygaol.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}
@@ -333,7 +353,7 @@ func (wgu *WeeklyGaolUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// WeeklyGaolUpdateOne is the builder for updating a single Weekly_Gaol entity.
+// WeeklyGaolUpdateOne is the builder for updating a single WeeklyGaol entity.
 type WeeklyGaolUpdateOne struct {
 	config
 	fields   []string
@@ -354,9 +374,23 @@ func (wguo *WeeklyGaolUpdateOne) SetScore(i int) *WeeklyGaolUpdateOne {
 	return wguo
 }
 
+// SetNillableScore sets the "score" field if the given value is not nil.
+func (wguo *WeeklyGaolUpdateOne) SetNillableScore(i *int) *WeeklyGaolUpdateOne {
+	if i != nil {
+		wguo.SetScore(*i)
+	}
+	return wguo
+}
+
 // AddScore adds i to the "score" field.
 func (wguo *WeeklyGaolUpdateOne) AddScore(i int) *WeeklyGaolUpdateOne {
 	wguo.mutation.AddScore(i)
+	return wguo
+}
+
+// ClearScore clears the value of the "score" field.
+func (wguo *WeeklyGaolUpdateOne) ClearScore() *WeeklyGaolUpdateOne {
+	wguo.mutation.ClearScore()
 	return wguo
 }
 
@@ -373,14 +407,14 @@ func (wguo *WeeklyGaolUpdateOne) AddNth(i int) *WeeklyGaolUpdateOne {
 	return wguo
 }
 
-// AddDgaolIDs adds the "dgaols" edge to the Daily_Gaol entity by IDs.
+// AddDgaolIDs adds the "dgaols" edge to the DailyGaol entity by IDs.
 func (wguo *WeeklyGaolUpdateOne) AddDgaolIDs(ids ...int) *WeeklyGaolUpdateOne {
 	wguo.mutation.AddDgaolIDs(ids...)
 	return wguo
 }
 
-// AddDgaols adds the "dgaols" edges to the Daily_Gaol entity.
-func (wguo *WeeklyGaolUpdateOne) AddDgaols(d ...*Daily_Gaol) *WeeklyGaolUpdateOne {
+// AddDgaols adds the "dgaols" edges to the DailyGaol entity.
+func (wguo *WeeklyGaolUpdateOne) AddDgaols(d ...*DailyGaol) *WeeklyGaolUpdateOne {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -412,20 +446,20 @@ func (wguo *WeeklyGaolUpdateOne) Mutation() *WeeklyGaolMutation {
 	return wguo.mutation
 }
 
-// ClearDgaols clears all "dgaols" edges to the Daily_Gaol entity.
+// ClearDgaols clears all "dgaols" edges to the DailyGaol entity.
 func (wguo *WeeklyGaolUpdateOne) ClearDgaols() *WeeklyGaolUpdateOne {
 	wguo.mutation.ClearDgaols()
 	return wguo
 }
 
-// RemoveDgaolIDs removes the "dgaols" edge to Daily_Gaol entities by IDs.
+// RemoveDgaolIDs removes the "dgaols" edge to DailyGaol entities by IDs.
 func (wguo *WeeklyGaolUpdateOne) RemoveDgaolIDs(ids ...int) *WeeklyGaolUpdateOne {
 	wguo.mutation.RemoveDgaolIDs(ids...)
 	return wguo
 }
 
-// RemoveDgaols removes "dgaols" edges to Daily_Gaol entities.
-func (wguo *WeeklyGaolUpdateOne) RemoveDgaols(d ...*Daily_Gaol) *WeeklyGaolUpdateOne {
+// RemoveDgaols removes "dgaols" edges to DailyGaol entities.
+func (wguo *WeeklyGaolUpdateOne) RemoveDgaols(d ...*DailyGaol) *WeeklyGaolUpdateOne {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -446,11 +480,11 @@ func (wguo *WeeklyGaolUpdateOne) Select(field string, fields ...string) *WeeklyG
 	return wguo
 }
 
-// Save executes the query and returns the updated Weekly_Gaol entity.
-func (wguo *WeeklyGaolUpdateOne) Save(ctx context.Context) (*Weekly_Gaol, error) {
+// Save executes the query and returns the updated WeeklyGaol entity.
+func (wguo *WeeklyGaolUpdateOne) Save(ctx context.Context) (*WeeklyGaol, error) {
 	var (
 		err  error
-		node *Weekly_Gaol
+		node *WeeklyGaol
 	)
 	if len(wguo.hooks) == 0 {
 		node, err = wguo.sqlSave(ctx)
@@ -479,7 +513,7 @@ func (wguo *WeeklyGaolUpdateOne) Save(ctx context.Context) (*Weekly_Gaol, error)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (wguo *WeeklyGaolUpdateOne) SaveX(ctx context.Context) *Weekly_Gaol {
+func (wguo *WeeklyGaolUpdateOne) SaveX(ctx context.Context) *WeeklyGaol {
 	node, err := wguo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -500,30 +534,30 @@ func (wguo *WeeklyGaolUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
-func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gaol, err error) {
+func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *WeeklyGaol, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   weekly_gaol.Table,
-			Columns: weekly_gaol.Columns,
+			Table:   weeklygaol.Table,
+			Columns: weeklygaol.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: weekly_gaol.FieldID,
+				Column: weeklygaol.FieldID,
 			},
 		},
 	}
 	id, ok := wguo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Weekly_Gaol.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing WeeklyGaol.ID for update")}
 	}
 	_spec.Node.ID.Value = id
 	if fields := wguo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, weekly_gaol.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, weeklygaol.FieldID)
 		for _, f := range fields {
-			if !weekly_gaol.ValidColumn(f) {
+			if !weeklygaol.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != weekly_gaol.FieldID {
+			if f != weeklygaol.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -539,48 +573,54 @@ func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gao
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: weekly_gaol.FieldGoal,
+			Column: weeklygaol.FieldGoal,
 		})
 	}
 	if value, ok := wguo.mutation.Score(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldScore,
+			Column: weeklygaol.FieldScore,
 		})
 	}
 	if value, ok := wguo.mutation.AddedScore(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldScore,
+			Column: weeklygaol.FieldScore,
+		})
+	}
+	if wguo.mutation.ScoreCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Column: weeklygaol.FieldScore,
 		})
 	}
 	if value, ok := wguo.mutation.Nth(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldNth,
+			Column: weeklygaol.FieldNth,
 		})
 	}
 	if value, ok := wguo.mutation.AddedNth(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: weekly_gaol.FieldNth,
+			Column: weeklygaol.FieldNth,
 		})
 	}
 	if wguo.mutation.DgaolsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -590,13 +630,13 @@ func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gao
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -609,13 +649,13 @@ func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gao
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   weekly_gaol.DgaolsTable,
-			Columns: []string{weekly_gaol.DgaolsColumn},
+			Table:   weeklygaol.DgaolsTable,
+			Columns: []string{weeklygaol.DgaolsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -628,8 +668,8 @@ func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gao
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   weekly_gaol.StudyTable,
-			Columns: []string{weekly_gaol.StudyColumn},
+			Table:   weeklygaol.StudyTable,
+			Columns: []string{weeklygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -644,8 +684,8 @@ func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gao
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   weekly_gaol.StudyTable,
-			Columns: []string{weekly_gaol.StudyColumn},
+			Table:   weeklygaol.StudyTable,
+			Columns: []string{weeklygaol.StudyColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -659,12 +699,12 @@ func (wguo *WeeklyGaolUpdateOne) sqlSave(ctx context.Context) (_node *Weekly_Gao
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Weekly_Gaol{config: wguo.config}
+	_node = &WeeklyGaol{config: wguo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, wguo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{weekly_gaol.Label}
+			err = &NotFoundError{weeklygaol.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}

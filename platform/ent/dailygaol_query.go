@@ -11,13 +11,13 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
-// DailyGaolQuery is the builder for querying Daily_Gaol entities.
+// DailyGaolQuery is the builder for querying DailyGaol entities.
 type DailyGaolQuery struct {
 	config
 	limit      *int
@@ -25,7 +25,7 @@ type DailyGaolQuery struct {
 	unique     *bool
 	order      []OrderFunc
 	fields     []string
-	predicates []predicate.Daily_Gaol
+	predicates []predicate.DailyGaol
 	// eager-loading edges.
 	withStudy *StudyQuery
 	withWgoal *WeeklyGaolQuery
@@ -36,7 +36,7 @@ type DailyGaolQuery struct {
 }
 
 // Where adds a new predicate for the DailyGaolQuery builder.
-func (dgq *DailyGaolQuery) Where(ps ...predicate.Daily_Gaol) *DailyGaolQuery {
+func (dgq *DailyGaolQuery) Where(ps ...predicate.DailyGaol) *DailyGaolQuery {
 	dgq.predicates = append(dgq.predicates, ps...)
 	return dgq
 }
@@ -78,9 +78,9 @@ func (dgq *DailyGaolQuery) QueryStudy() *StudyQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(daily_gaol.Table, daily_gaol.FieldID, selector),
+			sqlgraph.From(dailygaol.Table, dailygaol.FieldID, selector),
 			sqlgraph.To(study.Table, study.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, daily_gaol.StudyTable, daily_gaol.StudyColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, dailygaol.StudyTable, dailygaol.StudyColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dgq.driver.Dialect(), step)
 		return fromU, nil
@@ -100,9 +100,9 @@ func (dgq *DailyGaolQuery) QueryWgoal() *WeeklyGaolQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(daily_gaol.Table, daily_gaol.FieldID, selector),
-			sqlgraph.To(weekly_gaol.Table, weekly_gaol.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, daily_gaol.WgoalTable, daily_gaol.WgoalColumn),
+			sqlgraph.From(dailygaol.Table, dailygaol.FieldID, selector),
+			sqlgraph.To(weeklygaol.Table, weeklygaol.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, dailygaol.WgoalTable, dailygaol.WgoalColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dgq.driver.Dialect(), step)
 		return fromU, nil
@@ -110,21 +110,21 @@ func (dgq *DailyGaolQuery) QueryWgoal() *WeeklyGaolQuery {
 	return query
 }
 
-// First returns the first Daily_Gaol entity from the query.
-// Returns a *NotFoundError when no Daily_Gaol was found.
-func (dgq *DailyGaolQuery) First(ctx context.Context) (*Daily_Gaol, error) {
+// First returns the first DailyGaol entity from the query.
+// Returns a *NotFoundError when no DailyGaol was found.
+func (dgq *DailyGaolQuery) First(ctx context.Context) (*DailyGaol, error) {
 	nodes, err := dgq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{daily_gaol.Label}
+		return nil, &NotFoundError{dailygaol.Label}
 	}
 	return nodes[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (dgq *DailyGaolQuery) FirstX(ctx context.Context) *Daily_Gaol {
+func (dgq *DailyGaolQuery) FirstX(ctx context.Context) *DailyGaol {
 	node, err := dgq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,15 +132,15 @@ func (dgq *DailyGaolQuery) FirstX(ctx context.Context) *Daily_Gaol {
 	return node
 }
 
-// FirstID returns the first Daily_Gaol ID from the query.
-// Returns a *NotFoundError when no Daily_Gaol ID was found.
+// FirstID returns the first DailyGaol ID from the query.
+// Returns a *NotFoundError when no DailyGaol ID was found.
 func (dgq *DailyGaolQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = dgq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 		return
 	}
 	return ids[0], nil
@@ -155,10 +155,10 @@ func (dgq *DailyGaolQuery) FirstIDX(ctx context.Context) int {
 	return id
 }
 
-// Only returns a single Daily_Gaol entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Daily_Gaol entity is not found.
-// Returns a *NotFoundError when no Daily_Gaol entities are found.
-func (dgq *DailyGaolQuery) Only(ctx context.Context) (*Daily_Gaol, error) {
+// Only returns a single DailyGaol entity found by the query, ensuring it only returns one.
+// Returns a *NotSingularError when exactly one DailyGaol entity is not found.
+// Returns a *NotFoundError when no DailyGaol entities are found.
+func (dgq *DailyGaolQuery) Only(ctx context.Context) (*DailyGaol, error) {
 	nodes, err := dgq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
@@ -167,14 +167,14 @@ func (dgq *DailyGaolQuery) Only(ctx context.Context) (*Daily_Gaol, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{daily_gaol.Label}
+		return nil, &NotFoundError{dailygaol.Label}
 	default:
-		return nil, &NotSingularError{daily_gaol.Label}
+		return nil, &NotSingularError{dailygaol.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (dgq *DailyGaolQuery) OnlyX(ctx context.Context) *Daily_Gaol {
+func (dgq *DailyGaolQuery) OnlyX(ctx context.Context) *DailyGaol {
 	node, err := dgq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -182,8 +182,8 @@ func (dgq *DailyGaolQuery) OnlyX(ctx context.Context) *Daily_Gaol {
 	return node
 }
 
-// OnlyID is like Only, but returns the only Daily_Gaol ID in the query.
-// Returns a *NotSingularError when exactly one Daily_Gaol ID is not found.
+// OnlyID is like Only, but returns the only DailyGaol ID in the query.
+// Returns a *NotSingularError when exactly one DailyGaol ID is not found.
 // Returns a *NotFoundError when no entities are found.
 func (dgq *DailyGaolQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
@@ -194,9 +194,9 @@ func (dgq *DailyGaolQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
-		err = &NotSingularError{daily_gaol.Label}
+		err = &NotSingularError{dailygaol.Label}
 	}
 	return
 }
@@ -210,8 +210,8 @@ func (dgq *DailyGaolQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Daily_Gaols.
-func (dgq *DailyGaolQuery) All(ctx context.Context) ([]*Daily_Gaol, error) {
+// All executes the query and returns a list of DailyGaols.
+func (dgq *DailyGaolQuery) All(ctx context.Context) ([]*DailyGaol, error) {
 	if err := dgq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -219,7 +219,7 @@ func (dgq *DailyGaolQuery) All(ctx context.Context) ([]*Daily_Gaol, error) {
 }
 
 // AllX is like All, but panics if an error occurs.
-func (dgq *DailyGaolQuery) AllX(ctx context.Context) []*Daily_Gaol {
+func (dgq *DailyGaolQuery) AllX(ctx context.Context) []*DailyGaol {
 	nodes, err := dgq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -227,10 +227,10 @@ func (dgq *DailyGaolQuery) AllX(ctx context.Context) []*Daily_Gaol {
 	return nodes
 }
 
-// IDs executes the query and returns a list of Daily_Gaol IDs.
+// IDs executes the query and returns a list of DailyGaol IDs.
 func (dgq *DailyGaolQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := dgq.Select(daily_gaol.FieldID).Scan(ctx, &ids); err != nil {
+	if err := dgq.Select(dailygaol.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -290,7 +290,7 @@ func (dgq *DailyGaolQuery) Clone() *DailyGaolQuery {
 		limit:      dgq.limit,
 		offset:     dgq.offset,
 		order:      append([]OrderFunc{}, dgq.order...),
-		predicates: append([]predicate.Daily_Gaol{}, dgq.predicates...),
+		predicates: append([]predicate.DailyGaol{}, dgq.predicates...),
 		withStudy:  dgq.withStudy.Clone(),
 		withWgoal:  dgq.withWgoal.Clone(),
 		// clone intermediate query.
@@ -332,7 +332,7 @@ func (dgq *DailyGaolQuery) WithWgoal(opts ...func(*WeeklyGaolQuery)) *DailyGaolQ
 //	}
 //
 //	client.DailyGaol.Query().
-//		GroupBy(daily_gaol.FieldCreatedAt).
+//		GroupBy(dailygaol.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,7 +358,7 @@ func (dgq *DailyGaolQuery) GroupBy(field string, fields ...string) *DailyGaolGro
 //	}
 //
 //	client.DailyGaol.Query().
-//		Select(daily_gaol.FieldCreatedAt).
+//		Select(dailygaol.FieldCreatedAt).
 //		Scan(ctx, &v)
 //
 func (dgq *DailyGaolQuery) Select(fields ...string) *DailyGaolSelect {
@@ -368,7 +368,7 @@ func (dgq *DailyGaolQuery) Select(fields ...string) *DailyGaolSelect {
 
 func (dgq *DailyGaolQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range dgq.fields {
-		if !daily_gaol.ValidColumn(f) {
+		if !dailygaol.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -382,9 +382,9 @@ func (dgq *DailyGaolQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (dgq *DailyGaolQuery) sqlAll(ctx context.Context) ([]*Daily_Gaol, error) {
+func (dgq *DailyGaolQuery) sqlAll(ctx context.Context) ([]*DailyGaol, error) {
 	var (
-		nodes       = []*Daily_Gaol{}
+		nodes       = []*DailyGaol{}
 		withFKs     = dgq.withFKs
 		_spec       = dgq.querySpec()
 		loadedTypes = [2]bool{
@@ -396,10 +396,10 @@ func (dgq *DailyGaolQuery) sqlAll(ctx context.Context) ([]*Daily_Gaol, error) {
 		withFKs = true
 	}
 	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, daily_gaol.ForeignKeys...)
+		_spec.Node.Columns = append(_spec.Node.Columns, dailygaol.ForeignKeys...)
 	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
-		node := &Daily_Gaol{config: dgq.config}
+		node := &DailyGaol{config: dgq.config}
 		nodes = append(nodes, node)
 		return node.scanValues(columns)
 	}
@@ -420,7 +420,7 @@ func (dgq *DailyGaolQuery) sqlAll(ctx context.Context) ([]*Daily_Gaol, error) {
 
 	if query := dgq.withStudy; query != nil {
 		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Daily_Gaol)
+		nodeids := make(map[int][]*DailyGaol)
 		for i := range nodes {
 			if nodes[i].study_dgoals == nil {
 				continue
@@ -449,7 +449,7 @@ func (dgq *DailyGaolQuery) sqlAll(ctx context.Context) ([]*Daily_Gaol, error) {
 
 	if query := dgq.withWgoal; query != nil {
 		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Daily_Gaol)
+		nodeids := make(map[int][]*DailyGaol)
 		for i := range nodes {
 			if nodes[i].weekly_gaol_dgaols == nil {
 				continue
@@ -460,7 +460,7 @@ func (dgq *DailyGaolQuery) sqlAll(ctx context.Context) ([]*Daily_Gaol, error) {
 			}
 			nodeids[fk] = append(nodeids[fk], nodes[i])
 		}
-		query.Where(weekly_gaol.IDIn(ids...))
+		query.Where(weeklygaol.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -495,11 +495,11 @@ func (dgq *DailyGaolQuery) sqlExist(ctx context.Context) (bool, error) {
 func (dgq *DailyGaolQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   daily_gaol.Table,
-			Columns: daily_gaol.Columns,
+			Table:   dailygaol.Table,
+			Columns: dailygaol.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: daily_gaol.FieldID,
+				Column: dailygaol.FieldID,
 			},
 		},
 		From:   dgq.sql,
@@ -510,9 +510,9 @@ func (dgq *DailyGaolQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := dgq.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, daily_gaol.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, dailygaol.FieldID)
 		for i := range fields {
-			if fields[i] != daily_gaol.FieldID {
+			if fields[i] != dailygaol.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
@@ -542,10 +542,10 @@ func (dgq *DailyGaolQuery) querySpec() *sqlgraph.QuerySpec {
 
 func (dgq *DailyGaolQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(dgq.driver.Dialect())
-	t1 := builder.Table(daily_gaol.Table)
+	t1 := builder.Table(dailygaol.Table)
 	columns := dgq.fields
 	if len(columns) == 0 {
-		columns = daily_gaol.Columns
+		columns = dailygaol.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if dgq.sql != nil {
@@ -569,7 +569,7 @@ func (dgq *DailyGaolQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	return selector
 }
 
-// DailyGaolGroupBy is the group-by builder for Daily_Gaol entities.
+// DailyGaolGroupBy is the group-by builder for DailyGaol entities.
 type DailyGaolGroupBy struct {
 	config
 	fields []string
@@ -635,7 +635,7 @@ func (dggb *DailyGaolGroupBy) String(ctx context.Context) (_ string, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolGroupBy.Strings returned %d results when one was expected", len(v))
 	}
@@ -684,7 +684,7 @@ func (dggb *DailyGaolGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolGroupBy.Ints returned %d results when one was expected", len(v))
 	}
@@ -733,7 +733,7 @@ func (dggb *DailyGaolGroupBy) Float64(ctx context.Context) (_ float64, err error
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
@@ -782,7 +782,7 @@ func (dggb *DailyGaolGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolGroupBy.Bools returned %d results when one was expected", len(v))
 	}
@@ -800,7 +800,7 @@ func (dggb *DailyGaolGroupBy) BoolX(ctx context.Context) bool {
 
 func (dggb *DailyGaolGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	for _, f := range dggb.fields {
-		if !daily_gaol.ValidColumn(f) {
+		if !dailygaol.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
 		}
 	}
@@ -892,7 +892,7 @@ func (dgs *DailyGaolSelect) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolSelect.Strings returned %d results when one was expected", len(v))
 	}
@@ -939,7 +939,7 @@ func (dgs *DailyGaolSelect) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolSelect.Ints returned %d results when one was expected", len(v))
 	}
@@ -986,7 +986,7 @@ func (dgs *DailyGaolSelect) Float64(ctx context.Context) (_ float64, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolSelect.Float64s returned %d results when one was expected", len(v))
 	}
@@ -1033,7 +1033,7 @@ func (dgs *DailyGaolSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{daily_gaol.Label}
+		err = &NotFoundError{dailygaol.Label}
 	default:
 		err = fmt.Errorf("ent: DailyGaolSelect.Bools returned %d results when one was expected", len(v))
 	}

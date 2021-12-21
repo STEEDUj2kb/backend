@@ -10,11 +10,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/STEEDUj2kb/platform/ent/daily_gaol"
+	"github.com/STEEDUj2kb/platform/ent/dailygaol"
 	"github.com/STEEDUj2kb/platform/ent/predicate"
 	"github.com/STEEDUj2kb/platform/ent/study"
 	"github.com/STEEDUj2kb/platform/ent/user"
-	"github.com/STEEDUj2kb/platform/ent/weekly_gaol"
+	"github.com/STEEDUj2kb/platform/ent/weeklygaol"
 )
 
 // StudyUpdate is the builder for updating Study entities.
@@ -75,14 +75,14 @@ func (su *StudyUpdate) SetPlanner(u *User) *StudyUpdate {
 	return su.SetPlannerID(u.ID)
 }
 
-// AddDgoalIDs adds the "dgoals" edge to the Daily_Gaol entity by IDs.
+// AddDgoalIDs adds the "dgoals" edge to the DailyGaol entity by IDs.
 func (su *StudyUpdate) AddDgoalIDs(ids ...int) *StudyUpdate {
 	su.mutation.AddDgoalIDs(ids...)
 	return su
 }
 
-// AddDgoals adds the "dgoals" edges to the Daily_Gaol entity.
-func (su *StudyUpdate) AddDgoals(d ...*Daily_Gaol) *StudyUpdate {
+// AddDgoals adds the "dgoals" edges to the DailyGaol entity.
+func (su *StudyUpdate) AddDgoals(d ...*DailyGaol) *StudyUpdate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -90,14 +90,14 @@ func (su *StudyUpdate) AddDgoals(d ...*Daily_Gaol) *StudyUpdate {
 	return su.AddDgoalIDs(ids...)
 }
 
-// AddWgoalIDs adds the "wgoals" edge to the Weekly_Gaol entity by IDs.
+// AddWgoalIDs adds the "wgoals" edge to the WeeklyGaol entity by IDs.
 func (su *StudyUpdate) AddWgoalIDs(ids ...int) *StudyUpdate {
 	su.mutation.AddWgoalIDs(ids...)
 	return su
 }
 
-// AddWgoals adds the "wgoals" edges to the Weekly_Gaol entity.
-func (su *StudyUpdate) AddWgoals(w ...*Weekly_Gaol) *StudyUpdate {
+// AddWgoals adds the "wgoals" edges to the WeeklyGaol entity.
+func (su *StudyUpdate) AddWgoals(w ...*WeeklyGaol) *StudyUpdate {
 	ids := make([]int, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
@@ -116,20 +116,20 @@ func (su *StudyUpdate) ClearPlanner() *StudyUpdate {
 	return su
 }
 
-// ClearDgoals clears all "dgoals" edges to the Daily_Gaol entity.
+// ClearDgoals clears all "dgoals" edges to the DailyGaol entity.
 func (su *StudyUpdate) ClearDgoals() *StudyUpdate {
 	su.mutation.ClearDgoals()
 	return su
 }
 
-// RemoveDgoalIDs removes the "dgoals" edge to Daily_Gaol entities by IDs.
+// RemoveDgoalIDs removes the "dgoals" edge to DailyGaol entities by IDs.
 func (su *StudyUpdate) RemoveDgoalIDs(ids ...int) *StudyUpdate {
 	su.mutation.RemoveDgoalIDs(ids...)
 	return su
 }
 
-// RemoveDgoals removes "dgoals" edges to Daily_Gaol entities.
-func (su *StudyUpdate) RemoveDgoals(d ...*Daily_Gaol) *StudyUpdate {
+// RemoveDgoals removes "dgoals" edges to DailyGaol entities.
+func (su *StudyUpdate) RemoveDgoals(d ...*DailyGaol) *StudyUpdate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -137,20 +137,20 @@ func (su *StudyUpdate) RemoveDgoals(d ...*Daily_Gaol) *StudyUpdate {
 	return su.RemoveDgoalIDs(ids...)
 }
 
-// ClearWgoals clears all "wgoals" edges to the Weekly_Gaol entity.
+// ClearWgoals clears all "wgoals" edges to the WeeklyGaol entity.
 func (su *StudyUpdate) ClearWgoals() *StudyUpdate {
 	su.mutation.ClearWgoals()
 	return su
 }
 
-// RemoveWgoalIDs removes the "wgoals" edge to Weekly_Gaol entities by IDs.
+// RemoveWgoalIDs removes the "wgoals" edge to WeeklyGaol entities by IDs.
 func (su *StudyUpdate) RemoveWgoalIDs(ids ...int) *StudyUpdate {
 	su.mutation.RemoveWgoalIDs(ids...)
 	return su
 }
 
-// RemoveWgoals removes "wgoals" edges to Weekly_Gaol entities.
-func (su *StudyUpdate) RemoveWgoals(w ...*Weekly_Gaol) *StudyUpdate {
+// RemoveWgoals removes "wgoals" edges to WeeklyGaol entities.
+func (su *StudyUpdate) RemoveWgoals(w ...*WeeklyGaol) *StudyUpdate {
 	ids := make([]int, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
@@ -311,7 +311,7 @@ func (su *StudyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -327,7 +327,7 @@ func (su *StudyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -346,7 +346,7 @@ func (su *StudyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -365,7 +365,7 @@ func (su *StudyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -381,7 +381,7 @@ func (su *StudyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -400,7 +400,7 @@ func (su *StudyUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -473,14 +473,14 @@ func (suo *StudyUpdateOne) SetPlanner(u *User) *StudyUpdateOne {
 	return suo.SetPlannerID(u.ID)
 }
 
-// AddDgoalIDs adds the "dgoals" edge to the Daily_Gaol entity by IDs.
+// AddDgoalIDs adds the "dgoals" edge to the DailyGaol entity by IDs.
 func (suo *StudyUpdateOne) AddDgoalIDs(ids ...int) *StudyUpdateOne {
 	suo.mutation.AddDgoalIDs(ids...)
 	return suo
 }
 
-// AddDgoals adds the "dgoals" edges to the Daily_Gaol entity.
-func (suo *StudyUpdateOne) AddDgoals(d ...*Daily_Gaol) *StudyUpdateOne {
+// AddDgoals adds the "dgoals" edges to the DailyGaol entity.
+func (suo *StudyUpdateOne) AddDgoals(d ...*DailyGaol) *StudyUpdateOne {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -488,14 +488,14 @@ func (suo *StudyUpdateOne) AddDgoals(d ...*Daily_Gaol) *StudyUpdateOne {
 	return suo.AddDgoalIDs(ids...)
 }
 
-// AddWgoalIDs adds the "wgoals" edge to the Weekly_Gaol entity by IDs.
+// AddWgoalIDs adds the "wgoals" edge to the WeeklyGaol entity by IDs.
 func (suo *StudyUpdateOne) AddWgoalIDs(ids ...int) *StudyUpdateOne {
 	suo.mutation.AddWgoalIDs(ids...)
 	return suo
 }
 
-// AddWgoals adds the "wgoals" edges to the Weekly_Gaol entity.
-func (suo *StudyUpdateOne) AddWgoals(w ...*Weekly_Gaol) *StudyUpdateOne {
+// AddWgoals adds the "wgoals" edges to the WeeklyGaol entity.
+func (suo *StudyUpdateOne) AddWgoals(w ...*WeeklyGaol) *StudyUpdateOne {
 	ids := make([]int, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
@@ -514,20 +514,20 @@ func (suo *StudyUpdateOne) ClearPlanner() *StudyUpdateOne {
 	return suo
 }
 
-// ClearDgoals clears all "dgoals" edges to the Daily_Gaol entity.
+// ClearDgoals clears all "dgoals" edges to the DailyGaol entity.
 func (suo *StudyUpdateOne) ClearDgoals() *StudyUpdateOne {
 	suo.mutation.ClearDgoals()
 	return suo
 }
 
-// RemoveDgoalIDs removes the "dgoals" edge to Daily_Gaol entities by IDs.
+// RemoveDgoalIDs removes the "dgoals" edge to DailyGaol entities by IDs.
 func (suo *StudyUpdateOne) RemoveDgoalIDs(ids ...int) *StudyUpdateOne {
 	suo.mutation.RemoveDgoalIDs(ids...)
 	return suo
 }
 
-// RemoveDgoals removes "dgoals" edges to Daily_Gaol entities.
-func (suo *StudyUpdateOne) RemoveDgoals(d ...*Daily_Gaol) *StudyUpdateOne {
+// RemoveDgoals removes "dgoals" edges to DailyGaol entities.
+func (suo *StudyUpdateOne) RemoveDgoals(d ...*DailyGaol) *StudyUpdateOne {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
@@ -535,20 +535,20 @@ func (suo *StudyUpdateOne) RemoveDgoals(d ...*Daily_Gaol) *StudyUpdateOne {
 	return suo.RemoveDgoalIDs(ids...)
 }
 
-// ClearWgoals clears all "wgoals" edges to the Weekly_Gaol entity.
+// ClearWgoals clears all "wgoals" edges to the WeeklyGaol entity.
 func (suo *StudyUpdateOne) ClearWgoals() *StudyUpdateOne {
 	suo.mutation.ClearWgoals()
 	return suo
 }
 
-// RemoveWgoalIDs removes the "wgoals" edge to Weekly_Gaol entities by IDs.
+// RemoveWgoalIDs removes the "wgoals" edge to WeeklyGaol entities by IDs.
 func (suo *StudyUpdateOne) RemoveWgoalIDs(ids ...int) *StudyUpdateOne {
 	suo.mutation.RemoveWgoalIDs(ids...)
 	return suo
 }
 
-// RemoveWgoals removes "wgoals" edges to Weekly_Gaol entities.
-func (suo *StudyUpdateOne) RemoveWgoals(w ...*Weekly_Gaol) *StudyUpdateOne {
+// RemoveWgoals removes "wgoals" edges to WeeklyGaol entities.
+func (suo *StudyUpdateOne) RemoveWgoals(w ...*WeeklyGaol) *StudyUpdateOne {
 	ids := make([]int, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
@@ -733,7 +733,7 @@ func (suo *StudyUpdateOne) sqlSave(ctx context.Context) (_node *Study, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -749,7 +749,7 @@ func (suo *StudyUpdateOne) sqlSave(ctx context.Context) (_node *Study, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -768,7 +768,7 @@ func (suo *StudyUpdateOne) sqlSave(ctx context.Context) (_node *Study, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: daily_gaol.FieldID,
+					Column: dailygaol.FieldID,
 				},
 			},
 		}
@@ -787,7 +787,7 @@ func (suo *StudyUpdateOne) sqlSave(ctx context.Context) (_node *Study, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -803,7 +803,7 @@ func (suo *StudyUpdateOne) sqlSave(ctx context.Context) (_node *Study, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}
@@ -822,7 +822,7 @@ func (suo *StudyUpdateOne) sqlSave(ctx context.Context) (_node *Study, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: weekly_gaol.FieldID,
+					Column: weeklygaol.FieldID,
 				},
 			},
 		}

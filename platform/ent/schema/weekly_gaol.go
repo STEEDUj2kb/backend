@@ -6,25 +6,27 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// Weekly_Gaol holds the schema definition for the Weekly_Gaol entity.
-type Weekly_Gaol struct {
+// WeeklyGaol holds the schema definition for the WeeklyGaol entity.
+type WeeklyGaol struct {
 	ent.Schema
 }
 
-// Fields of the Weekly_Gaol.
-func (Weekly_Gaol) Fields() []ent.Field {
+// Fields of the WeeklyGaol.
+func (WeeklyGaol) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("goal"),
-		field.Int("score"),
+		field.Int("score").
+			Default(0).
+			Optional(),
 		field.Int("nth"),
 	}
 }
 
-// Edges of the Weekly_Gaol.
-func (Weekly_Gaol) Edges() []ent.Edge {
+// Edges of the WeeklyGaol.
+func (WeeklyGaol) Edges() []ent.Edge {
 	return []ent.Edge{
 		// Weekly goal have multiple Daily Goals
-		edge.To("dgaols", Daily_Gaol.Type),
+		edge.To("dgaols", DailyGaol.Type),
 
 		// Weeky Goal reference a Study
 		edge.From("study", Study.Type).

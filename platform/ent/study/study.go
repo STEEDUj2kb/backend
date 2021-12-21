@@ -34,15 +34,15 @@ const (
 	PlannerColumn = "user_studies"
 	// DgoalsTable is the table that holds the dgoals relation/edge.
 	DgoalsTable = "daily_gaols"
-	// DgoalsInverseTable is the table name for the Daily_Gaol entity.
-	// It exists in this package in order to avoid circular dependency with the "daily_gaol" package.
+	// DgoalsInverseTable is the table name for the DailyGaol entity.
+	// It exists in this package in order to avoid circular dependency with the "dailygaol" package.
 	DgoalsInverseTable = "daily_gaols"
 	// DgoalsColumn is the table column denoting the dgoals relation/edge.
 	DgoalsColumn = "study_dgoals"
 	// WgoalsTable is the table that holds the wgoals relation/edge.
 	WgoalsTable = "weekly_gaols"
-	// WgoalsInverseTable is the table name for the Weekly_Gaol entity.
-	// It exists in this package in order to avoid circular dependency with the "weekly_gaol" package.
+	// WgoalsInverseTable is the table name for the WeeklyGaol entity.
+	// It exists in this package in order to avoid circular dependency with the "weeklygaol" package.
 	WgoalsInverseTable = "weekly_gaols"
 	// WgoalsColumn is the table column denoting the wgoals relation/edge.
 	WgoalsColumn = "study_wgoals"
