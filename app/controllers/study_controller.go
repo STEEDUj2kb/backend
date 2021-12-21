@@ -206,6 +206,7 @@ func GetStudies(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Success 201 {object} models.WeeklyGaol
+// @Security ApiKeyAuth
 // @Router /v1/studies/{study_id}/weekly-goal [post]
 func CreateWeeklyGoal(c *fiber.Ctx) error {
 	// Get now time.
@@ -294,6 +295,7 @@ func CreateWeeklyGoal(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Success 200 {object} models.WeeklyGaol
+// @Security ApiKeyAuth
 // @Router /v1/studies/{study_id}/weekly-goals [get]
 func GetWeeklyGoals(c *fiber.Ctx) error {
 	// Get now time.
