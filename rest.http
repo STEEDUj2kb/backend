@@ -24,7 +24,8 @@ Content-Type: application/json
 
 ###
 GET http://{{host}}/api/{{version}}/studies HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzIjoxNjQwMDcxOTMxLCJpZCI6IjFkMmY2ZTUxLTM1MDktNDA4Zi1hNjA0LTI4MDlkNTU1OTYxMCIsInN0dWR5OmNyZWF0ZSI6dHJ1ZSwic3R1ZHk6ZGVsZXRlIjpmYWxzZSwic3R1ZHk6dXBkYXRlIjpmYWxzZX0.4G8KSfr7sLU_DdqfoUXyOBgPRWQyozGMuCynuUVnQ1A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzIjoxNjQwMDc2NDUzLCJpZCI6IjFkMmY2ZTUxLTM1MDktNDA4Zi1hNjA0LTI4MDlkNTU1OTYxMCIsInN0dWR5OmNyZWF0ZSI6dHJ1ZSwic3R1ZHk6ZGVsZXRlIjpmYWxzZSwic3R1ZHk6dXBkYXRlIjpmYWxzZX0.ME2C6dPjBEbN21-IBRtRRKdscllIEepsq08fhkBIQhk
+
 
 
 ###
@@ -34,4 +35,18 @@ Content-Type: application/json
 
 {
     "content": "study test2"
+}
+
+###
+GET http://{{host}}/api/{{version}}/studies/1/weekly-goals HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzIjoxNjQwMDc5MTk3LCJpZCI6IjFkMmY2ZTUxLTM1MDktNDA4Zi1hNjA0LTI4MDlkNTU1OTYxMCIsInN0dWR5OmNyZWF0ZSI6dHJ1ZSwic3R1ZHk6ZGVsZXRlIjpmYWxzZSwic3R1ZHk6dXBkYXRlIjpmYWxzZX0.c7DfTaPbZ3TJBs347ZAowO1Kgv8o-AdUKefRuKzuJzY
+
+
+###
+POST http://{{host}}/api/{{version}}/studies/1/weekly-goal HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzIjoxNjQwMDc3ODM3LCJpZCI6IjFkMmY2ZTUxLTM1MDktNDA4Zi1hNjA0LTI4MDlkNTU1OTYxMCIsInN0dWR5OmNyZWF0ZSI6dHJ1ZSwic3R1ZHk6ZGVsZXRlIjpmYWxzZSwic3R1ZHk6dXBkYXRlIjpmYWxzZX0.o5cuumLxz5tJIoHYqbcK0q38To06eB9Wma7DtG-Cbxo
+Content-Type: application/json
+
+{
+    "goal": "weekly goal2"
 }

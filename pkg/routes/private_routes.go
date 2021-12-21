@@ -11,6 +11,8 @@ func PrivateRoutes(a *fiber.App) {
 	route := a.Group("/api/v1")
 
 	// Routes for study related
-	route.Get("/studies", controllers.GetStudies) // get all studies of the authenticated user
-	route.Post("/study", controllers.CreateStudy) // create a study
+	route.Post("/study", controllers.CreateStudy)                              // create a study
+	route.Get("/studies", controllers.GetStudies)                              // get all studies of the authenticated user
+	route.Post("/studies/:study_id/weekly-goal", controllers.CreateWeeklyGoal) // create a weekly goal
+	route.Get("/studies/:study_id/weekly-goals", controllers.GetWeeklyGoals)   // get weekly goals
 }
