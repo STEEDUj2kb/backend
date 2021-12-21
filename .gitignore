@@ -123,6 +123,7 @@ $RECYCLE.BIN/
 ### direnv ###
 ### dotenv ###
 .env*
+*.env.json
 
 
 ### Goland ###

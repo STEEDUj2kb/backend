@@ -6,8 +6,8 @@ POST http://{{host}}/api/{{version}}/user/sign/up HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "testUser",
-    "email": "test36@test.com",
+    "name": "guest1",
+    "email": "guest1@test.com",
     "password": "1234"
 } 
 
@@ -17,6 +17,20 @@ POST http://localhost:5000/api/v1/user/sign/in HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "test36@test.com",
+    "email": "guest1@test.com",
     "password": "1234"
+}
+
+
+###
+GET http://{{host}}/api/{{version}}/studies HTTP/1.1
+
+
+###
+POST http://{{host}}/api/{{version}}/study HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzIjoxNjQwMDY4ODQyLCJpZCI6IjFkMmY2ZTUxLTM1MDktNDA4Zi1hNjA0LTI4MDlkNTU1OTYxMCIsInN0dWR5OmNyZWF0ZSI6dHJ1ZSwic3R1ZHk6ZGVsZXRlIjpmYWxzZSwic3R1ZHk6dXBkYXRlIjpmYWxzZX0.5pRhbmHAkKLKRPV95m3rSDzIiekFee_fEWTEV0qCaHI
+Content-Type: application/json
+
+{
+    "content": "study test2"
 }
