@@ -80,6 +80,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultStartedAt holds the default value on creation for the "started_at" field.
 	DefaultStartedAt func() time.Time
+	// DefaultEndedAt holds the default value on creation for the "ended_at" field.
+	DefaultEndedAt func() time.Time
 	// ContentValidator is a validator for the "content" field. It is called by the builders before save.
 	ContentValidator func(string) error
 )

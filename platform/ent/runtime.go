@@ -46,6 +46,10 @@ func init() {
 	studyDescStartedAt := studyFields[0].Descriptor()
 	// study.DefaultStartedAt holds the default value on creation for the started_at field.
 	study.DefaultStartedAt = studyDescStartedAt.Default.(func() time.Time)
+	// studyDescEndedAt is the schema descriptor for ended_at field.
+	studyDescEndedAt := studyFields[1].Descriptor()
+	// study.DefaultEndedAt holds the default value on creation for the ended_at field.
+	study.DefaultEndedAt = studyDescEndedAt.Default.(func() time.Time)
 	// studyDescContent is the schema descriptor for content field.
 	studyDescContent := studyFields[2].Descriptor()
 	// study.ContentValidator is a validator for the "content" field. It is called by the builders before save.

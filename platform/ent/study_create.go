@@ -181,6 +181,10 @@ func (sc *StudyCreate) defaults() {
 		v := study.DefaultStartedAt()
 		sc.mutation.SetStartedAt(v)
 	}
+	if _, ok := sc.mutation.EndedAt(); !ok {
+		v := study.DefaultEndedAt()
+		sc.mutation.SetEndedAt(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.

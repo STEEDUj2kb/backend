@@ -20,6 +20,7 @@ func (Study) Fields() []ent.Field {
 			Default(time.Now).
 			Immutable(),
 		field.Time("ended_at").
+			Default(nil).
 			Optional(),
 		field.String("content").
 			NotEmpty(),
