@@ -38,9 +38,9 @@ func main() {
 	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
 
 	// Routes.
-	routes.SwaggerRoute(app) // Register a route for API Docs (Swagger).
-	routes.PublicRoutes(app) // Register a public routes for app.
-	// routes.PrivateRoutes(app) // Register a private routes for app.
+	routes.SwaggerRoute(app)  // Register a route for API Docs (Swagger).
+	routes.PublicRoutes(app)  // Register a public routes for app.
+	routes.PrivateRoutes(app) // Register a private routes for app.
 	// routes.NotFoundRoute(app) // Register route for 404 Error.
 
 	// Start server (with or without graceful shutdown).
