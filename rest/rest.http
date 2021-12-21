@@ -1,0 +1,53 @@
+###
+POST http://{{host}}/api/{{version}}/user/sign/up HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "guest1",
+    "email": "guest1@test.com",
+    "password": "1234"
+} 
+
+
+###
+POST http://{{host}}/api/v1/user/sign/in HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "guest1@test.com",
+    "password": "1234"
+}
+
+> {%
+client.global.set("access_token", response.body.tokens.access);
+client.global.set("refresh_token", response.body.tokens.refresh);
+%}
+
+###
+GET http://{{host}}/api/{{version}}/studies HTTP/1.1
+Authorization: Bearer {{access_token}}
+
+
+
+###
+POST http://{{host}}/api/{{version}}/study HTTP/1.1
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "content": "study test2"
+}
+
+###
+GET http://{{host}}/api/{{version}}/studies/1/weekly-goals HTTP/1.1
+Authorization: Bearer {{access_token}}
+
+
+###
+POST http://{{host}}/api/{{version}}/studies/1/weekly-goal HTTP/1.1
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "goal": "weekly goal2"
+}

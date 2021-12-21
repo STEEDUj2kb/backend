@@ -2,8 +2,6 @@ package controllers
 
 import (
 	"context"
-	"strings"
-
 	"github.com/STEEDUj2kb/app/models"
 	"github.com/STEEDUj2kb/pkg/repository"
 	"github.com/STEEDUj2kb/pkg/utils"
@@ -12,30 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
-
-// GetHello func gets first name.
-// @Description Get first name with last name.
-// @Summary get first name
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} string
-// @Router /v1/hello/{last_name} [get]
-func GetHello(c *fiber.Ctx) error {
-	people := map[string]string{
-		"HONG": "GIL DONG",
-		"KIM":  "GA NAE",
-		"SHIN": "GI RU",
-	}
-	lastName := strings.ToUpper(c.Params("last_name"))
-
-	// Return status 200 OK.
-	return c.JSON(fiber.Map{
-		"error":      false,
-		"msg":        nil,
-		"first_name": people[lastName],
-	})
-}
 
 // UserSignUp method to create a new user.
 // @Description Create a new user.
