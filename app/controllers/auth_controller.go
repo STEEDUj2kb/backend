@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/STEEDUj2kb/app/models"
@@ -40,7 +39,7 @@ func GetHello(c *fiber.Ctx) error {
 
 // UserSignUp method to create a new user.
 // @Description Create a new user.
-// @Summary create a new user
+// @Summary creates a new user
 // @Tags User
 // @Accept json
 // @Produce json
@@ -73,7 +72,7 @@ func UserSignUp(c *fiber.Ctx) error {
 			"msg":   utils.ValidatorErrors(err),
 		})
 	}
-	user := &models.User{
+	newUser := &models.User{
 		UUID:         uuid.New(),
 		Name:         signUp.Name,
 		Email:        signUp.Email,
@@ -81,7 +80,7 @@ func UserSignUp(c *fiber.Ctx) error {
 	}
 
 	// Validate user fields.
-	if err := validate.Struct(user); err != nil {
+	if err := validate.Struct(newUser); err != nil {
 		// Return, if some fields are not valid.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
@@ -90,9 +89,9 @@ func UserSignUp(c *fiber.Ctx) error {
 	}
 
 	createdUser, err := database.EntClient.User.Create().
-		SetName(user.Name).
-		SetEmail(user.Email).
-		SetPasswordHash(user.PasswordHash).
+		SetName(newUser.Name).
+		SetEmail(newUser.Email).
+		SetPasswordHash(newUser.PasswordHash).
 		Save(context.Background())
 
 	if err != nil {
@@ -103,13 +102,13 @@ func UserSignUp(c *fiber.Ctx) error {
 		})
 	}
 	// Apply data from createdUser to user model
-	user.ApplyData(createdUser)
+	newUser.ApplyData(createdUser)
 
 	// Return status 201 OK.
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"error": false,
 		"msg":   nil,
-		"user":  user,
+		"user":  newUser,
 	})
 
 }
@@ -172,8 +171,7 @@ func UserSignIn(c *fiber.Ctx) error {
 	}
 
 	// Generate a new pair of access and refresh tokens.
-
-	tokens, err := utils.GenerateNewTokens(strconv.Itoa(foundedUser.ID), credentials)
+	tokens, err := utils.GenerateNewTokens(foundedUser.UUID.String(), credentials)
 	if err != nil {
 		// Return status 500 and token generation error.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
