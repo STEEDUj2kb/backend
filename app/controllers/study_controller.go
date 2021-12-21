@@ -108,3 +108,89 @@ func CreateStudy(c *fiber.Ctx) error {
 		"study": study,
 	})
 }
+
+// GetStudies func get studies.
+// @Description Get studies of request user.
+// @Summary Get studies
+// @Tags Study
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Study
+// @Security ApiKeyAuth
+// @Router /v1/studies [get]
+func GetStudies(c *fiber.Ctx) error {
+
+	// Get now time.
+	now := time.Now().Unix()
+
+	// Get claims from JWT.
+	claims, err := utils.ExtractTokenMetadata(c)
+	if err != nil {
+		// Return status 500 and JWT parse error.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// Set expiration time from JWT data of current book.
+	expires := claims.Expires
+
+	// Checking, if now time greater than expiration from JWT.
+	if now > expires {
+		// Return status 401 and unauthorized error message.
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": true,
+			"msg":   "unauthorized, check expiration time of your token",
+		})
+	}
+
+	// Set credential `study:create` from JWT data of current study.
+	credential := claims.Credentials[repository.StudyCreateCredential]
+
+	// Only user with `study:create` credential can create a new study.
+	if !credential {
+		// Return status 403 and permission denied error message.
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": true,
+			"msg":   "permission denied, check credentials of your token",
+		})
+	}
+
+	// get user from jwt claims.UserID
+	authUser, err := database.EntClient.User.
+		Query().
+		Where(user.UUID(claims.UserID)).
+		Only(context.Background())
+	if err != nil {
+		// Return, if some problem with save model.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	studiesQuery, err := authUser.QueryStudies().All(context.Background())
+	if err != nil {
+		// Return, if some problem with save model.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	studies := make([]*models.Study, len(studiesQuery))
+	for i, v := range studiesQuery {
+		// Create a new study struct.
+		study := new(models.Study)
+		study.ApplyData(v)
+		studies[i] = study
+	}
+
+	// Return status 200 ok.
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"error":   false,
+		"msg":     nil,
+		"studies": studies,
+	})
+}

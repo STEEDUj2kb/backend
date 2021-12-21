@@ -24,6 +24,7 @@ Content-Type: application/json
 
 ###
 GET http://{{host}}/api/{{version}}/studies HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzIjoxNjQwMDcxOTMxLCJpZCI6IjFkMmY2ZTUxLTM1MDktNDA4Zi1hNjA0LTI4MDlkNTU1OTYxMCIsInN0dWR5OmNyZWF0ZSI6dHJ1ZSwic3R1ZHk6ZGVsZXRlIjpmYWxzZSwic3R1ZHk6dXBkYXRlIjpmYWxzZX0.4G8KSfr7sLU_DdqfoUXyOBgPRWQyozGMuCynuUVnQ1A
 
 
 ###
