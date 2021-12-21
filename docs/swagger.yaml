@@ -1,5 +1,16 @@
 basePath: /api
 definitions:
+  models.Study:
+    properties:
+      content:
+        type: string
+      ended_at:
+        type: string
+      id:
+        type: integer
+      started_at:
+        type: string
+    type: object
   models.User:
     properties:
       created_at:
@@ -22,6 +33,18 @@ definitions:
     - email
     - name
     - uuid
+    type: object
+  models.WeeklyGaol:
+    properties:
+      goal:
+        maxLength: 255
+        type: string
+      nth:
+        type: integer
+      score:
+        type: integer
+    required:
+    - goal
     type: object
 info:
   contact:
@@ -50,6 +73,70 @@ paths:
       summary: get first name
       tags:
       - User
+  /v1/studies:
+    get:
+      consumes:
+      - application/json
+      description: Get studies of request user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Study'
+      security:
+      - ApiKeyAuth: []
+      summary: Get studies
+      tags:
+      - Study
+  /v1/studies/{study_id}/weekly-goal:
+    post:
+      consumes:
+      - application/json
+      description: Creates a weekly goal of request user by given study id.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.WeeklyGaol'
+      summary: creates a weekly goal
+      tags:
+      - Study
+  /v1/studies/{study_id}/weekly-goals:
+    get:
+      consumes:
+      - application/json
+      description: Get weekly goals of a user study.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WeeklyGaol'
+      summary: get weekly goals
+      tags:
+      - Study
+  /v1/study:
+    post:
+      consumes:
+      - application/json
+      description: Create a study.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Study'
+      security:
+      - ApiKeyAuth: []
+      summary: creates a study
+      tags:
+      - Study
   /v1/user/sign/in:
     post:
       consumes:
@@ -109,7 +196,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.User'
-      summary: create a new user
+      summary: creates a new user
       tags:
       - User
 securityDefinitions:

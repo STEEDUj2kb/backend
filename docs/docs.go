@@ -54,6 +54,108 @@ var doc = `{
                 }
             }
         },
+        "/v1/studies": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get studies of request user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Study"
+                ],
+                "summary": "Get studies",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Study"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studies/{study_id}/weekly-goal": {
+            "post": {
+                "description": "Creates a weekly goal of request user by given study id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Study"
+                ],
+                "summary": "creates a weekly goal",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.WeeklyGaol"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studies/{study_id}/weekly-goals": {
+            "get": {
+                "description": "Get weekly goals of a user study.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Study"
+                ],
+                "summary": "get weekly goals",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.WeeklyGaol"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/study": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a study.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Study"
+                ],
+                "summary": "creates a study",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Study"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/user/sign/in": {
             "post": {
                 "description": "Auth user and return access and refresh token.",
@@ -109,7 +211,7 @@ var doc = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "create a new user",
+                "summary": "creates a new user",
                 "parameters": [
                     {
                         "description": "Email",
@@ -151,6 +253,23 @@ var doc = `{
         }
     },
     "definitions": {
+        "models.Study": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "ended_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "started_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "required": [
@@ -181,6 +300,24 @@ var doc = `{
                 },
                 "uuid": {
                     "type": "string"
+                }
+            }
+        },
+        "models.WeeklyGaol": {
+            "type": "object",
+            "required": [
+                "goal"
+            ],
+            "properties": {
+                "goal": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "nth": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
                 }
             }
         }
