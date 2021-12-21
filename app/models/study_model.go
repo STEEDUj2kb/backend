@@ -7,7 +7,7 @@ import (
 )
 
 type Study struct {
-	Id        int       `db:"id" json:"-"`
+	ID        int       `db:"id" json:"id"`
 	Content   string    `db:"content" json:"content"`
 	StartedAt time.Time `db:"started_at" json:"started_at"`
 	EndedAt   time.Time `db:"ended_at" json:"ended_at"`
